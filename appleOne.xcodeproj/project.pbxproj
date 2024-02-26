@@ -1,0 +1,445 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 56;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		DB728ED32B8C9167006E60FD /* RealityKitContent in Frameworks */ = {isa = PBXBuildFile; productRef = DB728ED22B8C9167006E60FD /* RealityKitContent */; };
+		DB728ED52B8C9167006E60FD /* GameApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB728ED42B8C9167006E60FD /* GameApp.swift */; };
+		DB728ED72B8C9167006E60FD /* MainWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB728ED62B8C9167006E60FD /* MainWindow.swift */; };
+		DB728ED92B8C9167006E60FD /* GameSpace.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB728ED82B8C9167006E60FD /* GameSpace.swift */; };
+		DB728EDB2B8C9168006E60FD /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DB728EDA2B8C9168006E60FD /* Assets.xcassets */; };
+		DB728EDE2B8C9168006E60FD /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = DB728EDD2B8C9168006E60FD /* Preview Assets.xcassets */; };
+		DB728EE82B8C960A006E60FD /* RBUtility.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB728EE72B8C960A006E60FD /* RBUtility.swift */; };
+		DB728EEA2B8C9643006E60FD /* RBLog.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB728EE92B8C9643006E60FD /* RBLog.swift */; };
+		DB728EED2B8C988C006E60FD /* ObjCBridge.m in Sources */ = {isa = PBXBuildFile; fileRef = DB728EEC2B8C988C006E60FD /* ObjCBridge.m */; };
+		DB728EF12B8C98F1006E60FD /* emulate.c in Sources */ = {isa = PBXBuildFile; fileRef = DB728EEE2B8C98F1006E60FD /* emulate.c */; };
+		DB728EF22B8C98F1006E60FD /* cpu.c in Sources */ = {isa = PBXBuildFile; fileRef = DB728EEF2B8C98F1006E60FD /* cpu.c */; };
+		DB728EF42B8C9A2B006E60FD /* terminal.c in Sources */ = {isa = PBXBuildFile; fileRef = DB728EF32B8C9A2B006E60FD /* terminal.c */; };
+		DB728EF92B8CA7EE006E60FD /* BASIC.ROM in Resources */ = {isa = PBXBuildFile; fileRef = DB728EF82B8CA7ED006E60FD /* BASIC.ROM */; };
+		DB728EFB2B8CA7F8006E60FD /* WOZMON.ROM in Resources */ = {isa = PBXBuildFile; fileRef = DB728EFA2B8CA7F8006E60FD /* WOZMON.ROM */; };
+		DB728EFE2B8CAA32006E60FD /* ret_textbuffer.c in Sources */ = {isa = PBXBuildFile; fileRef = DB728EFD2B8CAA32006E60FD /* ret_textbuffer.c */; };
+		DB728F012B8CAA9C006E60FD /* ret_renderer.c in Sources */ = {isa = PBXBuildFile; fileRef = DB728EFF2B8CAA9C006E60FD /* ret_renderer.c */; };
+		DB728F072B8CAB10006E60FD /* ret_palette.c in Sources */ = {isa = PBXBuildFile; fileRef = DB728F032B8CAB10006E60FD /* ret_palette.c */; };
+		DB728F082B8CAB10006E60FD /* ret_font_amstrad.c in Sources */ = {isa = PBXBuildFile; fileRef = DB728F062B8CAB10006E60FD /* ret_font_amstrad.c */; };
+		DB728F0A2B8CD34E006E60FD /* Renderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB728F092B8CD34E006E60FD /* Renderer.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		DB728ECD2B8C9167006E60FD /* appleOne.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = appleOne.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		DB728ED12B8C9167006E60FD /* RealityKitContent */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = RealityKitContent; sourceTree = "<group>"; };
+		DB728ED42B8C9167006E60FD /* GameApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameApp.swift; sourceTree = "<group>"; };
+		DB728ED62B8C9167006E60FD /* MainWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainWindow.swift; sourceTree = "<group>"; };
+		DB728ED82B8C9167006E60FD /* GameSpace.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameSpace.swift; sourceTree = "<group>"; };
+		DB728EDA2B8C9168006E60FD /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		DB728EDD2B8C9168006E60FD /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
+		DB728EDF2B8C9168006E60FD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		DB728EE72B8C960A006E60FD /* RBUtility.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RBUtility.swift; sourceTree = "<group>"; };
+		DB728EE92B8C9643006E60FD /* RBLog.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RBLog.swift; sourceTree = "<group>"; };
+		DB728EEB2B8C988C006E60FD /* appleOne-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "appleOne-Bridging-Header.h"; sourceTree = "<group>"; };
+		DB728EEC2B8C988C006E60FD /* ObjCBridge.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ObjCBridge.m; sourceTree = "<group>"; };
+		DB728EEE2B8C98F1006E60FD /* emulate.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = emulate.c; sourceTree = "<group>"; };
+		DB728EEF2B8C98F1006E60FD /* cpu.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = cpu.c; sourceTree = "<group>"; };
+		DB728EF02B8C98F1006E60FD /* cpu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = cpu.h; sourceTree = "<group>"; };
+		DB728EF32B8C9A2B006E60FD /* terminal.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = terminal.c; sourceTree = "<group>"; };
+		DB728EF52B8C9D2D006E60FD /* terminal.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = terminal.h; sourceTree = "<group>"; };
+		DB728EF82B8CA7ED006E60FD /* BASIC.ROM */ = {isa = PBXFileReference; lastKnownFileType = file; path = BASIC.ROM; sourceTree = "<group>"; };
+		DB728EFA2B8CA7F8006E60FD /* WOZMON.ROM */ = {isa = PBXFileReference; lastKnownFileType = file; path = WOZMON.ROM; sourceTree = "<group>"; };
+		DB728EFC2B8CAA32006E60FD /* ret_textbuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ret_textbuffer.h; sourceTree = "<group>"; };
+		DB728EFD2B8CAA32006E60FD /* ret_textbuffer.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ret_textbuffer.c; sourceTree = "<group>"; };
+		DB728EFF2B8CAA9C006E60FD /* ret_renderer.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ret_renderer.c; sourceTree = "<group>"; };
+		DB728F002B8CAA9C006E60FD /* ret_renderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ret_renderer.h; sourceTree = "<group>"; };
+		DB728F022B8CAAC2006E60FD /* ret_platform_types.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ret_platform_types.h; sourceTree = "<group>"; };
+		DB728F032B8CAB10006E60FD /* ret_palette.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ret_palette.c; sourceTree = "<group>"; };
+		DB728F042B8CAB10006E60FD /* ret_font.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ret_font.h; sourceTree = "<group>"; };
+		DB728F052B8CAB10006E60FD /* ret_palette.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ret_palette.h; sourceTree = "<group>"; };
+		DB728F062B8CAB10006E60FD /* ret_font_amstrad.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ret_font_amstrad.c; sourceTree = "<group>"; };
+		DB728F092B8CD34E006E60FD /* Renderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Renderer.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		DB728ECA2B8C9167006E60FD /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DB728ED32B8C9167006E60FD /* RealityKitContent in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		DB728EC42B8C9167006E60FD = {
+			isa = PBXGroup;
+			children = (
+				DB728ECF2B8C9167006E60FD /* appleOne */,
+				DB728ECE2B8C9167006E60FD /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		DB728ECE2B8C9167006E60FD /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				DB728ECD2B8C9167006E60FD /* appleOne.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		DB728ECF2B8C9167006E60FD /* appleOne */ = {
+			isa = PBXGroup;
+			children = (
+				DB728EDF2B8C9168006E60FD /* Info.plist */,
+				DB728ED02B8C9167006E60FD /* Packages */,
+				DB728EDC2B8C9168006E60FD /* Preview Content */,
+				DB728EDA2B8C9168006E60FD /* Assets.xcassets */,
+				DB728EF82B8CA7ED006E60FD /* BASIC.ROM */,
+				DB728EFA2B8CA7F8006E60FD /* WOZMON.ROM */,
+				DB728F022B8CAAC2006E60FD /* ret_platform_types.h */,
+				DB728F042B8CAB10006E60FD /* ret_font.h */,
+				DB728F062B8CAB10006E60FD /* ret_font_amstrad.c */,
+				DB728F052B8CAB10006E60FD /* ret_palette.h */,
+				DB728F032B8CAB10006E60FD /* ret_palette.c */,
+				DB728F002B8CAA9C006E60FD /* ret_renderer.h */,
+				DB728EFF2B8CAA9C006E60FD /* ret_renderer.c */,
+				DB728EFC2B8CAA32006E60FD /* ret_textbuffer.h */,
+				DB728EFD2B8CAA32006E60FD /* ret_textbuffer.c */,
+				DB728EF52B8C9D2D006E60FD /* terminal.h */,
+				DB728EF32B8C9A2B006E60FD /* terminal.c */,
+				DB728EF02B8C98F1006E60FD /* cpu.h */,
+				DB728EEF2B8C98F1006E60FD /* cpu.c */,
+				DB728EEE2B8C98F1006E60FD /* emulate.c */,
+				DB728EEC2B8C988C006E60FD /* ObjCBridge.m */,
+				DB728F092B8CD34E006E60FD /* Renderer.swift */,
+				DB728ED42B8C9167006E60FD /* GameApp.swift */,
+				DB728ED82B8C9167006E60FD /* GameSpace.swift */,
+				DB728ED62B8C9167006E60FD /* MainWindow.swift */,
+				DB728EE72B8C960A006E60FD /* RBUtility.swift */,
+				DB728EE92B8C9643006E60FD /* RBLog.swift */,
+				DB728EEB2B8C988C006E60FD /* appleOne-Bridging-Header.h */,
+			);
+			path = appleOne;
+			sourceTree = "<group>";
+		};
+		DB728ED02B8C9167006E60FD /* Packages */ = {
+			isa = PBXGroup;
+			children = (
+				DB728ED12B8C9167006E60FD /* RealityKitContent */,
+			);
+			path = Packages;
+			sourceTree = "<group>";
+		};
+		DB728EDC2B8C9168006E60FD /* Preview Content */ = {
+			isa = PBXGroup;
+			children = (
+				DB728EDD2B8C9168006E60FD /* Preview Assets.xcassets */,
+			);
+			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		DB728ECC2B8C9167006E60FD /* appleOne */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = DB728EE22B8C9168006E60FD /* Build configuration list for PBXNativeTarget "appleOne" */;
+			buildPhases = (
+				DB728EC92B8C9167006E60FD /* Sources */,
+				DB728ECA2B8C9167006E60FD /* Frameworks */,
+				DB728ECB2B8C9167006E60FD /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = appleOne;
+			packageProductDependencies = (
+				DB728ED22B8C9167006E60FD /* RealityKitContent */,
+			);
+			productName = appleOne;
+			productReference = DB728ECD2B8C9167006E60FD /* appleOne.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		DB728EC52B8C9167006E60FD /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				BuildIndependentTargetsInParallel = 1;
+				LastSwiftUpdateCheck = 1520;
+				LastUpgradeCheck = 1520;
+				TargetAttributes = {
+					DB728ECC2B8C9167006E60FD = {
+						CreatedOnToolsVersion = 15.2;
+						LastSwiftMigration = 1520;
+					};
+				};
+			};
+			buildConfigurationList = DB728EC82B8C9167006E60FD /* Build configuration list for PBXProject "appleOne" */;
+			compatibilityVersion = "Xcode 14.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = DB728EC42B8C9167006E60FD;
+			productRefGroup = DB728ECE2B8C9167006E60FD /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				DB728ECC2B8C9167006E60FD /* appleOne */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		DB728ECB2B8C9167006E60FD /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DB728EDE2B8C9168006E60FD /* Preview Assets.xcassets in Resources */,
+				DB728EFB2B8CA7F8006E60FD /* WOZMON.ROM in Resources */,
+				DB728EDB2B8C9168006E60FD /* Assets.xcassets in Resources */,
+				DB728EF92B8CA7EE006E60FD /* BASIC.ROM in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		DB728EC92B8C9167006E60FD /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				DB728ED72B8C9167006E60FD /* MainWindow.swift in Sources */,
+				DB728EF12B8C98F1006E60FD /* emulate.c in Sources */,
+				DB728F0A2B8CD34E006E60FD /* Renderer.swift in Sources */,
+				DB728EFE2B8CAA32006E60FD /* ret_textbuffer.c in Sources */,
+				DB728EEA2B8C9643006E60FD /* RBLog.swift in Sources */,
+				DB728ED52B8C9167006E60FD /* GameApp.swift in Sources */,
+				DB728EE82B8C960A006E60FD /* RBUtility.swift in Sources */,
+				DB728F082B8CAB10006E60FD /* ret_font_amstrad.c in Sources */,
+				DB728F012B8CAA9C006E60FD /* ret_renderer.c in Sources */,
+				DB728F072B8CAB10006E60FD /* ret_palette.c in Sources */,
+				DB728EED2B8C988C006E60FD /* ObjCBridge.m in Sources */,
+				DB728EF22B8C98F1006E60FD /* cpu.c in Sources */,
+				DB728EF42B8C9A2B006E60FD /* terminal.c in Sources */,
+				DB728ED92B8C9167006E60FD /* GameSpace.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		DB728EE02B8C9168006E60FD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = xros;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "DEBUG $(inherited)";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				XROS_DEPLOYMENT_TARGET = 1.0;
+			};
+			name = Debug;
+		};
+		DB728EE12B8C9168006E60FD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++20";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu17;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				LOCALIZATION_PREFERS_STRING_CATALOGS = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				SDKROOT = xros;
+				SWIFT_COMPILATION_MODE = wholemodule;
+				VALIDATE_PRODUCT = YES;
+				XROS_DEPLOYMENT_TARGET = 1.0;
+			};
+			name = Release;
+		};
+		DB728EE32B8C9168006E60FD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"appleOne/Preview Content\"";
+				DEVELOPMENT_TEAM = F46T393V5A;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "$(TARGET_NAME)/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.rogerboesch.appleOne;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "xros xrsimulator";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "appleOne/appleOne-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2,7";
+			};
+			name = Debug;
+		};
+		DB728EE42B8C9168006E60FD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_ASSET_PATHS = "\"appleOne/Preview Content\"";
+				DEVELOPMENT_TEAM = F46T393V5A;
+				ENABLE_PREVIEWS = YES;
+				GENERATE_INFOPLIST_FILE = YES;
+				INFOPLIST_FILE = "$(TARGET_NAME)/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = com.rogerboesch.appleOne;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SUPPORTED_PLATFORMS = "xros xrsimulator";
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_OBJC_BRIDGING_HEADER = "appleOne/appleOne-Bridging-Header.h";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2,7";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		DB728EC82B8C9167006E60FD /* Build configuration list for PBXProject "appleOne" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DB728EE02B8C9168006E60FD /* Debug */,
+				DB728EE12B8C9168006E60FD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		DB728EE22B8C9168006E60FD /* Build configuration list for PBXNativeTarget "appleOne" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DB728EE32B8C9168006E60FD /* Debug */,
+				DB728EE42B8C9168006E60FD /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		DB728ED22B8C9167006E60FD /* RealityKitContent */ = {
+			isa = XCSwiftPackageProductDependency;
+			productName = RealityKitContent;
+		};
+/* End XCSwiftPackageProductDependency section */
+	};
+	rootObject = DB728EC52B8C9167006E60FD /* Project object */;
+}
