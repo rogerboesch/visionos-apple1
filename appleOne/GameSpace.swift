@@ -64,30 +64,7 @@ struct GameSpace: View {
                 Timer.scheduledTimer(withTimeInterval: interval, repeats: true) { timer in
                     EmulatorFrame()
                 }
-
-                let str = "e000r\n" // 10 PRINT \"HELLO WORLD \";\n20 GOTO 10\nRUN\n"
-                let interval2 = 1.0/10.0
-                var count = 0;
-                
-                Timer.scheduledTimer(withTimeInterval: interval2, repeats: true) { timer in
-                    let char = str[str.index(str.startIndex, offsetBy: count)]
-                    sendText(String(char))
-                    count += 1
-                    
-                    if count >= str.count {
-                        timer.invalidate()
-                    }
-                }
             }
         }
     }
-    
-    func sendText(_ str: String) {
-        for ch in str {
-            if let ascii = ch.asciiValue {
-                EmulatorKeyPress(Int32(ascii));
-            }
-        }
-    }
-    
 }

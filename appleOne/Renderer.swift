@@ -2,7 +2,7 @@ import Foundation
 import UIKit
 import RealityKit
 
-var count = 0
+var texture_count = 0
 
 @objc
 @MainActor
@@ -13,9 +13,10 @@ class Renderer : NSObject {
     public static func render(_ image: UIImage) {
         Task.init {
             do {
-                count += 1
+                texture_count += 1
+                
                 var material = SimpleMaterial(color: UIColor.red, roughness: 0, isMetallic: false)
-                let resource = try await TextureResource.generate(from: image.cgImage!, named: "asset-\(count)", options: TextureResource.CreateOptions.init(semantic: .raw))
+                let resource = try await TextureResource.generate(from: image.cgImage!, named: "asset-\(texture_count)", options: TextureResource.CreateOptions.init(semantic: .raw))
                 material.color = .init(tint: .white, texture: .init(resource))
                 
                 if Renderer.entity != nil {

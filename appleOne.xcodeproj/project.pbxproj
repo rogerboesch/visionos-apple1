@@ -7,16 +7,17 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		DB2043352B8D396A008A464B /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = DB2043282B8D3969008A464B /* main.c */; };
-		DB2043362B8D396A008A464B /* msgbuf.c in Sources */ = {isa = PBXBuildFile; fileRef = DB2043292B8D3969008A464B /* msgbuf.c */; };
+		DB2043352B8D396A008A464B /* emulator.c in Sources */ = {isa = PBXBuildFile; fileRef = DB2043282B8D3969008A464B /* emulator.c */; };
+		DB2043362B8D396A008A464B /* statusbar.c in Sources */ = {isa = PBXBuildFile; fileRef = DB2043292B8D3969008A464B /* statusbar.c */; };
 		DB2043372B8D396A008A464B /* memory.c in Sources */ = {isa = PBXBuildFile; fileRef = DB20432A2B8D3969008A464B /* memory.c */; };
 		DB2043382B8D396A008A464B /* pia6820.c in Sources */ = {isa = PBXBuildFile; fileRef = DB20432E2B8D396A008A464B /* pia6820.c */; };
 		DB2043392B8D396A008A464B /* m6502.c in Sources */ = {isa = PBXBuildFile; fileRef = DB2043302B8D396A008A464B /* m6502.c */; };
 		DB20433A2B8D396A008A464B /* screen.c in Sources */ = {isa = PBXBuildFile; fileRef = DB2043312B8D396A008A464B /* screen.c */; };
 		DB20433B2B8D396A008A464B /* keyboard.c in Sources */ = {isa = PBXBuildFile; fileRef = DB2043322B8D396A008A464B /* keyboard.c */; };
-		DB2043402B8DBEE5008A464B /* startrek.core in Resources */ = {isa = PBXBuildFile; fileRef = DB20433D2B8DBEE5008A464B /* startrek.core */; };
+		DB2043402B8DBEE5008A464B /* example.core in Resources */ = {isa = PBXBuildFile; fileRef = DB20433D2B8DBEE5008A464B /* example.core */; };
 		DB2043412B8DBEE5008A464B /* monitor.rom in Resources */ = {isa = PBXBuildFile; fileRef = DB20433E2B8DBEE5008A464B /* monitor.rom */; };
 		DB2043422B8DBEE5008A464B /* basic.rom in Resources */ = {isa = PBXBuildFile; fileRef = DB20433F2B8DBEE5008A464B /* basic.rom */; };
+		DB2043442B8DCB75008A464B /* KeyboardHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB2043432B8DCB75008A464B /* KeyboardHandler.swift */; };
 		DB728ED32B8C9167006E60FD /* RealityKitContent in Frameworks */ = {isa = PBXBuildFile; productRef = DB728ED22B8C9167006E60FD /* RealityKitContent */; };
 		DB728ED52B8C9167006E60FD /* GameApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB728ED42B8C9167006E60FD /* GameApp.swift */; };
 		DB728ED72B8C9167006E60FD /* MainWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB728ED62B8C9167006E60FD /* MainWindow.swift */; };
@@ -35,10 +36,10 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		DB2043282B8D3969008A464B /* main.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
-		DB2043292B8D3969008A464B /* msgbuf.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = msgbuf.c; sourceTree = "<group>"; };
+		DB2043282B8D3969008A464B /* emulator.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = emulator.c; sourceTree = "<group>"; };
+		DB2043292B8D3969008A464B /* statusbar.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = statusbar.c; sourceTree = "<group>"; };
 		DB20432A2B8D3969008A464B /* memory.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = memory.c; sourceTree = "<group>"; };
-		DB20432B2B8D3969008A464B /* msgbuf.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = msgbuf.h; sourceTree = "<group>"; };
+		DB20432B2B8D3969008A464B /* statusbar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = statusbar.h; sourceTree = "<group>"; };
 		DB20432C2B8D3969008A464B /* m6502.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = m6502.h; sourceTree = "<group>"; };
 		DB20432D2B8D396A008A464B /* screen.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = screen.h; sourceTree = "<group>"; };
 		DB20432E2B8D396A008A464B /* pia6820.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = pia6820.c; sourceTree = "<group>"; };
@@ -48,9 +49,11 @@
 		DB2043322B8D396A008A464B /* keyboard.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = keyboard.c; sourceTree = "<group>"; };
 		DB2043332B8D396A008A464B /* memory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = memory.h; sourceTree = "<group>"; };
 		DB2043342B8D396A008A464B /* keyboard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = keyboard.h; sourceTree = "<group>"; };
-		DB20433D2B8DBEE5008A464B /* startrek.core */ = {isa = PBXFileReference; lastKnownFileType = file; path = startrek.core; sourceTree = "<group>"; };
+		DB20433D2B8DBEE5008A464B /* example.core */ = {isa = PBXFileReference; lastKnownFileType = file; path = example.core; sourceTree = "<group>"; };
 		DB20433E2B8DBEE5008A464B /* monitor.rom */ = {isa = PBXFileReference; lastKnownFileType = file; path = monitor.rom; sourceTree = "<group>"; };
 		DB20433F2B8DBEE5008A464B /* basic.rom */ = {isa = PBXFileReference; lastKnownFileType = file; path = basic.rom; sourceTree = "<group>"; };
+		DB2043432B8DCB75008A464B /* KeyboardHandler.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardHandler.swift; sourceTree = "<group>"; };
+		DB2043452B8DDB32008A464B /* emulator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = emulator.h; sourceTree = "<group>"; };
 		DB728ECD2B8C9167006E60FD /* appleOne.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = appleOne.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DB728ED12B8C9167006E60FD /* RealityKitContent */ = {isa = PBXFileReference; lastKnownFileType = wrapper; path = RealityKitContent; sourceTree = "<group>"; };
 		DB728ED42B8C9167006E60FD /* GameApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GameApp.swift; sourceTree = "<group>"; };
@@ -114,13 +117,14 @@
 				DB20432C2B8D3969008A464B /* m6502.h */,
 				DB20432A2B8D3969008A464B /* memory.c */,
 				DB2043332B8D396A008A464B /* memory.h */,
-				DB2043292B8D3969008A464B /* msgbuf.c */,
-				DB20432B2B8D3969008A464B /* msgbuf.h */,
+				DB2043292B8D3969008A464B /* statusbar.c */,
+				DB20432B2B8D3969008A464B /* statusbar.h */,
 				DB20432E2B8D396A008A464B /* pia6820.c */,
 				DB20432F2B8D396A008A464B /* pia6820.h */,
 				DB2043312B8D396A008A464B /* screen.c */,
 				DB20432D2B8D396A008A464B /* screen.h */,
-				DB2043282B8D3969008A464B /* main.c */,
+				DB2043282B8D3969008A464B /* emulator.c */,
+				DB2043452B8DDB32008A464B /* emulator.h */,
 			);
 			path = Emulator;
 			sourceTree = "<group>";
@@ -130,7 +134,7 @@
 			children = (
 				DB20433F2B8DBEE5008A464B /* basic.rom */,
 				DB20433E2B8DBEE5008A464B /* monitor.rom */,
-				DB20433D2B8DBEE5008A464B /* startrek.core */,
+				DB20433D2B8DBEE5008A464B /* example.core */,
 			);
 			path = Roms;
 			sourceTree = "<group>";
@@ -168,6 +172,7 @@
 				DB728ED42B8C9167006E60FD /* GameApp.swift */,
 				DB728ED82B8C9167006E60FD /* GameSpace.swift */,
 				DB728ED62B8C9167006E60FD /* MainWindow.swift */,
+				DB2043432B8DCB75008A464B /* KeyboardHandler.swift */,
 				DB728EE72B8C960A006E60FD /* RBUtility.swift */,
 				DB728EE92B8C9643006E60FD /* RBLog.swift */,
 				DB728EEB2B8C988C006E60FD /* appleOne-Bridging-Header.h */,
@@ -254,7 +259,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				DB728EDE2B8C9168006E60FD /* Preview Assets.xcassets in Resources */,
-				DB2043402B8DBEE5008A464B /* startrek.core in Resources */,
+				DB2043402B8DBEE5008A464B /* example.core in Resources */,
 				DB728EDB2B8C9168006E60FD /* Assets.xcassets in Resources */,
 				DB2043412B8DBEE5008A464B /* monitor.rom in Resources */,
 				DB2043422B8DBEE5008A464B /* basic.rom in Resources */,
@@ -268,7 +273,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				DB2043352B8D396A008A464B /* main.c in Sources */,
+				DB2043352B8D396A008A464B /* emulator.c in Sources */,
 				DB728ED72B8C9167006E60FD /* MainWindow.swift in Sources */,
 				DB728F0A2B8CD34E006E60FD /* Renderer.swift in Sources */,
 				DB728EFE2B8CAA32006E60FD /* ret_textbuffer.c in Sources */,
@@ -277,12 +282,13 @@
 				DB728ED52B8C9167006E60FD /* GameApp.swift in Sources */,
 				DB728EE82B8C960A006E60FD /* RBUtility.swift in Sources */,
 				DB2043372B8D396A008A464B /* memory.c in Sources */,
-				DB2043362B8D396A008A464B /* msgbuf.c in Sources */,
+				DB2043362B8D396A008A464B /* statusbar.c in Sources */,
 				DB728F082B8CAB10006E60FD /* ret_font_amstrad.c in Sources */,
 				DB728F012B8CAA9C006E60FD /* ret_renderer.c in Sources */,
 				DB728F072B8CAB10006E60FD /* ret_palette.c in Sources */,
 				DB728EED2B8C988C006E60FD /* ObjCBridge.m in Sources */,
 				DB20433B2B8D396A008A464B /* keyboard.c in Sources */,
+				DB2043442B8DCB75008A464B /* KeyboardHandler.swift in Sources */,
 				DB2043392B8D396A008A464B /* m6502.c in Sources */,
 				DB728EF42B8C9A2B006E60FD /* terminal.c in Sources */,
 				DB728ED92B8C9167006E60FD /* GameSpace.swift in Sources */,

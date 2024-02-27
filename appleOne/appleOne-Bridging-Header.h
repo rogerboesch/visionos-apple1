@@ -5,3 +5,7 @@
 void EmulatorInit(void);
 void EmulatorFrame(void);
 void EmulatorKeyPress(int ch);
+
+void EmulatorHardReset(void);
+void EmulatorLoadBasic(void);
+void EmulatorLoadCore(void);

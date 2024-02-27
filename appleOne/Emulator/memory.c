@@ -1,50 +1,30 @@
-/* napple1 ncurses Apple 1 emulator
- * Copyright (C) 2008 Nobu Hatano
- *
- * Pom1 Apple 1 Emulator
- * Copyright (C) 2000 Verhille Arnaud
- * Copyright (C) 2006 John D. Corrado
- *
- * This program is free software; you can redistribute it and/or
- * modify it under the terms of the GNU General Public License
- * as published by the Free Software Foundation; either version 2
- * of the License, or (at your option) any later version.
- *
- * This program is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
- */
 /*
- * Memory maap of napple1
- * 
- * Apple I 8K mode & napple1 64K mode, common usage
+ * Memory map
+ *
+ * Apple I 8K mode & emulator 64K mode, common usage
  * -----------------------------------------------------------------------
- * $0000           Ststem & User Space 
- * $0200 - $027F   Input Buffer used by monitor
+ * $0000            Ststem & User Space
+ * $0200 - $027F    Input Buffer used by monitor
  * $0FFF
  * -----------------------------------------------------------------------
- * $D010	KBD	Keyboard input register. b7 is always 1 by hardware.
- * 		Read KBD will automatcically clear KBDCR's b7.
+ * $D010	        KBD	Keyboard input register. b7 is always 1 by hardware.
+ * 		            Read KBD will automatcically clear KBDCR's b7.
  * $D011	KBDCR	When key is pressed, b7 is set by hardware.
- * $D012	DSP	Bit b6..b0 is output character for the terminal.
- *	        Writing to DSP will set b7 by hardware.
- *              The termianl clear b7 after the character is accepted.
+ * $D012	DSP	    Bit b6..b0 is output character for the terminal.
+ *	                Writing to DSP will set b7 by hardware.
+ *                  The termianl clear b7 after the character is accepted.
  * $D013	DSPCR	Unused.
  * -----------------------------------------------------------------------
- * $E000        Apple I Integer BASIC
- * $E2B3        Re-entry address
+ * $E000            Apple I Integer BASIC
+ * $E2B3            Re-entry address
  * $EFFF
  * -----------------------------------------------------------------------
- * $FF00        Monitor
- * $FFEF	Echo
- * $FFFF	
+ * $FF00            Monitor
+ * $FFEF	        Echo
+ * $FFFF
  * ----------------------------------------------------------------------- 
  */
+
 /* Apple I 8K mode memory map
  * --------------------------------- 
  * Start Type
@@ -60,8 +40,9 @@
  * ---------------------------------
  * ^ ROM can be written by Load core  
  */
-/* napple I 32K mode memory map
- * --------------------------------- 
+
+/* Emulator 32K mode memory map
+ * ---------------------------------
  * Start Type
  * addr
  * --------------------------------- 
@@ -81,7 +62,7 @@
 #include "pia6820.h"
 #include "memory.h"
 #include "screen.h"
-#include "msgbuf.h"
+#include "statusbar.h"
 
 #define MEMMAX 0xFFFF
 #define FNAME_LEN_MAX 1024
@@ -99,7 +80,7 @@ void flipMode(void)
 		mode = 8;
 
 	/* update message buffer */
-	print_msgbuf("");
+	statusbar_print("");
 }
 
 int memMode(void) 
@@ -107,24 +88,22 @@ int memMode(void)
 	return mode;
 }
 
-void loadBasic(void)
-{
+void loadBasic(void) {
 	FILE *fd = fopen(platform_file_path("basic", "rom"), "rb");
 	char input[MSG_LEN_MAX +1];
 	
 	if (!fd) {
-		gets_msgbuf("Failed to open basic.rom", input);
+		statusbar_input("Failed to open 'basic.rom' - press key to continue", input);
 		return;
 	}
 
-	gets_msgbuf("Load basic.rom to ram? y/n: ", input);
-	if (input[0] == 'y') {
-		size_t s = fread(&mem[0xE000], 1, 4096, fd);
-		if (s) {
-			gets_msgbuf("Load completed: ", input);
-		} else {
-			gets_msgbuf("Load failed: ", input);
-		}
+    size_t s = fread(&mem[0xE000], 1, 4096, fd);
+
+    if (s) {
+        statusbar_input("BASIC loaded - press key to continue", input);
+    }
+    else {
+        statusbar_input("Load BASIC failed - press key to continue", input);
 	}
 
 	fclose(fd);
@@ -194,37 +173,31 @@ void dumpCore(void)
 {
 	int i;
 	FILE *fd;
-	char input[MSG_LEN_MAX +1];
 	char corename[5 + MSG_LEN_MAX +1]; /* 'core/' + input string */
 
-	gets_msgbuf("Dump core. Filename: ", input);
-	sprintf(corename, "core/%s", input);
+	sprintf(corename, "%s", "dump");
 
 	fd = fopen(corename, "w");
 	for (i = 0; i <= MEMMAX; i++)
 		fputc(mem[i], fd);
 	fclose(fd);
-	gets_msgbuf("Dump core completed: ", input);
+    
+	printf("Core dumped: %s", corename);
 }
 
-int loadCore(void)
-{
-	char input[MSG_LEN_MAX +1];
-	char corename[5 + MSG_LEN_MAX +1]; /* 'core/' + input string */
+int loadCore(void) {
 	size_t s = 0;
 	unsigned char buf[65536];
 	int i;
 
-    FILE *fd = fopen(platform_file_path("startreck", "core"), "rb");
-
-    fd = fopen(corename, "r");
+    FILE *fd = fopen(platform_file_path("example", "core"), "rb");
 	if (fd) {
 		s = fread(&buf[0], 1, MEMMAX+1, fd);
 		fclose(fd);
 	}
     
 	if (!s) {
-		gets_msgbuf("Failed to open core file: ", input);
+		printf("ERROR: Failed to open core file");
 		return 0;
 	}
 

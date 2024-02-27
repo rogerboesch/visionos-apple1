@@ -12,6 +12,7 @@
 
 #include "ret_renderer.h"
 #include "terminal.h"
+#include "Emulator.h"
 
 @implementation UIImage (Buffer)
 
@@ -61,10 +62,6 @@
 
 char filepath[1024];
 
-// External functions
-int emulator_init(void);
-int emulator_frame(void);
-
 // Helper functions to access platfiorm stuff
 char* platform_file_path(char *name, char *extension) {
     NSString *filename = [NSString stringWithCString:name encoding:NSASCIIStringEncoding];
@@ -111,3 +108,16 @@ void EmulatorFrame(void) {
 void EmulatorKeyPress(int ch) {
     [queue enqueue:[NSNumber numberWithInt:ch]];
 }
+
+void EmulatorLoadBasic(void) {
+    emulator_task(1);
+}
+
+void EmulatorHardReset(void) {
+    emulator_task(5);
+}
+
+void EmulatorLoadCore(void) {
+    emulator_task(2);
+}
+
