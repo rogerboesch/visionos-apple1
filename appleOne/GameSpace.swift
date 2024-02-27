@@ -65,10 +65,19 @@ struct GameSpace: View {
                     EmulatorFrame()
                 }
 
-                sendText("E000R\n")
-                sendText("10 PRINT \"HELLO WORLD \";\n")
-                sendText("20 GOTO 10\n")
-                sendText("RUN\n")
+                let str = "e000r\n" // 10 PRINT \"HELLO WORLD \";\n20 GOTO 10\nRUN\n"
+                let interval2 = 1.0/10.0
+                var count = 0;
+                
+                Timer.scheduledTimer(withTimeInterval: interval2, repeats: true) { timer in
+                    let char = str[str.index(str.startIndex, offsetBy: count)]
+                    sendText(String(char))
+                    count += 1
+                    
+                    if count >= str.count {
+                        timer.invalidate()
+                    }
+                }
             }
         }
     }

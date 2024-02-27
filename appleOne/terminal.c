@@ -4,7 +4,7 @@
 #include "ret_textbuffer.h"
 #include "ret_renderer.h"
 
-int key = TERMINAL_ERR;
+char key = TERMINAL_ERR;
 
 void terminal_print(char *str) {
     RETPrint(str);
@@ -31,18 +31,26 @@ void terminal_refresh(void) {
     RETRenderFrame();
 }
 
+void terminal_setcursor(int row, int col) {
+    ret_text_cursor_set(col, row);
+}
+
 void terminal_setch(int ch) {
     key = ch;
 }
 
-int terminal_getch(void) {
-    int current = key;
+char terminal_getch(void) {
+    char current = key;
     key = TERMINAL_ERR;
 
+    if (current != TERMINAL_ERR) {
+        printf("%c\n", current);
+    }
+    
     return current;
 }
 
-int terminal_testch(void) {
+char terminal_testch(void) {
     return key;
 }
 

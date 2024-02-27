@@ -66,16 +66,17 @@ int emulator_init(void);
 int emulator_frame(void);
 
 // Helper functions to access platfiorm stuff
-char* platform_file_path(char *name) {
+char* platform_file_path(char *name, char *extension) {
     NSString *filename = [NSString stringWithCString:name encoding:NSASCIIStringEncoding];
-    NSString *path = [[NSBundle mainBundle] pathForResource:filename ofType:@"ROM"];
+    NSString *ext = [NSString stringWithCString:extension encoding:NSASCIIStringEncoding];
+    NSString *path = [[NSBundle mainBundle] pathForResource:filename ofType:ext];
 
     if (path == nil) {
         return nil;
     }
     
     sprintf(filepath, "%s", path.UTF8String);
-    
+
     return filepath;
 }
 

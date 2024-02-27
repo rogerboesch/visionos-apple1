@@ -34,6 +34,19 @@ struct MainWindow: View {
                 Text("")
                 Text(text)
                     .font(.system(size: 22))
+                Button(action: {
+                    let str = "A"
+                    for ch in str {
+                        if let ascii = ch.asciiValue {
+                            EmulatorKeyPress(Int32(ascii));
+                        }
+                    }
+                }) {
+                    Text("START")
+                }
+                .padding()
+                .buttonStyle(.bordered)
+
             }
             Text(" ")
         }
