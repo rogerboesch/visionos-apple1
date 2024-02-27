@@ -32,7 +32,7 @@ void terminal_refresh(void) {
 }
 
 void terminal_setcursor(int row, int col) {
-    ret_text_cursor_set(col, row);
+    ret_text_cursor_set(col+1, row+1);
 }
 
 void terminal_setch(int ch) {

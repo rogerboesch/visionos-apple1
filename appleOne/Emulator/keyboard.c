@@ -4,11 +4,11 @@
 #include "keyboard.h"
 #include "screen.h"
 
-int process_keyboard_input(void) {
+int keyboard_process_input(void) {
 	char ch;
 
 	ch = '\0';
-    ch = getch_screen();
+    ch = screen_getch();
     
     if (ch == '\0')
 		return 0;
@@ -17,14 +17,17 @@ int process_keyboard_input(void) {
 		ch = '\r';
 	}
     else if (ch == '\b') {
-		ch = 0x5f;
-	}
+        ch = 0x5f;
+    }
+    else if (ch == '~') {   // Simulates esacpe character
+        ch = 0x1b;
+    }
     else if (ch >= 'a' && ch <= 'z') {
 		ch = ch - 'a' + 'A';
 	}
     
-	writeKbd((unsigned char)(ch + 0x80));
-	writeKbdCr(0xA7); 
+	pia6820_write_kbd((unsigned char)(ch + 0x80));
+	pia6820_write_kbd_cr(0xA7); 
 
 	return 1;
 }

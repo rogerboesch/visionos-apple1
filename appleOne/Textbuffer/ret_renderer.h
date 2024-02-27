@@ -4,8 +4,8 @@
 #include "ret_palette.h"
 #include "ret_font.h"
 
-#define RET_PIXEL_WIDTH_APPLE_I 320
-#define RET_PIXEL_HEIGHT_APPLE_I 200
+#define RET_PIXEL_WIDTH_APPLE_I 336
+#define RET_PIXEL_HEIGHT_APPLE_I 208
 #define RET_PIXEL_WIDTH_RET 640
 #define RET_PIXEL_HEIGHT_RET 480
 #define RET_PIXEL_WIDTH_C64 320

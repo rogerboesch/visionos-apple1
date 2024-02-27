@@ -27,17 +27,15 @@ static pthread_t thread;
 static int cycles;
 
 /* sync is a synchronization between real time and ideal time of apple 1 */
-static int sync_cycles; /* cycles per 1 sync */
-static int sync_interval; /* sync interval time in m sec */
+static int sync_cycles;             /* cycles per 1 sync */
+static int sync_interval;           /* sync interval time in m sec */
 static long long interval_start; /* interval start time in m sec from 0 time */
 
-static unsigned short memReadAbsolute(unsigned short adr)
-{
-	return (memRead(adr) | memRead((unsigned short)(adr + 1)) << 8);
+static unsigned short memReadAbsolute(unsigned short adr) {
+	return (memory_read(adr) | memory_read((unsigned short)(adr + 1)) << 8);
 }
 
-static void synchronize(void)
-{
+static void synchronize(void) {
 	int processed; /* processed real time in m sec */
 	int delay; /* delay m sec to be added to real time */
 	struct timeval t;
@@ -58,38 +56,34 @@ static void synchronize(void)
 				     + t.tv_sec * 1000);
 }
 
-static void pushProgramCounter(void)
-{
-	memWrite((unsigned short)(stackPointer + 0x100), (unsigned char)(programCounter >> 8));
+static void pushProgramCounter(void) {
+	memory_write((unsigned short)(stackPointer + 0x100), (unsigned char)(programCounter >> 8));
 	stackPointer--;
-	memWrite((unsigned short)(stackPointer + 0x100), (unsigned char)programCounter);
+	memory_write((unsigned short)(stackPointer + 0x100), (unsigned char)programCounter);
 	stackPointer--;
 	cycles += 2;
 }
 
-static void popProgramCounter(void)
-{
+static void popProgramCounter(void) {
 	stackPointer++;
-	programCounter = memRead((unsigned short)(stackPointer + 0x100));
+	programCounter = memory_read((unsigned short)(stackPointer + 0x100));
 	stackPointer++;
-	programCounter += memRead((unsigned short)(stackPointer + 0x100)) << 8;
+	programCounter += memory_read((unsigned short)(stackPointer + 0x100)) << 8;
 	cycles += 2;
 }
 
-static void handleIRQ(void)
-{
+static void handleIRQ(void) {
 	pushProgramCounter();
-	memWrite((unsigned short)(0x100 + stackPointer), (unsigned char)((statusRegister & ~B) | M));
+	memory_write((unsigned short)(0x100 + stackPointer), (unsigned char)((statusRegister & ~B) | M));
 	stackPointer--;
 	statusRegister |= I;
 	programCounter = memReadAbsolute(0xFFFE);
 	cycles += 8;
 }
 
-static void handleNMI(void)
-{
+static void handleNMI(void) {
 	pushProgramCounter();
-	memWrite((unsigned short)(0x100 + stackPointer), (unsigned char)((statusRegister & ~B) | M));
+	memory_write((unsigned short)(0x100 + stackPointer), (unsigned char)((statusRegister & ~B) | M));
 	stackPointer--;
 	statusRegister |= I;
 	NMI = 0;
@@ -97,45 +91,38 @@ static void handleNMI(void)
 	cycles += 8;
 }
 
-static void Imp(void)
-{
+static void Imp(void) {
 	cycles++;
 }
 
-static void Imm(void)
-{
+static void Imm(void) {
 	op = programCounter++;
 }
 
-static void Zero(void)
-{
-	op = memRead(programCounter++);
+static void Zero(void) {
+	op = memory_read(programCounter++);
 	cycles++;
 }
 
-static void ZeroX(void)
-{
-	op = (memRead(programCounter++) + xRegister) & 0xFF;
+static void ZeroX(void) {
+	op = (memory_read(programCounter++) + xRegister) & 0xFF;
 	cycles++;
 }
 
-static void ZeroY(void)
-{
-	op = (memRead(programCounter++) + yRegister) & 0xFF;
+static void ZeroY(void) {
+	op = (memory_read(programCounter++) + yRegister) & 0xFF;
 	cycles++;
 }
 
-static void Abs(void)
-{
+static void Abs(void) {
 	op = memReadAbsolute(programCounter);
 	programCounter += 2;
 	cycles += 2;
 }
 
-static void AbsX(void)
-{
-	opL = memRead(programCounter++) + xRegister;
-	opH = memRead(programCounter++) << 8;
+static void AbsX(void) {
+	opL = memory_read(programCounter++) + xRegister;
+	opH = memory_read(programCounter++) << 8;
 	cycles += 2;
 
 	if (opL >= 0x100)
@@ -144,10 +131,9 @@ static void AbsX(void)
 	op = opH + opL;
 }
 
-static void AbsY(void)
-{
-	opL = memRead(programCounter++) + yRegister;
-	opH = memRead(programCounter++) << 8;
+static void AbsY(void) {
+	opL = memory_read(programCounter++) + yRegister;
+	opH = memory_read(programCounter++) << 8;
 	cycles += 2;
 
 	if (opL >= 0x100)
@@ -156,29 +142,26 @@ static void AbsY(void)
 	op = opH + opL;
 }
 
-static void Ind(void)
-{
-	ptrL = memRead(programCounter++);
-	ptrH = memRead(programCounter++) << 8;
-	op = memRead((unsigned short)(ptrH + ptrL));
+static void Ind(void) {
+	ptrL = memory_read(programCounter++);
+	ptrH = memory_read(programCounter++) << 8;
+	op = memory_read((unsigned short)(ptrH + ptrL));
 	ptrL = (ptrL + 1) & 0xFF;
-	op += memRead((unsigned short)(ptrH + ptrL)) << 8;
+	op += memory_read((unsigned short)(ptrH + ptrL)) << 8;
 	cycles += 4;
 }
 
-static void IndZeroX(void)
-{
-	ptr = (xRegister + memRead(programCounter++)) & 0xFF;
-	op = memRead(ptr);
-	op += memRead((unsigned short)((ptr + 1) & 0xFF)) << 8;
+static void IndZeroX(void) {
+	ptr = (xRegister + memory_read(programCounter++)) & 0xFF;
+	op = memory_read(ptr);
+	op += memory_read((unsigned short)((ptr + 1) & 0xFF)) << 8;
 	cycles += 3;
 }
 
-static void IndZeroY(void)
-{
-	ptr = memRead(programCounter++);
-	opL = memRead(ptr) + yRegister;
-	opH = memRead((unsigned short)(ptr + 1)) << 8;
+static void IndZeroY(void) {
+	ptr = memory_read(programCounter++);
+	opL = memory_read(ptr) + yRegister;
+	opH = memory_read((unsigned short)(ptr + 1)) << 8;
 	cycles += 3;
 
 	if (opL >= 0x100)
@@ -187,9 +170,8 @@ static void IndZeroY(void)
 	op = opH + opL;
 }
 
-static void Rel(void)
-{
-	op = memRead(programCounter++);
+static void Rel(void) {
+	op = memory_read(programCounter++);
 
 	if (op >= 0x80)
 		op |= 0xFF00;
@@ -198,33 +180,29 @@ static void Rel(void)
 	cycles++;
 }
 
-static void WAbsX(void)
-{
-	opL = memRead(programCounter++) + xRegister;
-	opH = memRead(programCounter++) << 8;
+static void WAbsX(void) {
+	opL = memory_read(programCounter++) + xRegister;
+	opH = memory_read(programCounter++) << 8;
 	cycles += 3;
 	op = opH + opL;
 }
 
-static void WAbsY(void)
-{
-	opL = memRead(programCounter++) + yRegister;
-	opH = memRead(programCounter++) << 8;
+static void WAbsY(void) {
+	opL = memory_read(programCounter++) + yRegister;
+	opH = memory_read(programCounter++) << 8;
 	cycles += 3;
 	op = opH + opL;
 }
 
-void static WIndZeroY(void)
-{
-	ptr = memRead(programCounter++);
-	opL = memRead(ptr) + yRegister;
-	opH = memRead((unsigned short)((ptr + 1) & 0xFF)) << 8;
+static void WIndZeroY(void) {
+	ptr = memory_read(programCounter++);
+	opL = memory_read(ptr) + yRegister;
+	opH = memory_read((unsigned short)((ptr + 1) & 0xFF)) << 8;
 	cycles += 4;
 	op = opH + opL;
 }
 
-static void setStatusRegisterNZ(unsigned char val)
-{
+static void setStatusRegisterNZ(unsigned char val) {
 	if (val & 0x80)
 		statusRegister |= N;
 	else
@@ -236,56 +214,48 @@ static void setStatusRegisterNZ(unsigned char val)
 		statusRegister &= ~Z;
 }
 
-static void LDA(void)
-{
-	accumulator = memRead(op);
+static void LDA(void) {
+	accumulator = memory_read(op);
 	setStatusRegisterNZ(accumulator);
 	cycles++;
 }
 
-static void LDX(void)
-{
-	xRegister = memRead(op);
+static void LDX(void) {
+	xRegister = memory_read(op);
 	setStatusRegisterNZ(xRegister);
 	cycles++;
 }
 
-static void LDY(void)
-{
-	yRegister = memRead(op);
+static void LDY(void) {
+	yRegister = memory_read(op);
 	setStatusRegisterNZ(yRegister);
 	cycles++;
 }
 
-static void STA(void)
-{
-	memWrite(op, accumulator);
+static void STA(void) {
+	memory_write(op, accumulator);
 	cycles++;
 }
 
-static void STX(void)
-{
-	memWrite(op, xRegister);
+static void STX(void) {
+	memory_write(op, xRegister);
 	cycles++;
 }
 
-static void STY(void)
-{
-	memWrite(op, yRegister);
+static void STY(void) {
+	memory_write(op, yRegister);
 	cycles++;
 }
 
-static void setFlagCarry(unsigned short val)
-{
+static void setFlagCarry(unsigned short val) {
 	if (val & 0x100)
 		statusRegister |= C;
 	else
 		statusRegister &= ~C;
 }
 
-static void ADC(void)
-{
-	unsigned short Op1 = accumulator, Op2 = memRead(op);
+static void ADC(void) {
+	unsigned short Op1 = accumulator, Op2 = memory_read(op);
 	cycles++;
 
 	if (statusRegister & D)
@@ -333,17 +303,15 @@ static void ADC(void)
 	}
 }
 
-static void setFlagBorrow(unsigned short val)
-{
+static void setFlagBorrow(unsigned short val) {
 	if (!(val & 0x100))
 		statusRegister |= C;
 	else
 		statusRegister &= ~C;
 }
 
-static void SBC(void)
-{
-	unsigned short Op1 = accumulator, Op2 = memRead(op);
+static void SBC(void) {
+	unsigned short Op1 = accumulator, Op2 = memory_read(op);
 	cycles++;
 
 	if (statusRegister & D)
@@ -371,54 +339,47 @@ static void SBC(void)
 	}
 }
 
-static void CMP(void)
-{
-	tmp = accumulator - memRead(op);
+static void CMP(void) {
+	tmp = accumulator - memory_read(op);
 	cycles++;
 	setFlagBorrow(tmp);
 	setStatusRegisterNZ((unsigned char)tmp);
 }
 
-static void CPX(void)
-{
-	tmp = xRegister - memRead(op);
+static void CPX(void) {
+	tmp = xRegister - memory_read(op);
 	cycles++;
 	setFlagBorrow(tmp);
 	setStatusRegisterNZ((unsigned char)tmp);
 }
 
-static void CPY(void)
-{
-	tmp = yRegister - memRead(op);
+static void CPY(void) {
+	tmp = yRegister - memory_read(op);
 	cycles++;
 	setFlagBorrow(tmp);
 	setStatusRegisterNZ((unsigned char)tmp);
 }
 
-static void AND(void)
-{
-	accumulator &= memRead(op);
+static void AND(void) {
+	accumulator &= memory_read(op);
 	cycles++;
 	setStatusRegisterNZ(accumulator);
 }
 
-static void ORA(void)
-{
-	accumulator |= memRead(op);
+static void ORA(void) {
+	accumulator |= memory_read(op);
 	cycles++;
 	setStatusRegisterNZ(accumulator);
 }
 
-static void EOR(void)
-{
-	accumulator ^= memRead(op);
+static void EOR(void) {
+	accumulator ^= memory_read(op);
 	cycles++;
 	setStatusRegisterNZ(accumulator);
 }
 
-static void ASL(void)
-{
-	btmp = memRead(op);
+static void ASL(void) {
+	btmp = memory_read(op);
 	
 	if (btmp & 0x80)
 		statusRegister |= C;
@@ -427,21 +388,19 @@ static void ASL(void)
 
 	btmp <<= 1;
 	setStatusRegisterNZ(btmp);
-	memWrite(op, btmp);
+	memory_write(op, btmp);
 	cycles += 3;
 }
 
-static void ASL_A(void)
-{
+static void ASL_A(void) {
 	tmp = accumulator << 1;
 	accumulator = tmp & 0xFF;
 	setFlagCarry(tmp);
 	setStatusRegisterNZ(accumulator);
 }
 
-static void LSR(void)
-{
-	btmp = memRead(op);
+static void LSR(void) {
+	btmp = memory_read(op);
 	
 	if (btmp & 1)
 		statusRegister |= C;
@@ -450,12 +409,11 @@ static void LSR(void)
 
 	btmp >>= 1;
 	setStatusRegisterNZ(btmp);
-	memWrite(op, btmp);
+	memory_write(op, btmp);
 	cycles += 3;
 }
 
-static void LSR_A(void)
-{
+static void LSR_A(void) {
 	if (accumulator & 1)
 		statusRegister |= C;
 	else
@@ -465,11 +423,10 @@ static void LSR_A(void)
 	setStatusRegisterNZ(accumulator);
 }
 
-static void ROL(void)
-{
+static void ROL(void) {
 	int newCarry;
 
-	btmp = memRead(op);
+	btmp = memory_read(op);
 	newCarry = btmp & 0x80;
 	btmp = (btmp << 1) | (statusRegister & C ? 1 : 0);
 
@@ -479,23 +436,21 @@ static void ROL(void)
 		statusRegister &= ~C;
 	
 	setStatusRegisterNZ(btmp);
-	memWrite(op, btmp);
+	memory_write(op, btmp);
 	cycles += 3;
 }
 
-static void ROL_A(void)
-{
+static void ROL_A(void) {
 	tmp = (accumulator << 1) | (statusRegister & C ? 1 : 0);
 	accumulator = tmp & 0xFF;
 	setFlagCarry(tmp);
 	setStatusRegisterNZ(accumulator);
 }
 
-static void ROR(void)
-{
+static void ROR(void) {
 	int newCarry;
 
-	btmp = memRead(op);
+	btmp = memory_read(op);
 	newCarry = btmp & 1;
 	btmp = (btmp >> 1) | (statusRegister & C ? 0x80 : 0);
 	
@@ -505,12 +460,11 @@ static void ROR(void)
 		statusRegister &= ~C;
 
 	setStatusRegisterNZ(btmp);
-	memWrite(op, btmp);
+	memory_write(op, btmp);
 	cycles += 3;
 }
 
-static void ROR_A(void)
-{
+static void ROR_A(void) {
 	tmp = accumulator | (statusRegister & C ? 0x100 : 0);
 	
 	if (accumulator & 1)
@@ -522,51 +476,44 @@ static void ROR_A(void)
 	setStatusRegisterNZ(accumulator);
 }
 
-static void INC(void)
-{
-	btmp = memRead(op);
+static void INC(void) {
+	btmp = memory_read(op);
 	btmp++;
 	setStatusRegisterNZ(btmp);
-	memWrite(op, btmp);
+	memory_write(op, btmp);
 	cycles += 2;
 }
 
-static void DEC(void)
-{
-	btmp = memRead(op);
+static void DEC(void) {
+	btmp = memory_read(op);
 	btmp--;
 	setStatusRegisterNZ(btmp);
-	memWrite(op, btmp);
+	memory_write(op, btmp);
 	cycles += 2;
 }
 
-static void INX(void)
-{
+static void INX(void) {
 	xRegister++;
 	setStatusRegisterNZ(xRegister);
 }
 
-static void INY(void)
-{
+static void INY(void) {
 	yRegister++;
 	setStatusRegisterNZ(yRegister);
 }
 
-static void DEX(void)
-{
+static void DEX(void) {
 	xRegister--;
 	setStatusRegisterNZ(xRegister);
 }
 
-static void DEY(void)
-{
+static void DEY(void) {
 	yRegister--;
 	setStatusRegisterNZ(yRegister);
 }
 
-static void BIT(void)
-{
-	btmp = memRead(op);
+static void BIT(void) {
+	btmp = memory_read(op);
 
 	if (btmp & 0x40)
 		statusRegister |= V;
@@ -586,37 +533,32 @@ static void BIT(void)
 	cycles++;
 }
 
-static void PHA(void)
-{
-	memWrite((unsigned short)(0x100 + stackPointer), accumulator);
+static void PHA(void) {
+	memory_write((unsigned short)(0x100 + stackPointer), accumulator);
 	stackPointer--;
 	cycles++;
 }
 
-static void PHP(void)
-{
-	memWrite((unsigned short)(0x100 + stackPointer), statusRegister | B | M);
+static void PHP(void) {
+	memory_write((unsigned short)(0x100 + stackPointer), statusRegister | B | M);
 	stackPointer--;
 	cycles++;
 }
 
-static void PLA(void)
-{
+static void PLA(void) {
 	stackPointer++;
-	accumulator = memRead((unsigned short)(stackPointer + 0x100));
+	accumulator = memory_read((unsigned short)(stackPointer + 0x100));
 	setStatusRegisterNZ(accumulator);
 	cycles += 2;
 }
 
-static void PLP(void)
-{
+static void PLP(void) {
 	stackPointer++;
-	statusRegister = memRead((unsigned short)(stackPointer + 0x100));
+	statusRegister = memory_read((unsigned short)(stackPointer + 0x100));
 	cycles += 2;
 }
 
-static void BRK(void)
-{
+static void BRK(void) {
 	pushProgramCounter();
 	PHP();
 	statusRegister |= I;
@@ -624,35 +566,30 @@ static void BRK(void)
 	cycles += 3;
 }
 
-static void RTI(void)
-{
+static void RTI(void) {
 	PLP();
 	popProgramCounter();
 	cycles++;
 }
 
-static void JMP(void)
-{
+static void JMP(void) {
 	programCounter = op;
 }
 
-static void RTS(void)
-{
+static void RTS(void) {
 	popProgramCounter();
 	programCounter++;
 	cycles += 2;
 }
 
-static void JSR(void)
-{
-	opL = memRead(programCounter++);
+static void JSR(void) {
+	opL = memory_read(programCounter++);
 	pushProgramCounter();
-	programCounter = opL + (memRead(programCounter) << 8);
+	programCounter = opL + (memory_read(programCounter) << 8);
 	cycles += 3;
 }
 
-static void branch(void)
-{
+static void branch(void) {
 	cycles++;
 
 	if ((programCounter & 0xFF00) != (op & 0xFF00))
@@ -661,154 +598,126 @@ static void branch(void)
 	programCounter = op;
 }
 
-static void BNE(void)
-{
+static void BNE(void) {
 	if (!(statusRegister & Z))
 		branch();
 }
 
-static void BEQ(void)
-{
+static void BEQ(void) {
 	if (statusRegister & Z)
 		branch();
 }
 
-static void BVC(void)
-{
+static void BVC(void) {
 	if (!(statusRegister & V))
 		branch();
 }
 
-static void BVS(void)
-{
+static void BVS(void) {
 	if (statusRegister & V)
 		branch();
 }
 
-static void BCC(void)
-{
+static void BCC(void) {
 	if (!(statusRegister & C))
 		branch();
 }
 
-static void BCS(void)
-{
+static void BCS(void) {
 	if (statusRegister & C)
 		branch();
 }
 
-static void BPL(void)
-{
+static void BPL(void) {
 	if (!(statusRegister & N))
 		branch();
 }
 
-static void BMI(void)
-{
+static void BMI(void) {
 	if (statusRegister & N)
 		branch();
 }
 
-static void TAX(void)
-{
+static void TAX(void) {
 	xRegister = accumulator;
 	setStatusRegisterNZ(accumulator);
 }
 
-static void TXA(void)
-{
+static void TXA(void) {
 	accumulator = xRegister;
 	setStatusRegisterNZ(accumulator);
 }
 
-static void TAY(void)
-{
+static void TAY(void) {
 	yRegister = accumulator;
 	setStatusRegisterNZ(accumulator);
 }
 
-static void TYA(void)
-{
+static void TYA(void) {
 	accumulator = yRegister;
 	setStatusRegisterNZ(accumulator);
 }
 
-static void TXS(void)
-{
+static void TXS(void) {
 	stackPointer = xRegister;
 }
 
-static void TSX(void)
-{
+static void TSX(void) {
 	xRegister = stackPointer;
 	setStatusRegisterNZ(xRegister);
 }
 
-static void CLC(void)
-{
+static void CLC(void) {
 	statusRegister &= ~C;
 }
 
-static void SEC(void)
-{
+static void SEC(void) {
 	statusRegister |= C;
 }
 
-static void CLI(void)
-{
+static void CLI(void) {
 	statusRegister &= ~I;
 }
 
-static void SEI(void)
-{
+static void SEI(void) {
 	statusRegister |= I;
 }
 
-static void CLV(void)
-{
+static void CLV(void) {
 	statusRegister &= ~V;
 }
 
-static void CLD(void)
-{
+static void CLD(void) {
 	statusRegister &= ~D;
 }
 
-static void SED(void)
-{
+static void SED(void) {
 	statusRegister |= D;
 }
 
-static void NOP(void)
-{
+static void NOP(void) {
 }
 
-static void Unoff(void)
-{
+static void Unoff(void) {
 }
 
-static void Unoff1(void)
-{
+static void Unoff1(void) {
 }
 
-static void Unoff2(void)
-{
+static void Unoff2(void) {
 	programCounter++;
 }
 
-static void Unoff3(void)
-{
+static void Unoff3(void) {
 	programCounter += 2;
 }
 
-static void Hang(void)
-{
+static void Hang(void) {
 	programCounter--;
 }
 
-static void executeOpcode(void)
-{
-	unsigned char opcode = memRead(programCounter++);
+static void executeOpcode(void) {
+	unsigned char opcode = memory_read(programCounter++);
 
 	switch (opcode)
 	{
@@ -1736,8 +1645,7 @@ static void executeOpcode(void)
 	}
 }
 
-static int runM6502(void *data)
-{
+static int runM6502(void *data) {
 	while (1)
 	{
 		synchronize();
@@ -1758,7 +1666,7 @@ static int runM6502(void *data)
 	return 0;
 }
 
-void startM6502(void)
+void m6502_start(void)
 {
 	struct timeval t;
 
@@ -1771,7 +1679,7 @@ void startM6502(void)
 	}
 }
 
-void stopM6502(void)
+void m6502_stop(void)
 {
 	if (thread)
 	{
@@ -1779,7 +1687,7 @@ void stopM6502(void)
 	}
 }
 
-void resetM6502(void)
+void m6502_reset(void)
 {
 	statusRegister |= I;
 	stackPointer = 0xFF;
@@ -1789,19 +1697,19 @@ void resetM6502(void)
 /* freq      Processr clock speed in Hz 
  * interval  Interval of sync between real and ideal time in msec 
  */
-void setSpeed(int freq, int interval)
+void m6502_set_speed(int freq, int interval)
 {
 	/* freq = cycles/1sec, cycles/1msec = freq/1000 */
 	sync_cycles = freq / 1000 * interval;
 	sync_interval = interval;
 }
 
-void setIRQ(int state)
+void m6502_set_IRQ(int state)
 {
 	IRQ = state;
 }
 
-void setNMI(void)
+void m6502_set_NMI(void)
 {
 	NMI = 1;
 }

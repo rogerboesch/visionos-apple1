@@ -1,8 +1,7 @@
-void init_screen(void);
-void resetScreen(void);
+void screen_init(void);
+void screen_reset(void);
 void outputDsp(unsigned char dsp);
-char getch_screen(void);
-void select_screen(void);
+char screen_getch(void);
 
 extern int nrow, ncol;
 

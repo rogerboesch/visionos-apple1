@@ -10,39 +10,39 @@
 // Internal emulation functions (call trough emulator_task(number)
 
 static void _load_basic_rom(void) {
-    loadBasic();
-    resetPia6820();
-    resetM6502();
+    memory_load_basic();
+    pia6820_reset();
+    m6502_reset();
 }
 
 static void _load_startreck_core(void) {
-    loadCore();
-    resetPia6820();
-    resetM6502();
+    memory_load_example_core();
+    pia6820_reset();
+    m6502_reset();
 }
 
 static void _dump_core(void) {
-    dumpCore();
-    resetPia6820();
-    resetM6502();
+    memory_dump_core();
+    pia6820_reset();
+    m6502_reset();
 }
 
 static void _soft_reset(void) {
-    resetPia6820();
-    resetM6502();
+    pia6820_reset();
+    m6502_reset();
 }
 
 static void _hard_reset(void) {
-    resetScreen();
-    resetPia6820();
-    resetMemory();
-    resetM6502();
+    screen_reset();
+    pia6820_reset();
+    memory_reset();
+    m6502_reset();
 }
 
 static void _flip_mode(void) {
-    flipMode();
-    resetPia6820();
-    resetM6502();
+    memory_flip_mode();
+    pia6820_reset();
+    m6502_reset();
 }
 
 void emulator_task(int task) {
@@ -73,33 +73,33 @@ void emulator_task(int task) {
 // Emulator calls
 
 int emulator_init(void) {
-	init_screen();
+	screen_init();
 	statusbar_init();
 
-	resetScreen();
+	screen_reset();
     
     // 1M Hz. Sync emulation every 50 msec
-	setSpeed(1000000, 50);
+	m6502_set_speed(1000000, 50);
 
-	if (!loadMonitor()) {
+	if (!memory_load_wozmon()) {
 		statusbar_print("Failed to load monitor.rom");
 		return 0;
 	}
 
-    resetMemory();
+    memory_reset();
 
-	resetM6502();
-	startM6502();
+	m6502_reset();
+	m6502_start();
     
     return 0;
 }
 
 int emulator_frame(void) {
-    process_keyboard_input();
+    keyboard_process_input();
     return 0;
 }
 
 int emulator_stop(void) {
-    stopM6502();
+    m6502_stop();
     return 0;
 }

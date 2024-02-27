@@ -4,37 +4,31 @@
 static unsigned char _dspCr = 0, _dsp = 0, _kbdCr = 0, _kbd = 0;
 static int kbdInterrups = 0, dspOutput = 0;
 
-void resetPia6820(void)
-{
+void pia6820_reset(void) {
 	kbdInterrups = dspOutput = 0;
 	_kbdCr = _dspCr = 0;
 }
 
-void setKdbInterrups(int b)
-{
+void pia6820_set_kdb_interrupts(int b) {
 	kbdInterrups = b;
 }
 
-int getKbdInterrups(void)
-{
+int pia6820_get_kbd_interrupts(void) {
 	return kbdInterrups;
 }
 
-int getDspOutput(void)
-{
+int pia6820_get_dsp_output(void) {
 	return dspOutput;
 }
 
-void writeDspCr(unsigned char dspCr)
-{
+void pia6820_write_dsp_cr(unsigned char dspCr) {
 	if (!dspOutput && dspCr >= 0x80)
 		dspOutput = 1;
 	else
 		_dspCr = dspCr;
 }
 
-void writeDsp(unsigned char dsp)
-{
+void pia6820_write_dsp(unsigned char dsp) {
 	if (dsp >= 0x80)
 		dsp -= 0x80;
 
@@ -42,33 +36,27 @@ void writeDsp(unsigned char dsp)
 	_dsp = dsp;
 }
 
-void writeKbdCr(unsigned char kbdCr)
-{
+void pia6820_write_kbd_cr(unsigned char kbdCr) {
 	if (!kbdInterrups && kbdCr >= 0x80)
 		kbdInterrups = 1;
 	else
 		_kbdCr = kbdCr;
 }
 
-void writeKbd(unsigned char kbd)
-{
+void pia6820_write_kbd(unsigned char kbd) {
 	_kbd = kbd;
 }
 
-unsigned char readDspCr(void)
-{
+unsigned char pia6820_read_dsp_cr(void) {
 	return _dspCr;
 }
 
-unsigned char readDsp(void)
-{
+unsigned char pia6820_read_dsp(void) {
 	return _dsp;
 }
 
-unsigned char readKbdCr(void)
-{
-	if (kbdInterrups && _kbdCr >= 0x80)
-	{
+unsigned char pia6820_read_kbd_cr(void) {
+	if (kbdInterrups && _kbdCr >= 0x80) {
 		_kbdCr = 0;
 
 		return 0xA7;
@@ -77,7 +65,6 @@ unsigned char readKbdCr(void)
 	return _kbdCr;
 }
 
-unsigned char readKbd(void)
-{
+unsigned char pia6820_read_kbd(void) {
 	return _kbd;
 }

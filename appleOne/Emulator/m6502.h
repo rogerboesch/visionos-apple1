@@ -1,6 +1,6 @@
-void startM6502(void);
-void stopM6502(void);
-void resetM6502(void);
-void setSpeed(int freq, int synchroMillis);
-void setIRQ(int state);
-void setNMI(void);
+void m6502_start(void);
+void m6502_stop(void);
+void m6502_reset(void);
+void m6502_set_speed(int freq, int synchroMillis);
+void m6502_set_IRQ(int state);
+void m6502_set_NMI(void);

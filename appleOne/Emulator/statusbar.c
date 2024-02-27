@@ -30,7 +30,6 @@ void statusbar_input(char *prompt, char *typed) {
 	noecho();
 	cbreak();
 	print_msgbuf("");
-	select_screen();
      */
 }
 	

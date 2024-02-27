@@ -72,23 +72,20 @@ static int mode = 8; /* 8 = Apple I 8K mode, 32 = napple1 32K mode */
 
 char* platform_file_path(char *name, char *extension);
 
-void flipMode(void)
-{
+void memory_flip_mode(void) {
 	if (mode == 8)
 		mode = 32;
 	else 
 		mode = 8;
 
-	/* update message buffer */
 	statusbar_print("");
 }
 
-int memMode(void) 
-{
+int memory_get_mode(void)  {
 	return mode;
 }
 
-void loadBasic(void) {
+void memory_load_basic(void) {
 	FILE *fd = fopen(platform_file_path("basic", "rom"), "rb");
 	char input[MSG_LEN_MAX +1];
 	
@@ -110,58 +107,58 @@ void loadBasic(void) {
 	return;
 }
 
-int loadMonitor(void)
-{
+int memory_load_wozmon(void) {
     FILE *fd = fopen(platform_file_path("monitor", "rom"), "rb");
 
 	if (fd) {
 		fread(&mem[0xFF00], 1, 256, fd);
 		fclose(fd);
 	}
-	else{
+	else {
 		return 0;
 	}
 
 	return 1;
 }
 
-void resetMemory(void)
-{
-	if (memMode() > 8)
-		memset(mem, 0, 0xE000); /* rom is starting from 0xE000 */
-	else
-		memset(mem, 0, 0x10000 - 256); /* rom is within tail 256b */
+void memory_reset(void) {
+    if (memory_get_mode() > 8) {
+        // rom is starting from 0xE000
+        memset(mem, 0, 0xE000);
+    }
+    else {
+        // rom is within tail 256b
+        memset(mem, 0, 0x10000 - 256);
+    }
 }
 
-unsigned char memRead(unsigned short address)
-{
+unsigned char memory_read(unsigned short address) {
 	if (address == 0xD013)
-		return readDspCr();
+		return pia6820_read_dsp_cr();
 	if (address == 0xD012)
-		return readDsp();
+		return pia6820_read_dsp();
 	if (address == 0xD011)
-		return readKbdCr();
+		return pia6820_read_kbd_cr();
 	if (address == 0xD010)
-		return readKbd();
+		return pia6820_read_kbd();
 
 	return mem[address];
 }
 
-void memWrite(unsigned short address, unsigned char value)
-{
-	if (address < 0x1000)	
+void memory_write(unsigned short address, unsigned char value) {
+	if (address < 0x1000)
 		mem[address] = value;
-	else if (address < 0x8000 && (memMode() > 8) )
+	else if (address < 0x8000 && (memory_get_mode() > 8) )
 		mem[address] = value;
 	else if (address == 0xD013)
-		writeDspCr(value);
+		pia6820_write_dsp_cr(value);
 	else if (address == 0xD012)
-		writeDsp(value);
+		pia6820_write_dsp(value);
 	else if (address == 0xD011)
-		writeKbdCr(value);
+		pia6820_write_kbd_cr(value);
 	else if (address == 0xD010)
-		writeKbd(value);
-	else if (address >= 0xE000 && address < 0xF000 && memMode() == 8)
+		pia6820_write_kbd(value);
+	else if (address >= 0xE000 && address < 0xF000 && memory_get_mode() == 8)
 		mem[address] = value;
 	else
 		;
@@ -169,23 +166,21 @@ void memWrite(unsigned short address, unsigned char value)
 	return;
 }
 
-void dumpCore(void)
-{
+void memory_dump_core(void) {
 	int i;
 	FILE *fd;
-	char corename[5 + MSG_LEN_MAX +1]; /* 'core/' + input string */
 
-	sprintf(corename, "%s", "dump");
-
-	fd = fopen(corename, "w");
-	for (i = 0; i <= MEMMAX; i++)
-		fputc(mem[i], fd);
+	fd = fopen("dump", "w");
+    for (i = 0; i <= MEMMAX; i++) {
+        fputc(mem[i], fd);
+    }
+    
 	fclose(fd);
     
-	printf("Core dumped: %s", corename);
+	printf("Core 'dump' dumped\n");
 }
 
-int loadCore(void) {
+int memory_load_example_core(void) {
 	size_t s = 0;
 	unsigned char buf[65536];
 	int i;
@@ -201,21 +196,21 @@ int loadCore(void) {
 		return 0;
 	}
 
-	/* 0xF000 is unused area of 8K mode or
-	 * ROM area of 32K mode. So,  if 0xF000 has a value,
-	 * The mode should better change to 32K mode.
-	 */
-	if ((buf[0xF000] != 0) && (memMode() == 8)) {
-		flipMode();
+	// 0xF000 is unused area of 8K mode or ROM area of 32K mode. So,  if 0xF000 has a value,
+    // The mode should better change to 32K mode.
+	if ((buf[0xF000] != 0) && (memory_get_mode() == 8)) {
+		memory_flip_mode();
 	}
 
-	if (memMode() == 8) {
+	if (memory_get_mode() == 8) {
 		for (i = 0;      i <= 0x0FFF; i++) mem[i] = buf[i];
 		for (i = 0xE000; i <= 0xEFFF; i++) mem[i] = buf[i];
 		for (i = 0xFF00; i <= 0xFFFF; i++) mem[i] = buf[i];
-	} else {
+	}
+    else {
 		for (i = 0;      i <= 0x7FFF; i++) mem[i] = buf[i];
 		for (i = 0xE000; i <= 0xFFFF; i++) mem[i] = buf[i];
 	}
+    
 	return 1;
 }

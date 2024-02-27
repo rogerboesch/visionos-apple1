@@ -1,1 +1,1 @@
-int process_keyboard_input(void);
+int keyboard_process_input(void);

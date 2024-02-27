@@ -53,7 +53,7 @@ struct GameSpace: View {
                 let material = SimpleMaterial(color: UIColor.white, isMetallic: false)
                 let boxEntity = ModelEntity(mesh: box, materials: [material])
                 boxEntity.scale = [0.4, 0.4, 0.01]
-                boxEntity.position = [-0.01, 0.35, -0.2]
+                boxEntity.position = [-0.01, 0.4, -0.2]
                 
                 Renderer.entity = boxEntity
                 state_anchor!.addChild(boxEntity)
