@@ -16,7 +16,7 @@
 #include "ret_font.h"
 
 extern void ret_render_frame(byte* data, int index);
-extern byte ret_font_amstrad[];
+extern byte ret_font_apple2[];
 
 #define RET_BUF_SIZE RET_PIXEL_WIDTH*RET_PIXEL_HEIGHT*4
 
@@ -129,13 +129,15 @@ const byte ret_vecfont[128][8] = {
 #pragma mark - Helper
 
 int ret_getbit(byte b, byte number) {
+    // TODO: Make flexible when font must be inverted, Apple 2 needs it
+    number = 8 - number;
     return (b >> number) & 1;
 }
 
 // -----------------------------------------------------------------------------
 #pragma mark - Dirty bit mechanism
 
-byte ret_rend_get_dirty_bit() {
+byte ret_rend_get_dirty_bit(void) {
     return ret_screen_current->dirty_bit;
 }
 
@@ -280,7 +282,7 @@ void ret_rend_draw_char(int x, int y, const char ch, int invert, byte paletteCol
 
 	int xStart = x;
     for (int iy = 0; iy < h; iy++) {
-        byte line = ret_font_amstrad[offset+iy];
+        byte line = ret_font_apple2[offset+iy];
 
         for (int ix = w-1; ix >= 0; ix--) {
 			if (x >= 0 && x < RET_PIXEL_WIDTH && y >= 0 && y < RET_PIXEL_HEIGHT) {

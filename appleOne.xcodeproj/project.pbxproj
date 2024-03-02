@@ -33,6 +33,8 @@
 		DB728F072B8CAB10006E60FD /* ret_palette.c in Sources */ = {isa = PBXBuildFile; fileRef = DB728F032B8CAB10006E60FD /* ret_palette.c */; };
 		DB728F082B8CAB10006E60FD /* ret_font_amstrad.c in Sources */ = {isa = PBXBuildFile; fileRef = DB728F062B8CAB10006E60FD /* ret_font_amstrad.c */; };
 		DB728F0A2B8CD34E006E60FD /* Renderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB728F092B8CD34E006E60FD /* Renderer.swift */; };
+		DBF75C2F2B93C8CB00609966 /* ret_font_apple2.c in Sources */ = {isa = PBXBuildFile; fileRef = DBF75C2E2B93C8CB00609966 /* ret_font_apple2.c */; };
+		DBF75C312B93CCF200609966 /* ret_font_pet.c in Sources */ = {isa = PBXBuildFile; fileRef = DBF75C302B93CCF200609966 /* ret_font_pet.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -78,6 +80,8 @@
 		DB728F052B8CAB10006E60FD /* ret_palette.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ret_palette.h; sourceTree = "<group>"; };
 		DB728F062B8CAB10006E60FD /* ret_font_amstrad.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ret_font_amstrad.c; sourceTree = "<group>"; };
 		DB728F092B8CD34E006E60FD /* Renderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Renderer.swift; sourceTree = "<group>"; };
+		DBF75C2E2B93C8CB00609966 /* ret_font_apple2.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ret_font_apple2.c; sourceTree = "<group>"; };
+		DBF75C302B93CCF200609966 /* ret_font_pet.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ret_font_pet.c; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -98,6 +102,8 @@
 				DB728F022B8CAAC2006E60FD /* ret_platform_types.h */,
 				DB728F042B8CAB10006E60FD /* ret_font.h */,
 				DB728F062B8CAB10006E60FD /* ret_font_amstrad.c */,
+				DBF75C302B93CCF200609966 /* ret_font_pet.c */,
+				DBF75C2E2B93C8CB00609966 /* ret_font_apple2.c */,
 				DB728F052B8CAB10006E60FD /* ret_palette.h */,
 				DB728F032B8CAB10006E60FD /* ret_palette.c */,
 				DB728F002B8CAA9C006E60FD /* ret_renderer.h */,
@@ -289,10 +295,12 @@
 				DB728EED2B8C988C006E60FD /* ObjCBridge.m in Sources */,
 				DB20433B2B8D396A008A464B /* keyboard.c in Sources */,
 				DB2043442B8DCB75008A464B /* KeyboardHandler.swift in Sources */,
+				DBF75C312B93CCF200609966 /* ret_font_pet.c in Sources */,
 				DB2043392B8D396A008A464B /* m6502.c in Sources */,
 				DB728EF42B8C9A2B006E60FD /* terminal.c in Sources */,
 				DB728ED92B8C9167006E60FD /* GameSpace.swift in Sources */,
 				DB20433A2B8D396A008A464B /* screen.c in Sources */,
+				DBF75C2F2B93C8CB00609966 /* ret_font_apple2.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

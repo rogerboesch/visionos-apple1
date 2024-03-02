@@ -56,6 +56,14 @@ struct MainWindow: View {
                     }
                     .padding()
                     .buttonStyle(.bordered)
+                    
+                    Button(action: {
+                        KeyboardHandler().sendText("~")
+                    }) {
+                        Text("BREAK")
+                    }
+                    .padding()
+                    .buttonStyle(.bordered)
 
                     // BASIC
                     switch self.basicState {

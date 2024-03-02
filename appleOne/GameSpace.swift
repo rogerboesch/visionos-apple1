@@ -27,7 +27,7 @@ struct GameSpace: View {
         RealityView { content in
             if let scene = try? await Entity(named: "Immersive", in: realityKitContentBundle) {
                 content.add(scene)
-
+                
                 // Anchor used for game objects
                 if isVisionOSDevice() {
                     state_anchor = AnchorEntity(.plane(.horizontal, classification: .table, minimumBounds: [0.5, 0.5]))
@@ -38,11 +38,15 @@ struct GameSpace: View {
                     rbDebug("Created world anchor at 1, 1, -1.5")
                 }
                 scene.addChild(state_anchor!)
+
+                let parent = Entity()
+                parent.scale = [0.6, 0.6, 0.6]
+                state_anchor!.addChild(parent)
                 
                 if let apple = scene.findEntity(named: "Apple_I") as Entity? {
                     apple1 = apple
                     apple1?.isEnabled = true
-                    state_anchor?.addChild(apple1!)
+                    parent.addChild(apple1!)
                     
                     if let model = apple.children[0] as? ModelEntity {
                         model.model?.materials = [SimpleMaterial(color: UIColor.brown, isMetallic: false)]
@@ -56,7 +60,7 @@ struct GameSpace: View {
                 boxEntity.position = [-0.01, 0.4, -0.2]
                 
                 Renderer.entity = boxEntity
-                state_anchor!.addChild(boxEntity)
+                parent.addChild(boxEntity)
                 
                 EmulatorInit()
                 
