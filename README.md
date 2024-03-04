@@ -2,7 +2,8 @@
 
 ## STARTREK
 Original code is downloaded from http://www.brielcomputers.com/files/games.zip.
-How to start it.
+
+Here is how to start them:
 
 ```
 Shift + L   (Load example core)
