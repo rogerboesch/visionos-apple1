@@ -115,7 +115,6 @@ typedef struct rb_display {
 /*  Lifecycle                                                                 */
 /* -------------------------------------------------------------------------- */
 
-void rb_display_init(int cols, int rows);       /* Creates display 0 with given dimensions */
 int  rb_display_create(int cols, int rows);     /* Returns index, malloc's buffers */
 void rb_display_destroy(int display);           /* Free buffers, mark inactive */
 

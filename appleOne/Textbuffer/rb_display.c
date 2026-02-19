@@ -68,18 +68,8 @@ static void rb_display_init_defaults(rb_display *d) {
 /*  Lifecycle                                                                 */
 /* -------------------------------------------------------------------------- */
 
-void rb_display_init(int cols, int rows) {
-    memset(rb_displays, 0, sizeof(rb_displays));
-
-    /* Create display 0 — the main terminal */
-    rb_displays[0].index = 0;
-    rb_displays[0].active = 1;
-    rb_display_alloc_buffers(&rb_displays[0], cols, rows);
-    rb_display_init_defaults(&rb_displays[0]);
-}
-
 int rb_display_create(int cols, int rows) {
-    for (int i = 1; i < RB_DISPLAY_MAX; i++) {
+    for (int i = 0; i < RB_DISPLAY_MAX; i++) {
         if (!rb_displays[i].active) {
             rb_displays[i].index = i;
             rb_displays[i].active = 1;
@@ -92,7 +82,7 @@ int rb_display_create(int cols, int rows) {
 }
 
 void rb_display_destroy(int display) {
-    if (display <= 0 || display >= RB_DISPLAY_MAX) {
+    if (display < 0 || display >= RB_DISPLAY_MAX) {
         return;
     }
 

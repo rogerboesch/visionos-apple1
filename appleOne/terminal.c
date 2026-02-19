@@ -16,7 +16,7 @@ void terminal_printchar(char ch) {
 }
 
 void terminal_init(void) {
-    rb_display_init(42, 26);
+    rb_display_create(42, 26);
     rb_display_text_set_immediate(TERMINAL_DISPLAY, 1);
     rb_display_cursor_show(TERMINAL_DISPLAY, 0);
     rb_display_set_bg_color(TERMINAL_DISPLAY, 0);
