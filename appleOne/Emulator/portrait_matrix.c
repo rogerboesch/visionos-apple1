@@ -29,7 +29,11 @@ void rb_render_portrait_pair(unsigned char *dataA, int widthA, int heightA,
 #define PHASE_HOLD    0
 #define PHASE_RAIN    1
 #define PHASE_REBUILD 2
-#define PHASE_DONE    3
+#define PHASE_PAUSE   3
+#define PHASE_DONE    4
+
+/* Pause between loops (frames at 60 fps) */
+#define MATRIX_PAUSE_FRAMES 300  /* 5 seconds */
 
 /* Max portrait dimensions */
 #define MATRIX_MAX_COLS 100
@@ -258,6 +262,22 @@ static void render_final_to_display(matrix_slot *s, int d) {
                          rb_display_get_pixel_height(d));
 }
 
+/* Restart a slot for the next loop iteration with a new seed */
+static void restart_slot(matrix_slot *s) {
+    unsigned int new_seed = s->seed * 1103515245 + 12345;
+    const char **art = s->art;
+    int rows = s->art_rows;
+    int cols = s->art_cols;
+    memset(s, 0, sizeof(matrix_slot));
+    s->art = art;
+    s->art_rows = rows;
+    s->art_cols = cols;
+    s->phase = PHASE_HOLD;
+    s->frame_count = 0;
+    s->active = 1;
+    s->seed = new_seed;
+}
+
 /* Advance one slot's state machine. Returns 1 if still animating. */
 static int advance_slot(matrix_slot *s, int d) {
     if (!s->active) return 0;
@@ -286,9 +306,15 @@ static int advance_slot(matrix_slot *s, int d) {
             render_rebuild_to_display(s, d);
             if (all_columns_landed(s)) {
                 render_final_to_display(s, d);
-                s->phase = PHASE_DONE;
-                s->active = 0;
-                return 0;
+                s->phase = PHASE_PAUSE;
+                s->frame_count = 0;
+            }
+            break;
+
+        case PHASE_PAUSE:
+            /* Show final portrait, then restart the cycle */
+            if (s->frame_count >= MATRIX_PAUSE_FRAMES) {
+                restart_slot(s);
             }
             break;
 
@@ -353,8 +379,10 @@ int portrait_matrix_frame(void) {
             return 0;
         }
 
-        /* During hold phase, portrait is already displayed — skip rendering */
-        if (slots[SLOT_A].phase == PHASE_HOLD && slots[SLOT_B].phase == PHASE_HOLD) {
+        /* During hold/pause, portrait is static — skip bridge call */
+        int a_static = (slots[SLOT_A].phase == PHASE_HOLD || slots[SLOT_A].phase == PHASE_PAUSE);
+        int b_static = (slots[SLOT_B].phase == PHASE_HOLD || slots[SLOT_B].phase == PHASE_PAUSE);
+        if (a_static && b_static) {
             advance_slot(&slots[SLOT_A], da);
             advance_slot(&slots[SLOT_B], db);
             return 1;
@@ -374,8 +402,8 @@ int portrait_matrix_frame(void) {
     }
     else {
         int still = advance_slot(&slots[SLOT_A], da);
-        /* During hold phase, portrait is already displayed — skip bridge call */
-        if (slots[SLOT_A].phase != PHASE_HOLD) {
+        /* During hold/pause, portrait is static — skip bridge call */
+        if (slots[SLOT_A].phase != PHASE_HOLD && slots[SLOT_A].phase != PHASE_PAUSE) {
             rb_render_portrait(rb_display_get_pixel_data(da),
                                rb_display_get_pixel_width(da),
                                rb_display_get_pixel_height(da));
