@@ -25,6 +25,25 @@ Building an immersive visionOS experience featuring the Apple I emulator with mu
 - Removed `PORTRAIT_PIXEL_SCALE`, `char_to_brightness()`, phosphor color constants
 - `emulator.c` task 7/8 now calls `portrait_hires_show_*()` directly
 
+### Phosphor Color Fix for Portraits (2026-02-19)
+- Portraits were rendering with palette `RET_COLOR_GREEN` (0,204,85) but normal text goes through `ret_postprocess.c` which tints to phosphor green (51,255,51)
+- Fixed by rendering portrait glyphs as white, then tinting the entire buffer to phosphor green with `tint_buffer_phosphor()`
+
+### Immersive Space Control Panel (2026-02-19)
+- Moved control panel from flat SwiftUI window into RealityKit immersive space as an attachment
+- `MainWindow` is now a thin launcher (inits emulator, opens immersive space, dismisses itself)
+- `ControlPanel` lives as `Attachment(id: "control_panel")` in `GameSpace.swift`
+- Panel tilted 30 degrees like a table using quaternion composition (yaw + tilt)
+- Billboard rotation: yaw-only facing via `atan2`, smooth slerp interpolation
+- Panel placed once at startup (`placePanel()`), does NOT follow user — only rotates (`updatePanelBillboard()`)
+- Shockwave-inspired colored buttons: RESET=red, BREAK=orange, LOAD=cyan, START=green, TYPE/RUN=blue, Portraits=purple
+
+### Splash Screen Hold Until BREAK (2026-02-19)
+- Splash fades in over 1.5s then holds at full brightness indefinitely (removed auto-advance timer)
+- BREAK button calls `EmulatorSkipSplash()` → `emulator_task(9)` → `splash_skip()` which triggers fade-out
+- Fade-out takes 0.75s, then emulator boots the CPU normally
+- Added `splash_fading_out` / `splash_fadeout_frame` state tracking
+
 ### Previous Work
 - Hi-res portrait renderer with phosphor-green display
 - ASCII art portraits of Steve Jobs and Steve Wozniak
