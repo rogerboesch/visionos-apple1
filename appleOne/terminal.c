@@ -1,38 +1,36 @@
 
 #include <stdio.h>
 #include "terminal.h"
-#include "ret_textbuffer.h"
-#include "ret_renderer.h"
+#include "rb_display.h"
 
 char key = TERMINAL_ERR;
 
 void terminal_print(char *str) {
-    RETPrint(str);
+    rb_display_print(str);
 }
 
 void terminal_printchar(char ch) {
-    RETPrintChar(ch);
+    rb_display_print_char(ch);
 }
 
 void terminal_init(void) {
-    ret_rend_initialize();
-    ret_text_initialize();
-    ret_text_set_immediate_mode(1);
-    ret_text_cursor_show(0);
-    RETSetBgColor(0);
-    RETSetFgColor(13);
+    rb_display_init();
+    rb_display_text_set_immediate(1);
+    rb_display_cursor_show(0);
+    rb_display_set_bg_color(0);
+    rb_display_set_fg_color(13);
 }
 
 void terminal_clear(void) {
-    ret_text_clear_screen();
+    rb_display_text_clear();
 }
 
 void terminal_refresh(void) {
-    RETRenderFrame();
+    rb_display_render_frame();
 }
 
 void terminal_setcursor(int row, int col) {
-    ret_text_cursor_set(col+1, row+1);
+    rb_display_cursor_set(col + 1, row + 1);
 }
 
 void terminal_setch(int ch) {
@@ -46,7 +44,7 @@ char terminal_getch(void) {
     if (current != TERMINAL_ERR) {
         printf("%c\n", current);
     }
-    
+
     return current;
 }
 
