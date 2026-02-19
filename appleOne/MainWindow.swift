@@ -91,21 +91,39 @@ struct ControlPanel: View {
                 .font(.system(size: 42, weight: .bold, design: .monospaced))
                 .kerning(6)
 
-            // Emulator screen
-            Group {
-                if let image = renderer.screenImage {
-                    Image(uiImage: image)
-                        .resizable()
-                        .interpolation(.none)
-                        .aspectRatio(contentMode: .fit)
+            // Emulator screen + portrait buttons side by side
+            HStack(spacing: 12) {
+                // Emulator screen
+                Group {
+                    if let image = renderer.screenImage {
+                        Image(uiImage: image)
+                            .resizable()
+                            .interpolation(.none)
+                            .aspectRatio(contentMode: .fit)
+                    }
+                    else {
+                        Rectangle()
+                            .fill(Color.black)
+                            .aspectRatio(336.0 / 208.0, contentMode: .fit)
+                    }
                 }
-                else {
-                    Rectangle()
-                        .fill(Color.black)
-                        .aspectRatio(336.0 / 208.0, contentMode: .fit)
+                .clipShape(RoundedRectangle(cornerRadius: 8))
+
+                // Portrait buttons (right of screen)
+                VStack(spacing: 8) {
+                    PanelButton(label: "JOBS") {
+                        EmulatorShowJobs()
+                    }
+
+                    PanelButton(label: "WOZ") {
+                        EmulatorShowWozniak()
+                    }
+
+                    PanelButton(label: "BOTH") {
+                        EmulatorShowBothSteves()
+                    }
                 }
             }
-            .clipShape(RoundedRectangle(cornerRadius: 8))
 
             // Control buttons
             HStack(spacing: 8) {
@@ -123,17 +141,6 @@ struct ControlPanel: View {
                 basicButtons
 
                 assemblerButtons
-            }
-
-            // Portrait buttons
-            HStack(spacing: 8) {
-                PanelButton(label: "STEVE JOBS", color: .purple) {
-                    EmulatorShowJobs()
-                }
-
-                PanelButton(label: "STEVE WOZNIAK", color: .purple) {
-                    EmulatorShowWozniak()
-                }
             }
         }
         .padding()

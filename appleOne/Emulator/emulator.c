@@ -84,6 +84,9 @@ void emulator_task(int task) {
         case 9:
             splash_skip();
             break;
+        case 10:
+            portrait_hires_show_both();
+            break;
         default:
             break;
     }

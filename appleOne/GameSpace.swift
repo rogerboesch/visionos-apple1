@@ -55,5 +55,11 @@ struct GameSpace: View {
             guard let image = newValue, let cgImage = image.cgImage else { return }
             displayManager.updateTexture(cgImage)
         }
+        .onChange(of: renderer.portraitUpdateCount) { oldValue, newValue in
+            guard let imageA = renderer.portraitImageA, let cgA = imageA.cgImage,
+                  let imageB = renderer.portraitImageB, let cgB = imageB.cgImage
+            else { return }
+            displayManager.updatePortraitPair(cgA, cgB)
+        }
     }
 }

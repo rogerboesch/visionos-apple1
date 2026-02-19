@@ -89,6 +89,14 @@ void ret_render_frame_sized(unsigned char *data, int width, int height) {
     [Renderer render:image];
 }
 
+// Called from C to Swift — portrait pair for alternating displays
+void ret_render_portrait_pair(unsigned char *dataA, int widthA, int heightA,
+                              unsigned char *dataB, int widthB, int heightB) {
+    UIImage* imageA = [UIImage fromBuffer:dataA width:widthA height:heightA];
+    UIImage* imageB = [UIImage fromBuffer:dataB width:widthB height:heightB];
+    [Renderer renderPortraitPair:imageA imageB:imageB];
+}
+
 // Called from Swift to C
 
 NSMutableArray *queue = nil;
@@ -137,5 +145,9 @@ void EmulatorShowWozniak(void) {
 
 void EmulatorSkipSplash(void) {
     emulator_task(9);
+}
+
+void EmulatorShowBothSteves(void) {
+    emulator_task(10);
 }
 

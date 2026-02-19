@@ -222,6 +222,42 @@ class DisplayManager {
         }
     }
 
+    func updatePortraitPair(_ cgImageA: CGImage, _ cgImageB: CGImage) {
+        guard !displayEntities.isEmpty else { return }
+
+        textureIndex += 1
+        let nameA = "portrait-a-\(textureIndex)"
+        let nameB = "portrait-b-\(textureIndex)"
+
+        Task {
+            do {
+                let resourceA = try await TextureResource(
+                    image: cgImageA,
+                    withName: nameA,
+                    options: TextureResource.CreateOptions(semantic: .raw)
+                )
+                let resourceB = try await TextureResource(
+                    image: cgImageB,
+                    withName: nameB,
+                    options: TextureResource.CreateOptions(semantic: .raw)
+                )
+
+                var materialA = SimpleMaterial(color: .white, isMetallic: false)
+                materialA.color = .init(tint: .white, texture: .init(resourceA))
+
+                var materialB = SimpleMaterial(color: .white, isMetallic: false)
+                materialB.color = .init(tint: .white, texture: .init(resourceB))
+
+                for (index, entity) in displayEntities.enumerated() {
+                    entity.model?.materials = [index % 2 == 0 ? materialA : materialB]
+                }
+            }
+            catch {
+                rbError("Portrait pair texture: \(error.localizedDescription)")
+            }
+        }
+    }
+
     private func createDisplayEntity() -> ModelEntity {
         let mesh = MeshResource.generateBox(size: 1.0)
         let material = SimpleMaterial(color: .black, isMetallic: false)

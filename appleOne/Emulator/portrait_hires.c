@@ -8,8 +8,10 @@
 
 #include <string.h>
 
-/* Bridge function declared in ObjCBridge.m */
+/* Bridge functions declared in ObjCBridge.m */
 void ret_render_frame_sized(unsigned char *data, int width, int height);
+void ret_render_portrait_pair(unsigned char *dataA, int widthA, int heightA,
+                              unsigned char *dataB, int widthB, int heightB);
 
 /* Phosphor green — must match ret_postprocess.c for consistent color */
 #define PHOSPHOR_R 51
@@ -42,8 +44,8 @@ static void tint_buffer_phosphor(byte *buffer, int buf_w, int buf_h) {
     }
 }
 
-static void render_portrait_glyphs(const char **art, int art_rows, int art_cols,
-                                   byte *buffer, int buf_w, int buf_h) {
+static void render_portrait_to_buffer(const char **art, int art_rows, int art_cols,
+                                      byte *buffer, int buf_w, int buf_h) {
     memset(buffer, 0, buf_w * buf_h * 4);
 
     /* Resize text buffer to match portrait grid */
@@ -79,23 +81,39 @@ static void render_portrait_glyphs(const char **art, int art_rows, int art_cols,
 
     /* Tint white glyphs to phosphor green (matches post-processor) */
     tint_buffer_phosphor(buffer, buf_w, buf_h);
-
-    /* Send to display */
-    ret_render_frame_sized(buffer, buf_w, buf_h);
 }
 
 void portrait_hires_show_jobs(void) {
-    render_portrait_glyphs(portrait_hires_jobs_art,
-                           PORTRAIT_HIRES_JOBS_ROWS,
-                           PORTRAIT_HIRES_JOBS_COLS,
-                           jobs_buffer,
-                           JOBS_BUF_W, JOBS_BUF_H);
+    render_portrait_to_buffer(portrait_hires_jobs_art,
+                              PORTRAIT_HIRES_JOBS_ROWS,
+                              PORTRAIT_HIRES_JOBS_COLS,
+                              jobs_buffer,
+                              JOBS_BUF_W, JOBS_BUF_H);
+    ret_render_frame_sized(jobs_buffer, JOBS_BUF_W, JOBS_BUF_H);
 }
 
 void portrait_hires_show_wozniak(void) {
-    render_portrait_glyphs(portrait_hires_woz_art,
-                           PORTRAIT_HIRES_WOZ_ROWS,
-                           PORTRAIT_HIRES_WOZ_COLS,
-                           woz_buffer,
-                           WOZ_BUF_W, WOZ_BUF_H);
+    render_portrait_to_buffer(portrait_hires_woz_art,
+                              PORTRAIT_HIRES_WOZ_ROWS,
+                              PORTRAIT_HIRES_WOZ_COLS,
+                              woz_buffer,
+                              WOZ_BUF_W, WOZ_BUF_H);
+    ret_render_frame_sized(woz_buffer, WOZ_BUF_W, WOZ_BUF_H);
+}
+
+void portrait_hires_show_both(void) {
+    render_portrait_to_buffer(portrait_hires_jobs_art,
+                              PORTRAIT_HIRES_JOBS_ROWS,
+                              PORTRAIT_HIRES_JOBS_COLS,
+                              jobs_buffer,
+                              JOBS_BUF_W, JOBS_BUF_H);
+
+    render_portrait_to_buffer(portrait_hires_woz_art,
+                              PORTRAIT_HIRES_WOZ_ROWS,
+                              PORTRAIT_HIRES_WOZ_COLS,
+                              woz_buffer,
+                              WOZ_BUF_W, WOZ_BUF_H);
+
+    ret_render_portrait_pair(jobs_buffer, JOBS_BUF_W, JOBS_BUF_H,
+                             woz_buffer, WOZ_BUF_W, WOZ_BUF_H);
 }
