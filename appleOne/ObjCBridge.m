@@ -21,7 +21,9 @@
 
 + (UIImage *)fromBuffer:(unsigned char *)buffer width:(int)width height:(int)height {
     int length = width*height*4;
-    CGDataProviderRef provider = CGDataProviderCreateWithData(NULL, buffer, length, NULL);
+    CFDataRef dataCopy = CFDataCreate(NULL, buffer, length);
+    CGDataProviderRef provider = CGDataProviderCreateWithCFData(dataCopy);
+    CFRelease(dataCopy);
     
     int bitsPerComponent = 8;
     int bitsPerPixel = 4 * bitsPerComponent;

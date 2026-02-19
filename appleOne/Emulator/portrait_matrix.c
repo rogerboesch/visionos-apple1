@@ -302,6 +302,7 @@ static int advance_slot(matrix_slot *s, int d) {
 
 static void init_slot(matrix_slot *s, const char **art, int rows, int cols,
                       unsigned int seed) {
+    memset(s, 0, sizeof(matrix_slot));
     s->art = art;
     s->art_rows = rows;
     s->art_cols = cols;
