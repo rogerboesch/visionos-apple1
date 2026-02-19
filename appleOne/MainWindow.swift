@@ -106,7 +106,7 @@ struct ControlPanel: View {
         VStack(spacing: 16) {
             // Title
             Text("TERMINAL")
-                .font(.system(size: 42, weight: .bold, design: .monospaced))
+                .font(.system(size: 21, weight: .medium, design: .monospaced))
                 .kerning(6)
 
             // Emulator screen + portrait buttons side by side
@@ -176,8 +176,8 @@ struct ControlPanel: View {
                 }
             }
 
-            Text("Apple I Emulator")
-                .font(.system(size: 14, weight: .medium, design: .monospaced))
+            Text("APPLE I - EMULATOR")
+                .font(.system(size: 18, weight: .bold, design: .monospaced))
                 .foregroundColor(.white.opacity(0.6))
 
             // Control buttons
@@ -190,7 +190,7 @@ struct ControlPanel: View {
 
                 PanelButton(label: "BREAK", color: .orange) {
                     EmulatorSkipSplash()
-                    KeyboardHandler().sendText("~")
+                    // KeyboardHandler().sendText("~")
                 }
 
                 basicButtons
@@ -205,12 +205,12 @@ struct ControlPanel: View {
     private var basicButtons: some View {
         switch self.basicState {
         case .cold:
-            PanelButton(label: "LOAD BASIC", color: .cyan) {
+            PanelButton(label: "LOAD BASIC", color: .blue) {
                 EmulatorLoadBasic()
                 self.basicState = .loaded
             }
         case .loaded:
-            PanelButton(label: "START BASIC", color: .green) {
+            PanelButton(label: "START BASIC", color: .blue) {
                 KeyboardHandler().sendText("e000r\n")
                 self.basicState = .started
             }
@@ -231,18 +231,18 @@ struct ControlPanel: View {
             }
         case .loaded:
             HStack(spacing: 8) {
-                PanelButton(label: "START ASSEMBLER", color: .green) {
+                PanelButton(label: "START ASSEMBLER", color: .cyan) {
                     KeyboardHandler().sendText("f000r\n")
                     self.assemblerState = .started
                 }
 
-                PanelButton(label: "RUN EXAMPLE", color: .blue) {
+                PanelButton(label: "RUN EXAMPLE", color: .cyan) {
                     KeyboardHandler().sendText("e2b3r\n")
                     KeyboardHandler().sendText("run\n", wait: 1.0)
                 }
             }
         case .started:
-            PanelButton(label: "TYPE LISTING", color: .blue) {
+            PanelButton(label: "TYPE LISTING", color: .cyan) {
                 KeyboardHandler().sendText("n\n")
                 KeyboardHandler().sendText(assemblerListing, wait: 1.0)
                 KeyboardHandler().sendText("r $300\n", wait: 10.0)
