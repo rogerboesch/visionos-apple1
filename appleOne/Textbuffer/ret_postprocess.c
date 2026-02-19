@@ -1,6 +1,6 @@
 
 #include "ret_postprocess.h"
-#include "ret_renderer.h"
+#include "rb_display.h"
 
 #include <string.h>
 #include <math.h>
