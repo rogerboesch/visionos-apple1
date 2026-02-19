@@ -86,6 +86,18 @@ Building an immersive visionOS experience featuring the Apple I emulator with mu
 - Round button style for side panel (56pt circle, 9pt font)
 - Title changed to "TERMINAL", subtitle "Apple I Emulator" between display and controls
 
+### Matrix Rain Effect for Portraits (2026-02-19)
+- Three-phase animation triggered when JOBS or WOZ portrait is shown: hold (1s), rain down (1.5s), rebuild (1.5s)
+- **New files**: `portrait_matrix.c` (implementation), `portrait_matrix.h` (API)
+- Per-column animation with randomized speed (1-3 rows/frame) and start delay (0-15 frames) for organic look
+- Rain phase: art chars shift down per-column, green matrix trail chars at leading edge with fading brightness
+- Rebuild phase: art chars fall from above screen back to final position, snap when landed
+- Uses existing persistent `portrait_display_a` slot via `portrait_hires_get_display_a()` getter
+- State machine driven by `portrait_matrix_frame()` called from `emulator_frame()` at 60 FPS
+- Tapping portrait button during animation restarts cleanly (re-initializes all state)
+- Same phosphor-green tinting as normal portrait rendering
+- Builds successfully for visionOS simulator
+
 ### Previous Work
 - Hi-res portrait renderer with phosphor-green display
 - ASCII art portraits of Steve Jobs and Steve Wozniak
