@@ -37,8 +37,8 @@ struct GameSpace: View {
                 anchor = AnchorEntity(.plane(.vertical, classification: .wall, minimumBounds: [1.0, 0.5]))
             }
             else {
-                // In simulator: place at a fixed position in front of the user
-                anchor = AnchorEntity(world: [0, 1.5, -2.0])
+                // In simulator (museum room): position over the painting on the front wall
+                anchor = AnchorEntity(world: [0, 1.6, -3.7])
             }
 
             // Create a flat box as the display surface
