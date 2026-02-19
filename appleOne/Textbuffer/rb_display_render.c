@@ -2,8 +2,8 @@
 #include "rb_display.h"
 #include "ret_postprocess.h"
 
+#include <stdlib.h>
 #include <string.h>
-#include <math.h>
 
 /* Access to current display from rb_display.c */
 extern rb_display *rb_get_current(void);
