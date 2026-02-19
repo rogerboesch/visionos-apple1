@@ -1,6 +1,6 @@
 
 #include "rb_display.h"
-#include "ret_postprocess.h"
+#include "rb_postprocess.h"
 
 #include <stdlib.h>
 #include <string.h>

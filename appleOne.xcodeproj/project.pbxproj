@@ -32,7 +32,7 @@
 		BB000001265B000100000003 /* rb_display_render.c in Sources */ = {isa = PBXBuildFile; fileRef = BB000001265B000100000004 /* rb_display_render.c */; };
 		BB000001265B000100000005 /* rb_display_text.c in Sources */ = {isa = PBXBuildFile; fileRef = BB000001265B000100000006 /* rb_display_text.c */; };
 		DB728F0A2B8CD34E006E60FD /* Renderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB728F092B8CD34E006E60FD /* Renderer.swift */; };
-		AA000001265A000100000001 /* ret_postprocess.c in Sources */ = {isa = PBXBuildFile; fileRef = AA000001265A000100000002 /* ret_postprocess.c */; };
+		AA000001265A000100000001 /* rb_postprocess.c in Sources */ = {isa = PBXBuildFile; fileRef = AA000001265A000100000002 /* rb_postprocess.c */; };
 		AA000001265A000100000003 /* splash.c in Sources */ = {isa = PBXBuildFile; fileRef = AA000001265A000100000004 /* splash.c */; };
 		AA000002265A000200000001 /* DisplayManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002265A000200000002 /* DisplayManager.swift */; };
 		AA000003265A000300000001 /* PlacementPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000003265A000300000002 /* PlacementPanel.swift */; };
@@ -77,8 +77,8 @@
 		BB000001265B000100000004 /* rb_display_render.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = rb_display_render.c; sourceTree = "<group>"; };
 		BB000001265B000100000006 /* rb_display_text.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = rb_display_text.c; sourceTree = "<group>"; };
 		DB728F092B8CD34E006E60FD /* Renderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Renderer.swift; sourceTree = "<group>"; };
-		AA000001265A000100000002 /* ret_postprocess.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ret_postprocess.c; sourceTree = "<group>"; };
-		AA000001265A000100000005 /* ret_postprocess.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ret_postprocess.h; sourceTree = "<group>"; };
+		AA000001265A000100000002 /* rb_postprocess.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = rb_postprocess.c; sourceTree = "<group>"; };
+		AA000001265A000100000005 /* rb_postprocess.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = rb_postprocess.h; sourceTree = "<group>"; };
 		AA000001265A000100000004 /* splash.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = splash.c; sourceTree = "<group>"; };
 		AA000001265A000100000006 /* splash.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = splash.h; sourceTree = "<group>"; };
 		AA000002265A000200000002 /* DisplayManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayManager.swift; sourceTree = "<group>"; };
@@ -108,8 +108,8 @@
 				BB000001265B000100000002 /* rb_display.c */,
 				BB000001265B000100000004 /* rb_display_render.c */,
 				BB000001265B000100000006 /* rb_display_text.c */,
-				AA000001265A000100000005 /* ret_postprocess.h */,
-				AA000001265A000100000002 /* ret_postprocess.c */,
+				AA000001265A000100000005 /* rb_postprocess.h */,
+				AA000001265A000100000002 /* rb_postprocess.c */,
 			);
 			path = Textbuffer;
 			sourceTree = "<group>";
@@ -306,7 +306,7 @@
 				DB728EF42B8C9A2B006E60FD /* terminal.c in Sources */,
 				DB728ED92B8C9167006E60FD /* GameSpace.swift in Sources */,
 				DB20433A2B8D396A008A464B /* screen.c in Sources */,
-				AA000001265A000100000001 /* ret_postprocess.c in Sources */,
+				AA000001265A000100000001 /* rb_postprocess.c in Sources */,
 				AA000001265A000100000003 /* splash.c in Sources */,
 				AA000002265A000200000001 /* DisplayManager.swift in Sources */,
 				AA000003265A000300000001 /* PlacementPanel.swift in Sources */,
