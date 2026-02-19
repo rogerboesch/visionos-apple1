@@ -106,11 +106,6 @@ struct MainWindow: View {
             }
         }
         .padding()
-        .rotation3DEffect(
-            .degrees(30),
-            axis: (x: 1, y: 0, z: 0),
-            anchor: .bottom
-        )
         .onAppear {
             EmulatorInit()
 
