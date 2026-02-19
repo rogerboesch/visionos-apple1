@@ -7,9 +7,7 @@
 
 // Splash timing (in frames at 60 fps)
 #define SPLASH_FADE_IN_FRAMES   90   // 1.5 seconds
-#define SPLASH_HOLD_FRAMES      120  // 2.0 seconds
 #define SPLASH_FADE_OUT_FRAMES  45   // 0.75 seconds
-#define SPLASH_TOTAL_FRAMES     (SPLASH_FADE_IN_FRAMES + SPLASH_HOLD_FRAMES + SPLASH_FADE_OUT_FRAMES)
 
 // Screen grid: 42 columns x 26 rows (8x8 font, 336x208 pixels)
 #define SPLASH_COLS  42
@@ -17,6 +15,8 @@
 
 static int splash_frame_count = 0;
 static int splash_active = 0;
+static int splash_fading_out = 0;
+static int splash_fadeout_frame = 0;
 
 // Apple logo in ASCII art (16 rows x 14 columns)
 #define LOGO_ROWS 16
@@ -74,6 +74,16 @@ static void splash_draw_logo(int start_row) {
 void splash_init(void) {
     splash_frame_count = 0;
     splash_active = 1;
+    splash_fading_out = 0;
+    splash_fadeout_frame = 0;
+}
+
+void splash_skip(void) {
+    if (!splash_active) return;
+    if (splash_fading_out) return;
+
+    splash_fading_out = 1;
+    splash_fadeout_frame = 0;
 }
 
 int splash_frame(void) {
@@ -81,24 +91,28 @@ int splash_frame(void) {
 
     splash_frame_count++;
 
-    if (splash_frame_count > SPLASH_TOTAL_FRAMES) {
-        splash_active = 0;
-        ret_rend_clear_screen();
-        RETRenderFrame();
-        return 0;
-    }
-
-    // Calculate brightness based on fade phase
+    // Calculate brightness based on phase
     float alpha;
-    if (splash_frame_count <= SPLASH_FADE_IN_FRAMES) {
+
+    if (splash_fading_out) {
+        // Fade out triggered by skip
+        splash_fadeout_frame++;
+        alpha = 1.0f - (float)splash_fadeout_frame / (float)SPLASH_FADE_OUT_FRAMES;
+
+        if (splash_fadeout_frame >= SPLASH_FADE_OUT_FRAMES) {
+            splash_active = 0;
+            ret_rend_clear_screen();
+            RETRenderFrame();
+            return 0;
+        }
+    }
+    else if (splash_frame_count <= SPLASH_FADE_IN_FRAMES) {
+        // Fade in
         alpha = (float)splash_frame_count / (float)SPLASH_FADE_IN_FRAMES;
     }
-    else if (splash_frame_count <= SPLASH_FADE_IN_FRAMES + SPLASH_HOLD_FRAMES) {
-        alpha = 1.0f;
-    }
     else {
-        int fade_frame = splash_frame_count - SPLASH_FADE_IN_FRAMES - SPLASH_HOLD_FRAMES;
-        alpha = 1.0f - (float)fade_frame / (float)SPLASH_FADE_OUT_FRAMES;
+        // Hold at full brightness indefinitely
+        alpha = 1.0f;
     }
 
     // Map alpha to brightness index (0-15)
@@ -118,7 +132,7 @@ int splash_frame(void) {
     // Row 18:     "50 YEARS OF APPLE"
     // Row 20:     "APPLE COMPUTER INC"
     // Row 22:     "1976 - 2026"
-    // Row 24:     "CUPERTINO, CALIFORNIA"
+    // Row 24:     "CUPERTINO CALIFORNIA"
 
     splash_draw_logo(1);
     splash_draw_centered("50 YEARS OF APPLE", 18);

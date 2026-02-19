@@ -12,3 +12,5 @@ void EmulatorLoadCore(void);
 
 void EmulatorShowJobs(void);
 void EmulatorShowWozniak(void);
+
+void EmulatorSkipSplash(void);

@@ -135,3 +135,7 @@ void EmulatorShowWozniak(void) {
     emulator_task(8);
 }
 
+void EmulatorSkipSplash(void) {
+    emulator_task(9);
+}
+

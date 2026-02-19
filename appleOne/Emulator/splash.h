@@ -8,4 +8,7 @@ void splash_init(void);
 // Returns 1 while splash is active, 0 when done.
 int splash_frame(void);
 
+// Skip the splash (triggers fade-out)
+void splash_skip(void);
+
 #endif

@@ -116,6 +116,7 @@ struct ControlPanel: View {
                 }
 
                 PanelButton(label: "BREAK", color: .orange) {
+                    EmulatorSkipSplash()
                     KeyboardHandler().sendText("~")
                 }
 
@@ -126,11 +127,11 @@ struct ControlPanel: View {
 
             // Portrait buttons
             HStack(spacing: 8) {
-                PanelButton(label: "STEVE JOBS", color: .green) {
+                PanelButton(label: "STEVE JOBS", color: .purple) {
                     EmulatorShowJobs()
                 }
 
-                PanelButton(label: "STEVE WOZNIAK", color: .green) {
+                PanelButton(label: "STEVE WOZNIAK", color: .purple) {
                     EmulatorShowWozniak()
                 }
             }

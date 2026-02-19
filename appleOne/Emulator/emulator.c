@@ -81,6 +81,9 @@ void emulator_task(int task) {
         case 8:
             portrait_hires_show_wozniak();
             break;
+        case 9:
+            splash_skip();
+            break;
         default:
             break;
     }
