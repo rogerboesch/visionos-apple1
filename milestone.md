@@ -9,14 +9,18 @@ Building an immersive visionOS experience featuring the Apple I emulator with mu
 - Combined `ret_renderer.c`/`.h` and `ret_textbuffer.c`/`.h` into a single `rb_display` system
 - New `rb_display` struct contains: pixel buffer, text buffer, cursor, color state, graphics cursor, rendering flags — all per-display
 - **New files**: `rb_display.h` (struct + API), `rb_display.c` (lifecycle), `rb_display_render.c` (pixel rendering), `rb_display_text.c` (text operations)
-- **Deleted files**: `ret_renderer.h`, `ret_renderer.c`, `ret_textbuffer.h`, `ret_textbuffer.c`
+- **Deleted files**: `ret_renderer.h`, `ret_renderer.c`, `ret_textbuffer.h`, `ret_textbuffer.c`, `ret_platform_types.h`, `ret_palette.h`, `ret_palette.c`, `ret_font.h`, `ret_font_apple2.c`, `ret_font_amstrad.c`, `ret_font_pet.c`, `portraits.c`, `portraits.h`
 - Up to 16 displays (`RB_DISPLAY_MAX`), each with malloc'd buffers, identified by index
-- Display 0 is the main terminal (42x26, 336x208), created by `rb_display_init()`
-- Portrait rendering now uses temporary displays via `rb_display_create()`/`rb_display_destroy()` instead of the old `set_custom_target`/`restore_target` hack
-- All callers updated: `terminal.c`, `splash.c`, `portraits.c`, `portrait_hires.c`, `ObjCBridge.m`, `ret_postprocess.c`
-- Legacy defines `RET_PIXEL_WIDTH`/`RET_PIXEL_HEIGHT` aliased in `rb_display.h` for postprocess compatibility
-- Removed unused multi-platform resolution defines (`RET_PIXEL_WIDTH_C64`, `_ATARIXL`, etc.)
-- Removed `RETSetMainScreen`/`RETSetGameScreen`/mirror logic — replaced by `rb_display_set_current()`
+- Display 0 is the main terminal (42x26, 336x208), created by `rb_display_init(42, 26)`
+- Portrait rendering uses temporary displays via `rb_display_create()`/`rb_display_destroy()`
+- All callers updated: `terminal.c`, `splash.c`, `portrait_hires.c`, `ObjCBridge.m`, `rb_postprocess.c`
+- All `ret_*` naming eliminated — types, functions, constants, filenames all use `rb_` prefix
+- `rb_display_init(cols, rows)` takes explicit dimensions (no more default constants)
+- **All public functions take explicit `int display` parameter** — no active/current display concept
+- Removed `rb_display_set_current()`/`rb_display_get_current()`/`rb_get_current()` and `rb_current_display` tracking
+- `terminal.c` uses `TERMINAL_DISPLAY` (0), `splash.c` uses `SPLASH_DISPLAY` (0), `portrait_hires.c` passes temporary display index directly
+- Palette, font, and platform types consolidated into `rb_display.h` / `rb_display_render.c`
+- Postprocess renamed to `rb_postprocess.h`/`.c` with dynamic buffer sizing
 - Builds successfully for visionOS simulator
 
 ### Font Consolidation + Text Layer for Splash/Portraits (2026-02-19)
