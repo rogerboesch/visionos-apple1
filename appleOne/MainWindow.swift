@@ -87,6 +87,23 @@ struct MainWindow: View {
 
                 assemblerButtons
             }
+
+            // Portrait buttons
+            HStack(spacing: 12) {
+                Button(action: {
+                    EmulatorShowJobs()
+                }) {
+                    Text("STEVE JOBS")
+                }
+                .buttonStyle(.bordered)
+
+                Button(action: {
+                    EmulatorShowWozniak()
+                }) {
+                    Text("STEVE WOZNIAK")
+                }
+                .buttonStyle(.bordered)
+            }
         }
         .padding()
         .onAppear {

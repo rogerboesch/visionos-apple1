@@ -9,3 +9,6 @@ void EmulatorKeyPress(int ch);
 void EmulatorHardReset(void);
 void EmulatorLoadBasic(void);
 void EmulatorLoadCore(void);
+
+void EmulatorShowJobs(void);
+void EmulatorShowWozniak(void);

@@ -121,3 +121,11 @@ void EmulatorLoadCore(void) {
     emulator_task(2);
 }
 
+void EmulatorShowJobs(void) {
+    emulator_task(7);
+}
+
+void EmulatorShowWozniak(void) {
+    emulator_task(8);
+}
+
