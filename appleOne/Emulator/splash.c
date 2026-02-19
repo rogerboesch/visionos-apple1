@@ -11,66 +11,64 @@
 #define SPLASH_FADE_OUT_FRAMES  45   // 0.75 seconds
 #define SPLASH_TOTAL_FRAMES     (SPLASH_FADE_IN_FRAMES + SPLASH_HOLD_FRAMES + SPLASH_FADE_OUT_FRAMES)
 
+// Screen grid: 42 columns x 26 rows (8x8 font, 336x208 pixels)
+#define SPLASH_COLS  42
+#define SPLASH_ROWS  26
+
 static int splash_frame_count = 0;
 static int splash_active = 0;
 
-// Scale factor for the "50" text
-#define SCALE 4
+// Apple logo in ASCII art (16 rows x 14 columns)
+#define LOGO_ROWS 16
+#define LOGO_COLS 14
 
-// Draw a single vector font character scaled up
-static void draw_scaled_char(char ch, int x, int y, int scale) {
-    extern const unsigned char ret_vecfont[128][8];
+static const char *apple_logo[LOGO_ROWS] = {
+    "      ##      ",
+    "     ##       ",
+    "  ########    ",
+    " ##########   ",
+    "############  ",
+    "############  ",
+    "############  ",
+    "############  ",
+    "############  ",
+    " ########### ",
+    " ##########   ",
+    " ##########   ",
+    "  ########    ",
+    "  ########    ",
+    "   ######     ",
+    "    ####      "
+};
 
-    if (ch < 0x20 || ch > 127) return;
-
-    const unsigned char *p = ret_vecfont[ch - 0x20];
-    int cx = 0, cy = 0;
-    int bright = 0;
-
-    for (int i = 0; i < 8; i++) {
-        unsigned char b = p[i];
-
-        if (b == 0xFF) break;      // FONT_LAST
-        if (b == 0xFE) {           // FONT_UP
-            bright = 0;
-            continue;
-        }
-
-        int x2 = (b >> 4) & 0x0F;
-        int y2 = b & 0x0F;
-
-        if (bright) {
-            // Draw line from (cx,cy) to (x2,y2) scaled
-            int sx1 = x + cx * scale;
-            int sy1 = y - cy * scale;
-            int sx2 = x + x2 * scale;
-            int sy2 = y - y2 * scale;
-            ret_rend_draw_line(sx1, sy1, sx2, sy2,
-                RETGetFgColor(), RETGetFgBrightness());
-        }
-
-        bright = 1;
-        cx = x2;
-        cy = y2;
-    }
-}
-
-// Draw a string of scaled vector characters
-static void draw_scaled_string(const char *str, int x, int y, int scale) {
-    int char_width = (8 + 2) * scale;  // 8 units + 2 spacing
-
-    while (*str) {
-        draw_scaled_char(*str, x, y, scale);
-        x += char_width;
-        str++;
-    }
-}
-
-// Get pixel width of a scaled string
-static int scaled_string_width(const char *str, int scale) {
+// Draw a string centered on a given text row
+static void splash_draw_centered(const char *str, int row) {
     int len = (int)strlen(str);
-    if (len == 0) return 0;
-    return len * (8 + 2) * scale - 2 * scale;  // No trailing space
+    int col = (SPLASH_COLS - len) / 2;
+
+    for (int i = 0; i < len; i++) {
+        int px = (col + i) * RET_FONT_WIDTH;
+        int py = row * RET_FONT_HEIGHT;
+        ret_rend_draw_char(px, py, str[i], 0, RETGetFgColor());
+    }
+}
+
+// Draw the apple logo centered, starting at a given text row
+static void splash_draw_logo(int start_row) {
+    int col_offset = (SPLASH_COLS - LOGO_COLS) / 2;
+
+    for (int row = 0; row < LOGO_ROWS; row++) {
+        const char *line = apple_logo[row];
+
+        for (int col = 0; col < LOGO_COLS; col++) {
+            if (line[col] == '#') {
+                int px = (col_offset + col) * RET_FONT_WIDTH;
+                int py = (start_row + row) * RET_FONT_HEIGHT;
+                // Draw a solid block character (inverted space)
+                ret_rend_draw_char(px, py, ' ', 1, RETGetFgColor());
+            }
+        }
+    }
 }
 
 void splash_init(void) {
@@ -115,29 +113,18 @@ int splash_frame(void) {
     byte old_fg = RETSetFgColor(RET_COLOR_GREEN);
     byte old_bright = RETSetFgBrightness((unsigned char)brightness);
 
-    int screen_w = RET_PIXEL_WIDTH;
-    int screen_h = RET_PIXEL_HEIGHT;
+    // Layout (26 rows total):
+    // Row 1:      Apple logo starts (16 rows tall)
+    // Row 18:     "50 YEARS OF APPLE"
+    // Row 20:     "APPLE COMPUTER INC"
+    // Row 22:     "1976 - 2026"
+    // Row 24:     "CUPERTINO, CALIFORNIA"
 
-    // Draw "50" big and centered
-    const char *text_50 = "50";
-    int w50 = scaled_string_width(text_50, SCALE);
-    int x50 = (screen_w - w50) / 2;
-    int y50 = screen_h / 2 + 12 * SCALE;  // Vector font draws downward from baseline
-    draw_scaled_string(text_50, x50, y50, SCALE);
-
-    // Draw "YEARS OF APPLE" smaller below
-    const char *text_years = "YEARS OF APPLE";
-    int w_years = scaled_string_width(text_years, 1);
-    int x_years = (screen_w - w_years) / 2;
-    int y_years = y50 + 20;
-    RETDrawVString((char *)text_years, x_years, y_years - 12);
-
-    // Draw "1976 - 2026" at the bottom
-    const char *text_dates = "1976 - 2026";
-    int w_dates = scaled_string_width(text_dates, 1);
-    int x_dates = (screen_w - w_dates) / 2;
-    int y_dates = screen_h - 20;
-    RETDrawVString((char *)text_dates, x_dates, y_dates - 12);
+    splash_draw_logo(1);
+    splash_draw_centered("50 YEARS OF APPLE", 18);
+    splash_draw_centered("APPLE COMPUTER INC", 20);
+    splash_draw_centered("1976 - 2026", 22);
+    splash_draw_centered("CUPERTINO CALIFORNIA", 24);
 
     // Restore colors
     RETSetFgColor(old_fg);
