@@ -11,6 +11,63 @@ extern rb_display *rb_get_current(void);
 extern void ret_render_frame(byte *data, int index);
 
 /* -------------------------------------------------------------------------- */
+/*  Palette data                                                              */
+/* -------------------------------------------------------------------------- */
+
+static ret_color rb_palette[] = {
+	{0x00, 0x00, 0x00}, /* Black      0 */
+	{0xff, 0xff, 0xff}, /* White      1 */
+	{0x88, 0x00, 0x00}, /* Red        2 */
+	{0xaa, 0xff, 0xee}, /* Turkey     3 */
+	{0xcc, 0x44, 0xcc}, /* Violett    4 */
+	{0x00, 0xcc, 0x55}, /* Green      5 */
+	{0x00, 0x00, 0xaa}, /* Blue       6 */
+	{0xee, 0xee, 0x77}, /* Yellow     7 */
+	{0xdd, 0x88, 0x55}, /* Orange     8 */
+	{0x66, 0x44, 0x00}, /* Brown      9 */
+	{0xff, 0x77, 0x77}, /* Red light  10 */
+	{0x33, 0x33, 0x33}, /* Gray 1     11 */
+	{0x77, 0x77, 0x77}, /* Gray 2     12 */
+	{0x00, 0xff, 0x00}, /* Green lt   13 */
+	{0x00, 0x88, 0xff}, /* Blue light 14 */
+	{0xbb, 0xbb, 0xbb}  /* Gray 3     15 */
+};
+
+static float rb_brightness_table[] = {
+	0.01f, 0.1f, 0.25f, 0.4f,
+	0.55f, 0.7f, 0.85f, 1.0f,
+	1.15f, 1.3f, 1.45f, 1.6f,
+	1.75f, 1.9f, 2.0f, 2.1f
+};
+
+ret_color RETPaletteGetColor(byte index) {
+	if (index >= RET_PALETTE_SIZE) {
+		return RETPaletteGetColor(2);
+	}
+	return rb_palette[index];
+}
+
+ret_color RETPaletteGetColorWithBrightness(byte index, byte bindex) {
+	if (index >= RET_PALETTE_SIZE) {
+		return RETPaletteGetColor(2);
+	}
+
+	float brightness = rb_brightness_table[bindex];
+	ret_color color = rb_palette[index];
+
+	if (color.r * brightness > 255) color.r = 255;
+	else color.r = (byte)(color.r * brightness);
+
+	if (color.g * brightness > 255) color.g = 255;
+	else color.g = (byte)(color.g * brightness);
+
+	if (color.b * brightness > 255) color.b = 255;
+	else color.b = (byte)(color.b * brightness);
+
+	return color;
+}
+
+/* -------------------------------------------------------------------------- */
 /*  Apple II bitmap font (8x8, 128 glyphs)                                   */
 /* -------------------------------------------------------------------------- */
 

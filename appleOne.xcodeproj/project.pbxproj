@@ -31,7 +31,6 @@
 		BB000001265B000100000001 /* rb_display.c in Sources */ = {isa = PBXBuildFile; fileRef = BB000001265B000100000002 /* rb_display.c */; };
 		BB000001265B000100000003 /* rb_display_render.c in Sources */ = {isa = PBXBuildFile; fileRef = BB000001265B000100000004 /* rb_display_render.c */; };
 		BB000001265B000100000005 /* rb_display_text.c in Sources */ = {isa = PBXBuildFile; fileRef = BB000001265B000100000006 /* rb_display_text.c */; };
-		DB728F072B8CAB10006E60FD /* ret_palette.c in Sources */ = {isa = PBXBuildFile; fileRef = DB728F032B8CAB10006E60FD /* ret_palette.c */; };
 		DB728F0A2B8CD34E006E60FD /* Renderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB728F092B8CD34E006E60FD /* Renderer.swift */; };
 		AA000001265A000100000001 /* ret_postprocess.c in Sources */ = {isa = PBXBuildFile; fileRef = AA000001265A000100000002 /* ret_postprocess.c */; };
 		AA000001265A000100000003 /* splash.c in Sources */ = {isa = PBXBuildFile; fileRef = AA000001265A000100000004 /* splash.c */; };
@@ -77,8 +76,6 @@
 		BB000001265B000100000002 /* rb_display.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = rb_display.c; sourceTree = "<group>"; };
 		BB000001265B000100000004 /* rb_display_render.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = rb_display_render.c; sourceTree = "<group>"; };
 		BB000001265B000100000006 /* rb_display_text.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = rb_display_text.c; sourceTree = "<group>"; };
-		DB728F032B8CAB10006E60FD /* ret_palette.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ret_palette.c; sourceTree = "<group>"; };
-		DB728F052B8CAB10006E60FD /* ret_palette.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ret_palette.h; sourceTree = "<group>"; };
 		DB728F092B8CD34E006E60FD /* Renderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Renderer.swift; sourceTree = "<group>"; };
 		AA000001265A000100000002 /* ret_postprocess.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ret_postprocess.c; sourceTree = "<group>"; };
 		AA000001265A000100000005 /* ret_postprocess.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ret_postprocess.h; sourceTree = "<group>"; };
@@ -107,8 +104,6 @@
 		DB2043142B8D2313008A464B /* Textbuffer */ = {
 			isa = PBXGroup;
 			children = (
-				DB728F052B8CAB10006E60FD /* ret_palette.h */,
-				DB728F032B8CAB10006E60FD /* ret_palette.c */,
 				BB000001265B000100000007 /* rb_display.h */,
 				BB000001265B000100000002 /* rb_display.c */,
 				BB000001265B000100000004 /* rb_display_render.c */,
@@ -304,7 +299,6 @@
 				DB728EE82B8C960A006E60FD /* RBUtility.swift in Sources */,
 				DB2043372B8D396A008A464B /* memory.c in Sources */,
 				DB2043362B8D396A008A464B /* statusbar.c in Sources */,
-				DB728F072B8CAB10006E60FD /* ret_palette.c in Sources */,
 				DB728EED2B8C988C006E60FD /* ObjCBridge.m in Sources */,
 				DB20433B2B8D396A008A464B /* keyboard.c in Sources */,
 				DB2043442B8DCB75008A464B /* KeyboardHandler.swift in Sources */,

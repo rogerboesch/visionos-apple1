@@ -76,8 +76,6 @@ static void rb_display_init_defaults(rb_display *d) {
 void rb_display_init(void) {
     memset(rb_displays, 0, sizeof(rb_displays));
 
-    ret_palette_create_atari();
-
     /* Create display 0 — the main terminal */
     rb_displays[0].index = 0;
     rb_displays[0].active = 1;
