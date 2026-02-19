@@ -1,6 +1,7 @@
 
 #include "ret_renderer.h"
 #include "ret_textbuffer.h"
+#include "ret_postprocess.h"
 #include "ret_platform_types.h"
 
 #include <ctype.h>
@@ -478,11 +479,14 @@ void RETMoveBy(int x, int y) {
 }
 
 void RETRenderFrame(void) {
+    byte *output = ret_postprocess_get_buffer();
+    ret_postprocess_apply(ret_screen_current->pointer, output);
+
     if (ret_screen_mirror == 1) {
-        ret_render_frame(ret_screen_current->pointer, 0);
+        ret_render_frame(output, 0);
     }
     else {
-        ret_render_frame(ret_screen_current->pointer, ret_screen_index);
+        ret_render_frame(output, ret_screen_index);
     }
 }
 

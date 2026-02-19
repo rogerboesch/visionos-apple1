@@ -35,6 +35,8 @@
 		DB728F0A2B8CD34E006E60FD /* Renderer.swift in Sources */ = {isa = PBXBuildFile; fileRef = DB728F092B8CD34E006E60FD /* Renderer.swift */; };
 		DBF75C2F2B93C8CB00609966 /* ret_font_apple2.c in Sources */ = {isa = PBXBuildFile; fileRef = DBF75C2E2B93C8CB00609966 /* ret_font_apple2.c */; };
 		DBF75C312B93CCF200609966 /* ret_font_pet.c in Sources */ = {isa = PBXBuildFile; fileRef = DBF75C302B93CCF200609966 /* ret_font_pet.c */; };
+		AA000001265A000100000001 /* ret_postprocess.c in Sources */ = {isa = PBXBuildFile; fileRef = AA000001265A000100000002 /* ret_postprocess.c */; };
+		AA000001265A000100000003 /* splash.c in Sources */ = {isa = PBXBuildFile; fileRef = AA000001265A000100000004 /* splash.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -82,6 +84,10 @@
 		DB728F092B8CD34E006E60FD /* Renderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Renderer.swift; sourceTree = "<group>"; };
 		DBF75C2E2B93C8CB00609966 /* ret_font_apple2.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ret_font_apple2.c; sourceTree = "<group>"; };
 		DBF75C302B93CCF200609966 /* ret_font_pet.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ret_font_pet.c; sourceTree = "<group>"; };
+		AA000001265A000100000002 /* ret_postprocess.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = ret_postprocess.c; sourceTree = "<group>"; };
+		AA000001265A000100000005 /* ret_postprocess.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ret_postprocess.h; sourceTree = "<group>"; };
+		AA000001265A000100000004 /* splash.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = splash.c; sourceTree = "<group>"; };
+		AA000001265A000100000006 /* splash.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = splash.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -110,6 +116,8 @@
 				DB728EFF2B8CAA9C006E60FD /* ret_renderer.c */,
 				DB728EFC2B8CAA32006E60FD /* ret_textbuffer.h */,
 				DB728EFD2B8CAA32006E60FD /* ret_textbuffer.c */,
+				AA000001265A000100000005 /* ret_postprocess.h */,
+				AA000001265A000100000002 /* ret_postprocess.c */,
 			);
 			path = Textbuffer;
 			sourceTree = "<group>";
@@ -131,6 +139,8 @@
 				DB2043342B8D396A008A464B /* keyboard.h */,
 				DB2043282B8D3969008A464B /* emulator.c */,
 				DB2043452B8DDB32008A464B /* emulator.h */,
+				AA000001265A000100000006 /* splash.h */,
+				AA000001265A000100000004 /* splash.c */,
 			);
 			path = Emulator;
 			sourceTree = "<group>";
@@ -301,6 +311,8 @@
 				DB728ED92B8C9167006E60FD /* GameSpace.swift in Sources */,
 				DB20433A2B8D396A008A464B /* screen.c in Sources */,
 				DBF75C2F2B93C8CB00609966 /* ret_font_apple2.c in Sources */,
+				AA000001265A000100000001 /* ret_postprocess.c in Sources */,
+				AA000001265A000100000003 /* splash.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
