@@ -178,6 +178,4 @@ void rb_display_print_line(char *str);
 void rb_display_print_newline(void);
 void rb_display_print_palette(void);
 void rb_display_show_charset(void);
-void rb_display_process_ascii_key(int ch);
-
 #endif
