@@ -8,6 +8,7 @@
 #include "statusbar.h"
 #include "splash.h"
 #include "portrait_hires.h"
+#include "portrait_matrix.h"
 
 static int emulator_splash_done = 0;
 static int emulator_cpu_started = 0;
@@ -120,6 +121,12 @@ int emulator_init(void) {
 }
 
 int emulator_frame(void) {
+    /* Matrix rain animation takes priority when active */
+    if (portrait_matrix_is_active()) {
+        portrait_matrix_frame();
+        return 0;
+    }
+
     // Run splash animation first
     if (!emulator_splash_done) {
         if (!splash_frame()) {

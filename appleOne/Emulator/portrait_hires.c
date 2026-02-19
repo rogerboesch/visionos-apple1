@@ -1,4 +1,5 @@
 #include "portrait_hires.h"
+#include "portrait_matrix.h"
 #include "portrait_data_jobs.h"
 #include "portrait_data_wozniak.h"
 #include "rb_display.h"
@@ -42,6 +43,10 @@ static void tint_buffer_phosphor(byte *buffer, int buf_w, int buf_h) {
     }
 }
 
+int portrait_hires_get_display_a(void) {
+    return portrait_display_a;
+}
+
 static int ensure_portrait_display(int *slot) {
     if (*slot < 0) {
         *slot = rb_display_create(PORTRAIT_COLS, PORTRAIT_ROWS);
@@ -82,6 +87,9 @@ void portrait_hires_show_jobs(void) {
     rb_render_portrait(rb_display_get_pixel_data(d),
                        rb_display_get_pixel_width(d),
                        rb_display_get_pixel_height(d));
+    portrait_matrix_start(portrait_hires_jobs_art,
+                          PORTRAIT_HIRES_JOBS_ROWS,
+                          PORTRAIT_HIRES_JOBS_COLS);
 }
 
 void portrait_hires_show_wozniak(void) {
@@ -92,6 +100,9 @@ void portrait_hires_show_wozniak(void) {
     rb_render_portrait(rb_display_get_pixel_data(d),
                        rb_display_get_pixel_width(d),
                        rb_display_get_pixel_height(d));
+    portrait_matrix_start(portrait_hires_woz_art,
+                          PORTRAIT_HIRES_WOZ_ROWS,
+                          PORTRAIT_HIRES_WOZ_COLS);
 }
 
 void portrait_hires_show_both(void) {

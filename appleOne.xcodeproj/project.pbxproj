@@ -37,6 +37,7 @@
 		AA000002265A000200000001 /* DisplayManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002265A000200000002 /* DisplayManager.swift */; };
 		AA000003265A000300000001 /* PlacementPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000003265A000300000002 /* PlacementPanel.swift */; };
 		AA000005265A000500000001 /* portrait_hires.c in Sources */ = {isa = PBXBuildFile; fileRef = AA000005265A000500000002 /* portrait_hires.c */; };
+		AA000006265A000600000001 /* portrait_matrix.c in Sources */ = {isa = PBXBuildFile; fileRef = AA000006265A000600000002 /* portrait_matrix.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -87,6 +88,8 @@
 		AA000005265A000500000003 /* portrait_hires.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = portrait_hires.h; sourceTree = "<group>"; };
 		AA000005265A000500000004 /* portrait_data_jobs.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = portrait_data_jobs.h; sourceTree = "<group>"; };
 		AA000005265A000500000005 /* portrait_data_wozniak.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = portrait_data_wozniak.h; sourceTree = "<group>"; };
+		AA000006265A000600000002 /* portrait_matrix.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = portrait_matrix.c; sourceTree = "<group>"; };
+		AA000006265A000600000003 /* portrait_matrix.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = portrait_matrix.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -137,6 +140,8 @@
 				AA000005265A000500000002 /* portrait_hires.c */,
 				AA000005265A000500000004 /* portrait_data_jobs.h */,
 				AA000005265A000500000005 /* portrait_data_wozniak.h */,
+				AA000006265A000600000003 /* portrait_matrix.h */,
+				AA000006265A000600000002 /* portrait_matrix.c */,
 			);
 			path = Emulator;
 			sourceTree = "<group>";
@@ -311,6 +316,7 @@
 				AA000002265A000200000001 /* DisplayManager.swift in Sources */,
 				AA000003265A000300000001 /* PlacementPanel.swift in Sources */,
 				AA000005265A000500000001 /* portrait_hires.c in Sources */,
+				AA000006265A000600000001 /* portrait_matrix.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
