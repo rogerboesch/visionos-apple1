@@ -37,7 +37,6 @@
 		AA000001265A000100000003 /* splash.c in Sources */ = {isa = PBXBuildFile; fileRef = AA000001265A000100000004 /* splash.c */; };
 		AA000002265A000200000001 /* DisplayManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002265A000200000002 /* DisplayManager.swift */; };
 		AA000003265A000300000001 /* PlacementPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000003265A000300000002 /* PlacementPanel.swift */; };
-		AA000004265A000400000001 /* portraits.c in Sources */ = {isa = PBXBuildFile; fileRef = AA000004265A000400000002 /* portraits.c */; };
 		AA000005265A000500000001 /* portrait_hires.c in Sources */ = {isa = PBXBuildFile; fileRef = AA000005265A000500000002 /* portrait_hires.c */; };
 /* End PBXBuildFile section */
 
@@ -88,8 +87,6 @@
 		AA000001265A000100000006 /* splash.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = splash.h; sourceTree = "<group>"; };
 		AA000002265A000200000002 /* DisplayManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayManager.swift; sourceTree = "<group>"; };
 		AA000003265A000300000002 /* PlacementPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlacementPanel.swift; sourceTree = "<group>"; };
-		AA000004265A000400000002 /* portraits.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = portraits.c; sourceTree = "<group>"; };
-		AA000004265A000400000003 /* portraits.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = portraits.h; sourceTree = "<group>"; };
 		AA000005265A000500000002 /* portrait_hires.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = portrait_hires.c; sourceTree = "<group>"; };
 		AA000005265A000500000003 /* portrait_hires.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = portrait_hires.h; sourceTree = "<group>"; };
 		AA000005265A000500000004 /* portrait_data_jobs.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = portrait_data_jobs.h; sourceTree = "<group>"; };
@@ -143,8 +140,6 @@
 				DB2043452B8DDB32008A464B /* emulator.h */,
 				AA000001265A000100000006 /* splash.h */,
 				AA000001265A000100000004 /* splash.c */,
-				AA000004265A000400000003 /* portraits.h */,
-				AA000004265A000400000002 /* portraits.c */,
 				AA000005265A000500000003 /* portrait_hires.h */,
 				AA000005265A000500000002 /* portrait_hires.c */,
 				AA000005265A000500000004 /* portrait_data_jobs.h */,
@@ -323,7 +318,6 @@
 				AA000001265A000100000003 /* splash.c in Sources */,
 				AA000002265A000200000001 /* DisplayManager.swift in Sources */,
 				AA000003265A000300000001 /* PlacementPanel.swift in Sources */,
-				AA000004265A000400000001 /* portraits.c in Sources */,
 				AA000005265A000500000001 /* portrait_hires.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
