@@ -5,12 +5,12 @@ import QuartzCore
 
 // Display size in meters (4:3 ratio matching main window)
 let DISPLAY_WIDTH: Float = 7.5
-let DISPLAY_HEIGHT: Float = 5.625
+let DISPLAY_HEIGHT: Float = 5.2
 
 let DISPLAY_DEPTH: Float = 0.005
 
 // Minimum distance from floor to bottom of display (in meters)
-let DISPLAY_MIN_FLOOR_GAP: Float = 0.5
+let DISPLAY_MIN_FLOOR_GAP: Float = 0.2
 
 // Offset from head: placed slightly in front of the user
 let DISPLAY_PLACE_DISTANCE: Float = 0.5
@@ -19,10 +19,11 @@ let DISPLAY_PLACE_DISTANCE: Float = 0.5
 let PANEL_DISTANCE: Float = 0.8
 let PANEL_VERTICAL_OFFSET: Float = -0.3
 let PANEL_SMOOTHING: Float = 0.1
+let PANEL_TILT_DEGREES: Float = 30.0
 
 // Circle layout
-let CIRCLE_DISPLAY_COUNT = 16
-let CIRCLE_RADIUS: Float = 19.0
+let CIRCLE_DISPLAY_COUNT = 8
+let CIRCLE_RADIUS: Float = 10.0
 
 // Maximum number of displays
 let DISPLAY_MAX_COUNT = 26
@@ -77,10 +78,21 @@ class DisplayManager {
         let current = panel.position
         panel.position = current + (target - current) * PANEL_SMOOTHING
 
-        // Face the user
-        let headTransform = Transform(matrix: headMatrix)
+        // Billboard: face user using yaw only (ignore head pitch/roll)
+        let headPos = simd_float3(headMatrix.columns.3.x,
+                                  headMatrix.columns.3.y,
+                                  headMatrix.columns.3.z)
+        let dir = headPos - panel.position
+        let yaw = atan2(dir.x, dir.z)
+        let tilt = PANEL_TILT_DEGREES * (.pi / 180.0)
+
+        // Yaw rotation (face user) then tilt forward like a table
+        let yawQuat = simd_quatf(angle: yaw, axis: simd_float3(0, 1, 0))
+        let tiltQuat = simd_quatf(angle: tilt, axis: simd_float3(1, 0, 0))
+        let targetRot = yawQuat * tiltQuat
+
         let currentRot = panel.orientation
-        panel.orientation = simd_slerp(currentRot, headTransform.rotation, PANEL_SMOOTHING)
+        panel.orientation = simd_slerp(currentRot, targetRot, PANEL_SMOOTHING)
     }
 
     func placeDisplay() {
