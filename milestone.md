@@ -19,6 +19,14 @@ Building an immersive visionOS experience featuring the Apple I emulator with mu
 - Removed `RETSetMainScreen`/`RETSetGameScreen`/mirror logic — replaced by `rb_display_set_current()`
 - Builds successfully for visionOS simulator
 
+### Font Consolidation + Text Layer for Splash/Portraits (2026-02-19)
+- Embedded Apple II font array (`rb_font_apple2[]`) directly into `rb_display_render.c` as static const
+- Deleted `ret_font.h`, `ret_font_apple2.c`, `ret_font_amstrad.c`, `ret_font_pet.c`
+- Font defines (`RET_FONT_WIDTH`, `RET_FONT_HEIGHT`, etc.) moved into `rb_display.h`
+- `splash.c` and `portrait_hires.c` now use `rb_display_text_print_char()` instead of `rb_display_render_draw_char()`
+- Text and pixel buffers stay in sync — rendering goes through the text layer with `immediate_print` mode
+- Splash logo uses `rb_display_set_invert(true/false)` for inverted space blocks
+
 ### Circle Display Layout (2026-02-19)
 - Added `placeDisplayCircle()` to `DisplayManager.swift` that places 8 displays in a 10m radius circle around the user at startup
 - Constants: `CIRCLE_DISPLAY_COUNT = 8`, `CIRCLE_RADIUS = 10.0m`
