@@ -143,6 +143,8 @@ struct ControlPanel: View {
                         EmulatorShowBothSteves()
                     }
 
+                    Spacer().frame(height: 8)
+
                     PanelButton(
                         label: "ROTATE",
                         color: displayManager.carouselRotating ? .green : .white
