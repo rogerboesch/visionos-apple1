@@ -5,5 +5,6 @@ void portrait_hires_show_jobs(void);
 void portrait_hires_show_wozniak(void);
 void portrait_hires_show_both(void);
 int  portrait_hires_get_display_a(void);
+int  portrait_hires_get_display_b(void);
 
 #endif

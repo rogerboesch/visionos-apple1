@@ -47,6 +47,10 @@ int portrait_hires_get_display_a(void) {
     return portrait_display_a;
 }
 
+int portrait_hires_get_display_b(void) {
+    return portrait_display_b;
+}
+
 static int ensure_portrait_display(int *slot) {
     if (*slot < 0) {
         *slot = rb_display_create(PORTRAIT_COLS, PORTRAIT_ROWS);
@@ -122,4 +126,10 @@ void portrait_hires_show_both(void) {
                             rb_display_get_pixel_data(db),
                             rb_display_get_pixel_width(db),
                             rb_display_get_pixel_height(db));
+    portrait_matrix_start_pair(portrait_hires_jobs_art,
+                               PORTRAIT_HIRES_JOBS_ROWS,
+                               PORTRAIT_HIRES_JOBS_COLS,
+                               portrait_hires_woz_art,
+                               PORTRAIT_HIRES_WOZ_ROWS,
+                               PORTRAIT_HIRES_WOZ_COLS);
 }

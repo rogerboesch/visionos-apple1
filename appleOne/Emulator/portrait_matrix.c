@@ -4,8 +4,10 @@
 
 #include <string.h>
 
-/* Bridge function declared in ObjCBridge.m */
+/* Bridge functions declared in ObjCBridge.m */
 void rb_render_portrait(unsigned char *data, int width, int height);
+void rb_render_portrait_pair(unsigned char *dataA, int widthA, int heightA,
+                              unsigned char *dataB, int widthB, int heightB);
 
 /* Phosphor green — must match portrait_hires.c */
 #define PHOSPHOR_R 51
@@ -46,30 +48,38 @@ typedef struct {
     int delay;    /* frames to wait before column starts moving */
 } matrix_column;
 
-static int matrix_active = 0;
-static int matrix_phase = PHASE_DONE;
-static int matrix_frame_count = 0;
-static matrix_column columns[MATRIX_MAX_COLS];
+/* Per-slot animation state */
+typedef struct {
+    int active;
+    int phase;
+    int frame_count;
+    matrix_column columns[MATRIX_MAX_COLS];
+    const char **art;
+    int art_rows;
+    int art_cols;
+    unsigned int seed;
+} matrix_slot;
 
-/* Cached art pointer and dimensions */
-static const char **matrix_art = NULL;
-static int matrix_art_rows = 0;
-static int matrix_art_cols = 0;
+/* Slot A = single or Jobs half, Slot B = Woz half in pair mode */
+#define SLOT_A 0
+#define SLOT_B 1
+#define SLOT_COUNT 2
 
-/* Simple pseudo-random number generator */
-static unsigned int matrix_seed = 12345;
+static matrix_slot slots[SLOT_COUNT];
+static int matrix_pair_mode = 0;  /* 1 when both portraits animate together */
 
-static int matrix_rand(void) {
-    matrix_seed = matrix_seed * 1103515245 + 12345;
-    return (matrix_seed >> 16) & 0x7FFF;
+/* Simple pseudo-random number generator (per-slot) */
+static int slot_rand(matrix_slot *s) {
+    s->seed = s->seed * 1103515245 + 12345;
+    return (s->seed >> 16) & 0x7FFF;
 }
 
-static int rand_range(int min, int max) {
-    return min + (matrix_rand() % (max - min + 1));
+static int slot_rand_range(matrix_slot *s, int min, int max) {
+    return min + (slot_rand(s) % (max - min + 1));
 }
 
-static char rand_matrix_char(void) {
-    return matrix_chars[matrix_rand() % MATRIX_CHAR_COUNT];
+static char slot_rand_matrix_char(matrix_slot *s) {
+    return matrix_chars[slot_rand(s) % MATRIX_CHAR_COUNT];
 }
 
 static void tint_buffer_phosphor(byte *buffer, int buf_w, int buf_h) {
@@ -89,42 +99,42 @@ static void tint_buffer_phosphor(byte *buffer, int buf_w, int buf_h) {
     }
 }
 
-static void init_columns_rain(void) {
-    for (int c = 0; c < matrix_art_cols; c++) {
-        columns[c].offset = 0;
-        columns[c].speed = rand_range(MATRIX_MIN_SPEED, MATRIX_MAX_SPEED);
-        columns[c].delay = rand_range(0, MATRIX_MAX_DELAY);
+static void init_columns_rain(matrix_slot *s) {
+    for (int c = 0; c < s->art_cols; c++) {
+        s->columns[c].offset = 0;
+        s->columns[c].speed = slot_rand_range(s, MATRIX_MIN_SPEED, MATRIX_MAX_SPEED);
+        s->columns[c].delay = slot_rand_range(s, 0, MATRIX_MAX_DELAY);
     }
 }
 
-static void init_columns_rebuild(void) {
-    for (int c = 0; c < matrix_art_cols; c++) {
-        /* Start above screen — negative offset means chars are above */
-        columns[c].offset = -(matrix_art_rows + rand_range(5, 30));
-        columns[c].speed = rand_range(MATRIX_MIN_SPEED, MATRIX_MAX_SPEED);
-        columns[c].delay = rand_range(0, MATRIX_MAX_DELAY);
+static void init_columns_rebuild(matrix_slot *s) {
+    for (int c = 0; c < s->art_cols; c++) {
+        s->columns[c].offset = -(s->art_rows + slot_rand_range(s, 5, 30));
+        s->columns[c].speed = slot_rand_range(s, MATRIX_MIN_SPEED, MATRIX_MAX_SPEED);
+        s->columns[c].delay = slot_rand_range(s, 0, MATRIX_MAX_DELAY);
     }
 }
 
-static int all_columns_offscreen(void) {
-    for (int c = 0; c < matrix_art_cols; c++) {
-        if (columns[c].offset < matrix_art_rows + MATRIX_TRAIL_LEN) {
+static int all_columns_offscreen(matrix_slot *s) {
+    for (int c = 0; c < s->art_cols; c++) {
+        if (s->columns[c].offset < s->art_rows + MATRIX_TRAIL_LEN) {
             return 0;
         }
     }
     return 1;
 }
 
-static int all_columns_landed(void) {
-    for (int c = 0; c < matrix_art_cols; c++) {
-        if (columns[c].offset < 0) {
+static int all_columns_landed(matrix_slot *s) {
+    for (int c = 0; c < s->art_cols; c++) {
+        if (s->columns[c].offset < 0) {
             return 0;
         }
     }
     return 1;
 }
 
-static void render_rain_frame(int d) {
+/* Render one slot's rain frame into a display (no bridge call) */
+static void render_rain_to_display(matrix_slot *s, int d) {
     rb_display_render_clear(d);
     rb_display_text_clear(d);
     rb_display_set_fg_color(d, RB_COLOR_WHITE);
@@ -132,54 +142,48 @@ static void render_rain_frame(int d) {
     rb_display_text_set_immediate(d, 1);
     byte color = rb_display_get_fg_color(d);
 
-    for (int c = 0; c < matrix_art_cols; c++) {
-        int off = columns[c].offset;
+    for (int c = 0; c < s->art_cols; c++) {
+        int off = s->columns[c].offset;
 
-        /* Draw original art chars shifted down by offset */
-        for (int r = 0; r < matrix_art_rows; r++) {
+        for (int r = 0; r < s->art_rows; r++) {
             int screen_row = r + off;
-            if (screen_row < 0 || screen_row >= matrix_art_rows) continue;
+            if (screen_row < 0 || screen_row >= s->art_rows) continue;
 
-            const char *line = matrix_art[r];
+            const char *line = s->art[r];
             char ch = (c < (int)strlen(line)) ? line[c] : ' ';
             if (ch != ' ') {
                 rb_display_text_print_char(d, screen_row, c, ch, color);
             }
         }
 
-        /* Draw matrix trail at leading edge (just below the shifted art) */
         for (int t = 0; t < MATRIX_TRAIL_LEN; t++) {
-            int trail_row = off + matrix_art_rows + t;
-            if (trail_row < 0 || trail_row >= matrix_art_rows) continue;
+            int trail_row = off + s->art_rows + t;
+            if (trail_row < 0 || trail_row >= s->art_rows) continue;
 
-            /* Brighter at the leading edge, dimmer further back */
             byte trail_brightness = (byte)(15 - t * 4);
             if (trail_brightness < 3) trail_brightness = 3;
             rb_display_set_fg_brightness(d, trail_brightness);
             byte trail_color = rb_display_get_fg_color(d);
-            rb_display_text_print_char(d, trail_row, c, rand_matrix_char(),
-                                       trail_color);
+            rb_display_text_print_char(d, trail_row, c,
+                                       slot_rand_matrix_char(s), trail_color);
         }
         rb_display_set_fg_brightness(d, 15);
 
-        /* Advance column */
-        if (columns[c].delay > 0) {
-            columns[c].delay--;
+        if (s->columns[c].delay > 0) {
+            s->columns[c].delay--;
         }
         else {
-            columns[c].offset += columns[c].speed;
+            s->columns[c].offset += s->columns[c].speed;
         }
     }
 
     tint_buffer_phosphor(rb_display_get_pixel_data(d),
                          rb_display_get_pixel_width(d),
                          rb_display_get_pixel_height(d));
-    rb_render_portrait(rb_display_get_pixel_data(d),
-                       rb_display_get_pixel_width(d),
-                       rb_display_get_pixel_height(d));
 }
 
-static void render_rebuild_frame(int d) {
+/* Render one slot's rebuild frame into a display (no bridge call) */
+static void render_rebuild_to_display(matrix_slot *s, int d) {
     rb_display_render_clear(d);
     rb_display_text_clear(d);
     rb_display_set_fg_color(d, RB_COLOR_WHITE);
@@ -187,43 +191,40 @@ static void render_rebuild_frame(int d) {
     rb_display_text_set_immediate(d, 1);
     byte color = rb_display_get_fg_color(d);
 
-    for (int c = 0; c < matrix_art_cols; c++) {
-        int off = columns[c].offset;
+    for (int c = 0; c < s->art_cols; c++) {
+        int off = s->columns[c].offset;
 
-        /* Draw original art chars shifted by offset (negative = above) */
-        for (int r = 0; r < matrix_art_rows; r++) {
+        for (int r = 0; r < s->art_rows; r++) {
             int screen_row = r + off;
-            if (screen_row < 0 || screen_row >= matrix_art_rows) continue;
+            if (screen_row < 0 || screen_row >= s->art_rows) continue;
 
-            const char *line = matrix_art[r];
+            const char *line = s->art[r];
             char ch = (c < (int)strlen(line)) ? line[c] : ' ';
             if (ch != ' ') {
                 rb_display_text_print_char(d, screen_row, c, ch, color);
             }
         }
 
-        /* Draw matrix trail above the falling art (leading edge) */
         for (int t = 0; t < MATRIX_TRAIL_LEN; t++) {
             int trail_row = off - 1 - t;
-            if (trail_row < 0 || trail_row >= matrix_art_rows) continue;
+            if (trail_row < 0 || trail_row >= s->art_rows) continue;
 
             byte trail_brightness = (byte)(15 - t * 4);
             if (trail_brightness < 3) trail_brightness = 3;
             rb_display_set_fg_brightness(d, trail_brightness);
             byte trail_color = rb_display_get_fg_color(d);
-            rb_display_text_print_char(d, trail_row, c, rand_matrix_char(),
-                                       trail_color);
+            rb_display_text_print_char(d, trail_row, c,
+                                       slot_rand_matrix_char(s), trail_color);
         }
         rb_display_set_fg_brightness(d, 15);
 
-        /* Advance column toward final position (offset 0) */
-        if (columns[c].delay > 0) {
-            columns[c].delay--;
+        if (s->columns[c].delay > 0) {
+            s->columns[c].delay--;
         }
         else {
-            columns[c].offset += columns[c].speed;
-            if (columns[c].offset > 0) {
-                columns[c].offset = 0;  /* snap to final position */
+            s->columns[c].offset += s->columns[c].speed;
+            if (s->columns[c].offset > 0) {
+                s->columns[c].offset = 0;
             }
         }
     }
@@ -231,12 +232,10 @@ static void render_rebuild_frame(int d) {
     tint_buffer_phosphor(rb_display_get_pixel_data(d),
                          rb_display_get_pixel_width(d),
                          rb_display_get_pixel_height(d));
-    rb_render_portrait(rb_display_get_pixel_data(d),
-                       rb_display_get_pixel_width(d),
-                       rb_display_get_pixel_height(d));
 }
 
-static void render_final_portrait(int d) {
+/* Render final clean portrait into a display (no bridge call) */
+static void render_final_to_display(matrix_slot *s, int d) {
     rb_display_render_clear(d);
     rb_display_text_clear(d);
     rb_display_set_fg_color(d, RB_COLOR_WHITE);
@@ -244,9 +243,9 @@ static void render_final_portrait(int d) {
     rb_display_text_set_immediate(d, 1);
     byte color = rb_display_get_fg_color(d);
 
-    for (int r = 0; r < matrix_art_rows; r++) {
-        const char *line = matrix_art[r];
-        for (int c = 0; c < matrix_art_cols && line[c]; c++) {
+    for (int r = 0; r < s->art_rows; r++) {
+        const char *line = s->art[r];
+        for (int c = 0; c < s->art_cols && line[c]; c++) {
             if (line[c] != ' ') {
                 rb_display_text_print_char(d, r, c, line[c], color);
             }
@@ -256,70 +255,123 @@ static void render_final_portrait(int d) {
     tint_buffer_phosphor(rb_display_get_pixel_data(d),
                          rb_display_get_pixel_width(d),
                          rb_display_get_pixel_height(d));
-    rb_render_portrait(rb_display_get_pixel_data(d),
-                       rb_display_get_pixel_width(d),
-                       rb_display_get_pixel_height(d));
 }
 
-/* --- Public API --------------------------------------------------------- */
+/* Advance one slot's state machine. Returns 1 if still animating. */
+static int advance_slot(matrix_slot *s, int d) {
+    if (!s->active) return 0;
 
-void portrait_matrix_start(const char **art, int rows, int cols) {
-    matrix_art = art;
-    matrix_art_rows = rows;
-    matrix_art_cols = cols;
-    matrix_phase = PHASE_HOLD;
-    matrix_frame_count = 0;
-    matrix_active = 1;
-    /* Reseed RNG for variety each time */
-    matrix_seed = (unsigned int)(rows * 7919 + cols * 104729);
-}
+    s->frame_count++;
 
-int portrait_matrix_frame(void) {
-    if (!matrix_active) return 0;
-
-    matrix_frame_count++;
-    int d = portrait_hires_get_display_a();
-    if (d < 0) {
-        matrix_active = 0;
-        return 0;
-    }
-
-    switch (matrix_phase) {
+    switch (s->phase) {
         case PHASE_HOLD:
-            if (matrix_frame_count >= MATRIX_HOLD_FRAMES) {
-                matrix_phase = PHASE_RAIN;
-                matrix_frame_count = 0;
-                init_columns_rain();
+            if (s->frame_count >= MATRIX_HOLD_FRAMES) {
+                s->phase = PHASE_RAIN;
+                s->frame_count = 0;
+                init_columns_rain(s);
             }
             break;
 
         case PHASE_RAIN:
-            render_rain_frame(d);
-            if (all_columns_offscreen()) {
-                matrix_phase = PHASE_REBUILD;
-                matrix_frame_count = 0;
-                init_columns_rebuild();
+            render_rain_to_display(s, d);
+            if (all_columns_offscreen(s)) {
+                s->phase = PHASE_REBUILD;
+                s->frame_count = 0;
+                init_columns_rebuild(s);
             }
             break;
 
         case PHASE_REBUILD:
-            render_rebuild_frame(d);
-            if (all_columns_landed()) {
-                render_final_portrait(d);
-                matrix_phase = PHASE_DONE;
-                matrix_active = 0;
+            render_rebuild_to_display(s, d);
+            if (all_columns_landed(s)) {
+                render_final_to_display(s, d);
+                s->phase = PHASE_DONE;
+                s->active = 0;
                 return 0;
             }
             break;
 
         default:
-            matrix_active = 0;
+            s->active = 0;
             return 0;
     }
 
     return 1;
 }
 
+static void init_slot(matrix_slot *s, const char **art, int rows, int cols,
+                      unsigned int seed) {
+    s->art = art;
+    s->art_rows = rows;
+    s->art_cols = cols;
+    s->phase = PHASE_HOLD;
+    s->frame_count = 0;
+    s->active = 1;
+    s->seed = seed;
+}
+
+/* --- Public API --------------------------------------------------------- */
+
+void portrait_matrix_start(const char **art, int rows, int cols) {
+    /* Cancel any previous pair mode */
+    slots[SLOT_B].active = 0;
+    matrix_pair_mode = 0;
+
+    init_slot(&slots[SLOT_A], art, rows, cols,
+              (unsigned int)(rows * 7919 + cols * 104729));
+}
+
+void portrait_matrix_start_pair(const char **art_a, int rows_a, int cols_a,
+                                const char **art_b, int rows_b, int cols_b) {
+    matrix_pair_mode = 1;
+    init_slot(&slots[SLOT_A], art_a, rows_a, cols_a,
+              (unsigned int)(rows_a * 7919 + cols_a * 104729));
+    init_slot(&slots[SLOT_B], art_b, rows_b, cols_b,
+              (unsigned int)(rows_b * 6311 + cols_b * 87491));
+}
+
+int portrait_matrix_frame(void) {
+    if (!slots[SLOT_A].active && !slots[SLOT_B].active) return 0;
+
+    int da = portrait_hires_get_display_a();
+    if (da < 0) {
+        slots[SLOT_A].active = 0;
+        slots[SLOT_B].active = 0;
+        return 0;
+    }
+
+    if (matrix_pair_mode) {
+        int db = portrait_hires_get_display_b();
+        if (db < 0) {
+            slots[SLOT_A].active = 0;
+            slots[SLOT_B].active = 0;
+            return 0;
+        }
+
+        int still_a = advance_slot(&slots[SLOT_A], da);
+        int still_b = advance_slot(&slots[SLOT_B], db);
+
+        /* Always send pair update so both displays refresh together */
+        rb_render_portrait_pair(rb_display_get_pixel_data(da),
+                                rb_display_get_pixel_width(da),
+                                rb_display_get_pixel_height(da),
+                                rb_display_get_pixel_data(db),
+                                rb_display_get_pixel_width(db),
+                                rb_display_get_pixel_height(db));
+
+        return (still_a || still_b) ? 1 : 0;
+    }
+    else {
+        int still = advance_slot(&slots[SLOT_A], da);
+        if (slots[SLOT_A].phase != PHASE_HOLD) {
+            rb_render_portrait(rb_display_get_pixel_data(da),
+                               rb_display_get_pixel_width(da),
+                               rb_display_get_pixel_height(da));
+        }
+        return still;
+    }
+}
+
 int portrait_matrix_is_active(void) {
-    return matrix_active;
+    return slots[SLOT_A].active || slots[SLOT_B].active;
 }
