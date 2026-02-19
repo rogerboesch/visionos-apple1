@@ -44,29 +44,31 @@ static const char *apple_logo[LOGO_ROWS] = {
 static void splash_draw_centered(const char *str, int row) {
     int len = (int)strlen(str);
     int col = (SPLASH_COLS - len) / 2;
+    byte color = rb_display_get_fg_color();
 
     for (int i = 0; i < len; i++) {
-        int px = (col + i) * RET_FONT_WIDTH;
-        int py = row * RET_FONT_HEIGHT;
-        rb_display_render_draw_char(px, py, str[i], 0, rb_display_get_fg_color());
+        rb_display_text_print_char(row, col + i, str[i], color);
     }
 }
 
 /* Draw the apple logo centered, starting at a given text row */
 static void splash_draw_logo(int start_row) {
     int col_offset = (SPLASH_COLS - LOGO_COLS) / 2;
+    byte color = rb_display_get_fg_color();
+
+    rb_display_set_invert(true);
 
     for (int row = 0; row < LOGO_ROWS; row++) {
         const char *line = apple_logo[row];
 
         for (int col = 0; col < LOGO_COLS; col++) {
             if (line[col] == '#') {
-                int px = (col_offset + col) * RET_FONT_WIDTH;
-                int py = (start_row + row) * RET_FONT_HEIGHT;
-                rb_display_render_draw_char(px, py, ' ', 1, rb_display_get_fg_color());
+                rb_display_text_print_char(start_row + row, col_offset + col, ' ', color);
             }
         }
     }
+
+    rb_display_set_invert(false);
 }
 
 void splash_init(void) {
@@ -119,11 +121,15 @@ int splash_frame(void) {
     byte old_fg = rb_display_set_fg_color(RET_COLOR_GREEN);
     byte old_bright = rb_display_set_fg_brightness((unsigned char)brightness);
 
+    rb_display_text_set_immediate(1);
+
     splash_draw_logo(1);
     splash_draw_centered("50 YEARS OF APPLE", 18);
     splash_draw_centered("APPLE COMPUTER INC", 20);
     splash_draw_centered("1976 - 2026", 22);
     splash_draw_centered("CUPERTINO CALIFORNIA", 24);
+
+    rb_display_text_set_immediate(0);
 
     rb_display_set_fg_color(old_fg);
     rb_display_set_fg_brightness(old_bright);

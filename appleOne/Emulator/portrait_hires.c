@@ -43,8 +43,10 @@ static void render_portrait_to_buffer(const char **art, int art_rows, int art_co
     /* Render glyphs as white — we tint to phosphor green afterwards */
     rb_display_set_fg_color(RET_COLOR_WHITE);
     rb_display_set_fg_brightness(15);
+    rb_display_text_set_immediate(1);
 
     /* Draw each character using the bitmap font */
+    byte color = rb_display_get_fg_color();
     for (int row = 0; row < art_rows; row++) {
         const char *line = art[row];
         for (int col = 0; col < art_cols && line[col]; col++) {
@@ -52,11 +54,11 @@ static void render_portrait_to_buffer(const char **art, int art_rows, int art_co
             if (ch == ' ') {
                 continue;
             }
-            int px = col * RET_FONT_WIDTH;
-            int py = row * RET_FONT_HEIGHT;
-            rb_display_render_draw_char(px, py, ch, 0, rb_display_get_fg_color());
+            rb_display_text_print_char(row, col, ch, color);
         }
     }
+
+    rb_display_text_set_immediate(0);
 
     int w = rb_display_get_pixel_width(d);
     int h = rb_display_get_pixel_height(d);
