@@ -9,7 +9,6 @@
 extern rb_display *rb_get_current(void);
 
 extern void ret_render_frame(byte *data, int index);
-extern byte ret_font_apple2[];
 
 /* -------------------------------------------------------------------------- */
 /*  Vector font table                                                         */

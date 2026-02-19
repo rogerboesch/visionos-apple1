@@ -9,4 +9,6 @@
 #define RET_FONT_VEC_HEIGHT 16
 #define RET_VFONT_SPACE 2
 
-#endif 
+extern unsigned char ret_font_apple2[];
+
+#endif
