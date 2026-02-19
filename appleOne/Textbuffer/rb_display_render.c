@@ -433,7 +433,7 @@ void rb_display_render_draw_char(int display, int x, int y, char ch, int invert,
     rb_display *d = rb_get_display(display);
     int w = RB_FONT_WIDTH;
     int h = RB_FONT_HEIGHT;
-    int offset = (int)ch * 8;
+    int offset = ((int)ch + 1) * 8;
     int stride = d->pixel_width;
 
     byte *dest = d->pixel_data + y * (stride * 4) + (x * 4);
