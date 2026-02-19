@@ -131,8 +131,6 @@ int splash_frame(void) {
     splash_draw_centered("1976 - 2026", 22);
     splash_draw_centered("CUPERTINO CALIFORNIA", 24);
 
-    rb_display_text_set_immediate(SPLASH_DISPLAY, 0);
-
     rb_display_set_fg_color(SPLASH_DISPLAY, old_fg);
     rb_display_set_fg_brightness(SPLASH_DISPLAY, old_bright);
 
