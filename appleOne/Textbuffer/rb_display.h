@@ -118,8 +118,6 @@ typedef struct rb_display {
 void rb_display_init(int cols, int rows);       /* Creates display 0 with given dimensions */
 int  rb_display_create(int cols, int rows);     /* Returns index, malloc's buffers */
 void rb_display_destroy(int display);           /* Free buffers, mark inactive */
-void rb_display_set_current(int display);       /* Switch active display */
-int  rb_display_get_current(void);
 
 /* -------------------------------------------------------------------------- */
 /*  Dimensions / access                                                       */
@@ -132,76 +130,76 @@ int  rb_display_get_pixel_height(int display);
 byte *rb_display_get_pixel_data(int display);
 
 /* -------------------------------------------------------------------------- */
-/*  Text operations (operate on current display)                              */
+/*  Text operations                                                           */
 /* -------------------------------------------------------------------------- */
 
-void rb_display_text_clear(void);
-void rb_display_text_flush(void);
-void rb_display_text_scroll_up(void);
-void rb_display_text_set_immediate(int flag);
-boolean rb_display_text_print_char(int row, int col, char ch, byte color);
-char rb_display_text_get_char(int row, int col);
-void rb_display_text_print_no_linebreak(char *str, int size);
-const char *rb_display_text_get_line_buffer(void);
+void rb_display_text_clear(int display);
+void rb_display_text_flush(int display);
+void rb_display_text_scroll_up(int display);
+void rb_display_text_set_immediate(int display, int flag);
+boolean rb_display_text_print_char(int display, int row, int col, char ch, byte color);
+char rb_display_text_get_char(int display, int row, int col);
+void rb_display_text_print_no_linebreak(int display, char *str, int size);
+const char *rb_display_text_get_line_buffer(int display);
 
 /* -------------------------------------------------------------------------- */
-/*  Cursor (operate on current display)                                       */
+/*  Cursor                                                                    */
 /* -------------------------------------------------------------------------- */
 
-void rb_display_cursor_show(boolean flag);
-void rb_display_cursor_left(void);
-void rb_display_cursor_right(void);
-void rb_display_cursor_up(void);
-void rb_display_cursor_down(void);
-void rb_display_cursor_set(int x, int y);
-void rb_display_cursor_blink(void);
-void rb_display_cursor_draw(void);
-void rb_display_cursor_delete_char(void);
+void rb_display_cursor_show(int display, boolean flag);
+void rb_display_cursor_left(int display);
+void rb_display_cursor_right(int display);
+void rb_display_cursor_up(int display);
+void rb_display_cursor_down(int display);
+void rb_display_cursor_set(int display, int x, int y);
+void rb_display_cursor_blink(int display);
+void rb_display_cursor_draw(int display);
+void rb_display_cursor_delete_char(int display);
 
 /* -------------------------------------------------------------------------- */
-/*  Rendering (operate on current display)                                    */
+/*  Rendering                                                                 */
 /* -------------------------------------------------------------------------- */
 
-void rb_display_render_clear(void);
-void rb_display_render_draw_char(int x, int y, char ch, int invert, byte color);
-void rb_display_render_scroll_up(int height);
-void rb_display_render_frame(void);
-void rb_display_render_set_direct(int mode);
+void rb_display_render_clear(int display);
+void rb_display_render_draw_char(int display, int x, int y, char ch, int invert, byte color);
+void rb_display_render_scroll_up(int display, int height);
+void rb_display_render_frame(int display);
+void rb_display_render_set_direct(int display, int mode);
 
 /* -------------------------------------------------------------------------- */
-/*  Color state (per current display)                                         */
+/*  Color state                                                               */
 /* -------------------------------------------------------------------------- */
 
-byte rb_display_set_bg_color(byte index);
-byte rb_display_get_bg_color(void);
-byte rb_display_set_fg_color(byte index);
-byte rb_display_get_fg_color(void);
-byte rb_display_set_fg_brightness(byte index);
-byte rb_display_get_fg_brightness(void);
-void rb_display_set_invert(boolean flag);
-byte rb_display_set_dot_mode(byte mode);
+byte rb_display_set_bg_color(int display, byte index);
+byte rb_display_get_bg_color(int display);
+byte rb_display_set_fg_color(int display, byte index);
+byte rb_display_get_fg_color(int display);
+byte rb_display_set_fg_brightness(int display, byte index);
+byte rb_display_get_fg_brightness(int display);
+void rb_display_set_invert(int display, boolean flag);
+byte rb_display_set_dot_mode(int display, byte mode);
 
 /* -------------------------------------------------------------------------- */
-/*  Graphics cursor (for vector drawing, operate on current display)          */
+/*  Graphics cursor (for vector drawing)                                      */
 /* -------------------------------------------------------------------------- */
 
-void rb_display_move_to(int x, int y);
-void rb_display_move_by(int x, int y);
-void rb_display_draw_pixel(int x, int y);
-void rb_display_draw_line(int x1, int y1, int x2, int y2);
-void rb_display_draw_line_to(int x, int y);
-void rb_display_draw_vstring(char *str, int x, int y);
+void rb_display_move_to(int display, int x, int y);
+void rb_display_move_by(int display, int x, int y);
+void rb_display_draw_pixel(int display, int x, int y);
+void rb_display_draw_line(int display, int x1, int y1, int x2, int y2);
+void rb_display_draw_line_to(int display, int x, int y);
+void rb_display_draw_vstring(int display, char *str, int x, int y);
 
 /* -------------------------------------------------------------------------- */
-/*  High-level text (operate on current display)                              */
+/*  High-level text                                                           */
 /* -------------------------------------------------------------------------- */
 
-boolean rb_display_print_char_at(int row, int col, char ch);
-void rb_display_print_at(int row, int col, char *str);
-void rb_display_print_char(char ch);
-void rb_display_print(char *str);
-void rb_display_print_line(char *str);
-void rb_display_print_newline(void);
-void rb_display_print_palette(void);
-void rb_display_show_charset(void);
+boolean rb_display_print_char_at(int display, int row, int col, char ch);
+void rb_display_print_at(int display, int row, int col, char *str);
+void rb_display_print_char(int display, char ch);
+void rb_display_print(int display, char *str);
+void rb_display_print_line(int display, char *str);
+void rb_display_print_newline(int display);
+void rb_display_print_palette(int display);
+void rb_display_show_charset(int display);
 #endif

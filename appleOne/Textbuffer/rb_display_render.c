@@ -5,8 +5,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-/* Access to current display from rb_display.c */
-extern rb_display *rb_get_current(void);
+/* Access to display by index from rb_display.c */
+extern rb_display *rb_get_display(int index);
 
 extern void rb_render_frame(byte *data, int width, int height);
 
@@ -298,16 +298,15 @@ static int rb_getbit(byte b, byte number) {
 /*  Dirty bit                                                                 */
 /* -------------------------------------------------------------------------- */
 
-static void rb_enable_dirty(void) {
-    rb_get_current()->dirty = 1;
+static void rb_enable_dirty(rb_display *d) {
+    d->dirty = 1;
 }
 
 /* -------------------------------------------------------------------------- */
 /*  Pixel drawing (internal)                                                  */
 /* -------------------------------------------------------------------------- */
 
-static void rb_set_pixel_internal(int x, int y, int r, int g, int b) {
-    rb_display *d = rb_get_current();
+static void rb_set_pixel_internal(rb_display *d, int x, int y, int r, int g, int b) {
     int width = d->pixel_width;
     int height = d->pixel_height;
 
@@ -320,21 +319,20 @@ static void rb_set_pixel_internal(int x, int y, int r, int g, int b) {
         d->pixel_data[offset + 3] = 255;
     }
 
-    rb_enable_dirty();
+    rb_enable_dirty(d);
 }
 
-static void rb_set_pixel(int x, int y, byte palette_color, byte brightness) {
+static void rb_set_pixel(rb_display *d, int x, int y, byte palette_color, byte brightness) {
     rb_color fg = rb_display_palette_get_color_brightness(palette_color, brightness);
-    rb_set_pixel_internal(x, y, fg.r, fg.g, fg.b);
+    rb_set_pixel_internal(d, x, y, fg.r, fg.g, fg.b);
 }
 
 /* -------------------------------------------------------------------------- */
 /*  Line drawing (internal)                                                   */
 /* -------------------------------------------------------------------------- */
 
-static void rb_draw_line_internal(int x1, int y1, int x2, int y2,
+static void rb_draw_line_internal(rb_display *d, int x1, int y1, int x2, int y2,
                                   byte palette_color, byte brightness) {
-    rb_display *d = rb_get_current();
     int dx = x2 - x1;
     int dy = y2 - y1;
     int steps = abs(dx) > abs(dy) ? abs(dx) : abs(dy);
@@ -351,7 +349,7 @@ static void rb_draw_line_internal(int x1, int y1, int x2, int y2,
     for (int i = 0; i <= steps; i++) {
         if (d->mode_dotted > 0) {
             if (draw) {
-                rb_set_pixel(x, y, palette_color, brightness);
+                rb_set_pixel(d, x, y, palette_color, brightness);
             }
 
             count++;
@@ -362,7 +360,7 @@ static void rb_draw_line_internal(int x1, int y1, int x2, int y2,
             }
         }
         else {
-            rb_set_pixel(x, y, palette_color, brightness);
+            rb_set_pixel(d, x, y, palette_color, brightness);
         }
 
         x += xInc;
@@ -387,15 +385,14 @@ static void rb_vec_moveby(int dx, int dy) {
     rb_vec_cursor_y += dy;
 }
 
-static void rb_vec_lineby(int dx, int dy) {
-    rb_display *d = rb_get_current();
-    rb_draw_line_internal(rb_vec_cursor_x, rb_vec_cursor_y,
+static void rb_vec_lineby(rb_display *d, int dx, int dy) {
+    rb_draw_line_internal(d, rb_vec_cursor_x, rb_vec_cursor_y,
                           rb_vec_cursor_x + dx, rb_vec_cursor_y + dy,
                           d->fg_color, d->fg_brightness);
     rb_vec_moveby(dx, dy);
 }
 
-static void rb_vec_drawchar(char ch) {
+static void rb_vec_drawchar(rb_display *d, char ch) {
     const byte *p = rb_vecfont[ch - 0x20];
     byte bright = 0;
     byte x = 0;
@@ -418,7 +415,7 @@ static void rb_vec_drawchar(char ch) {
                 rb_vec_moveby((char)(x2 - x), (char)-(y2 - y));
             }
             else {
-                rb_vec_lineby((char)(x2 - x), (char)-(y2 - y));
+                rb_vec_lineby(d, (char)(x2 - x), (char)-(y2 - y));
             }
 
             bright = 4;
@@ -432,8 +429,8 @@ static void rb_vec_drawchar(char ch) {
 /*  Public: Character drawing                                                 */
 /* -------------------------------------------------------------------------- */
 
-void rb_display_render_draw_char(int x, int y, char ch, int invert, byte paletteColor) {
-    rb_display *d = rb_get_current();
+void rb_display_render_draw_char(int display, int x, int y, char ch, int invert, byte paletteColor) {
+    rb_display *d = rb_get_display(display);
     int w = RB_FONT_WIDTH;
     int h = RB_FONT_HEIGHT;
     int offset = (int)ch * 8;
@@ -479,10 +476,10 @@ void rb_display_render_draw_char(int x, int y, char ch, int invert, byte palette
         dest = d->pixel_data + y * (stride * 4) + (x * 4);
     }
 
-    rb_enable_dirty();
+    rb_enable_dirty(d);
 
     if (d->direct_render) {
-        rb_display_render_frame();
+        rb_display_render_frame(display);
     }
 }
 
@@ -490,8 +487,8 @@ void rb_display_render_draw_char(int x, int y, char ch, int invert, byte palette
 /*  Public: Screen operations                                                 */
 /* -------------------------------------------------------------------------- */
 
-void rb_display_render_clear(void) {
-    rb_display *d = rb_get_current();
+void rb_display_render_clear(int display) {
+    rb_display *d = rb_get_display(display);
     int total = d->pixel_width * d->pixel_height;
     int offset = 0;
 
@@ -506,11 +503,11 @@ void rb_display_render_clear(void) {
         offset += 4;
     }
 
-    rb_enable_dirty();
+    rb_enable_dirty(d);
 }
 
-void rb_display_render_scroll_up(int height) {
-    rb_display *d = rb_get_current();
+void rb_display_render_scroll_up(int display, int height) {
+    rb_display *d = rb_get_display(display);
     int w = d->pixel_width;
     int h = d->pixel_height;
     byte *source;
@@ -534,11 +531,11 @@ void rb_display_render_scroll_up(int height) {
         offset += 4;
     }
 
-    rb_enable_dirty();
+    rb_enable_dirty(d);
 }
 
-void rb_display_render_frame(void) {
-    rb_display *d = rb_get_current();
+void rb_display_render_frame(int display) {
+    rb_display *d = rb_get_display(display);
 
     int w = d->pixel_width;
     int h = d->pixel_height;
@@ -549,53 +546,53 @@ void rb_display_render_frame(void) {
     rb_render_frame(output, w, h);
 }
 
-void rb_display_render_set_direct(int mode) {
-    rb_get_current()->direct_render = mode;
+void rb_display_render_set_direct(int display, int mode) {
+    rb_get_display(display)->direct_render = mode;
 }
 
 /* -------------------------------------------------------------------------- */
 /*  Public: Color state                                                       */
 /* -------------------------------------------------------------------------- */
 
-byte rb_display_set_bg_color(byte index) {
-    rb_display *d = rb_get_current();
+byte rb_display_set_bg_color(int display, byte index) {
+    rb_display *d = rb_get_display(display);
     byte old = d->bg_color;
     d->bg_color = index;
     return old;
 }
 
-byte rb_display_get_bg_color(void) {
-    return rb_get_current()->bg_color;
+byte rb_display_get_bg_color(int display) {
+    return rb_get_display(display)->bg_color;
 }
 
-byte rb_display_set_fg_color(byte index) {
-    rb_display *d = rb_get_current();
+byte rb_display_set_fg_color(int display, byte index) {
+    rb_display *d = rb_get_display(display);
     byte old = d->fg_color;
     d->fg_color = index;
     return old;
 }
 
-byte rb_display_get_fg_color(void) {
-    return rb_get_current()->fg_color;
+byte rb_display_get_fg_color(int display) {
+    return rb_get_display(display)->fg_color;
 }
 
-byte rb_display_set_fg_brightness(byte index) {
-    rb_display *d = rb_get_current();
+byte rb_display_set_fg_brightness(int display, byte index) {
+    rb_display *d = rb_get_display(display);
     byte old = d->fg_brightness;
     d->fg_brightness = index;
     return old;
 }
 
-byte rb_display_get_fg_brightness(void) {
-    return rb_get_current()->fg_brightness;
+byte rb_display_get_fg_brightness(int display) {
+    return rb_get_display(display)->fg_brightness;
 }
 
-void rb_display_set_invert(boolean flag) {
-    rb_get_current()->invert_mode = flag;
+void rb_display_set_invert(int display, boolean flag) {
+    rb_get_display(display)->invert_mode = flag;
 }
 
-byte rb_display_set_dot_mode(byte mode) {
-    rb_display *d = rb_get_current();
+byte rb_display_set_dot_mode(int display, byte mode) {
+    rb_display *d = rb_get_display(display);
     byte old = d->mode_dotted;
     d->mode_dotted = mode;
     return old;
@@ -605,47 +602,47 @@ byte rb_display_set_dot_mode(byte mode) {
 /*  Public: Graphics cursor / vector drawing                                  */
 /* -------------------------------------------------------------------------- */
 
-void rb_display_move_to(int x, int y) {
-    rb_display *d = rb_get_current();
+void rb_display_move_to(int display, int x, int y) {
+    rb_display *d = rb_get_display(display);
     int hw = d->pixel_width / 2;
     int hh = d->pixel_height / 2;
     d->graphics_x = hw + x;
     d->graphics_y = hh + y;
 }
 
-void rb_display_move_by(int x, int y) {
-    rb_display *d = rb_get_current();
+void rb_display_move_by(int display, int x, int y) {
+    rb_display *d = rb_get_display(display);
     d->graphics_x += x;
     d->graphics_y += y;
 }
 
-void rb_display_draw_pixel(int x, int y) {
-    rb_display *d = rb_get_current();
+void rb_display_draw_pixel(int display, int x, int y) {
+    rb_display *d = rb_get_display(display);
     int hw = d->pixel_width / 2;
     int hh = d->pixel_height / 2;
 
-    rb_set_pixel(hw + x, hh + y, d->fg_color, d->fg_brightness);
+    rb_set_pixel(d, hw + x, hh + y, d->fg_color, d->fg_brightness);
 
     d->graphics_x = hw + x;
     d->graphics_y = hh + y;
 }
 
-void rb_display_draw_line(int x1, int y1, int x2, int y2) {
-    rb_display *d = rb_get_current();
+void rb_display_draw_line(int display, int x1, int y1, int x2, int y2) {
+    rb_display *d = rb_get_display(display);
     int hw = d->pixel_width / 2;
     int hh = d->pixel_height / 2;
 
-    rb_draw_line_internal(hw + x1, hh + y1, hw + x2, hh + y2,
+    rb_draw_line_internal(d, hw + x1, hh + y1, hw + x2, hh + y2,
                           d->fg_color, d->fg_brightness);
 
     d->graphics_x = hw + x2;
     d->graphics_y = hh + y2;
 }
 
-void rb_display_draw_line_to(int x, int y) {
-    rb_display *d = rb_get_current();
+void rb_display_draw_line_to(int display, int x, int y) {
+    rb_display *d = rb_get_display(display);
 
-    rb_draw_line_internal(d->graphics_x, d->graphics_y,
+    rb_draw_line_internal(d, d->graphics_x, d->graphics_y,
                           d->graphics_x + x, d->graphics_y + y,
                           d->fg_color, d->fg_brightness);
 
@@ -653,14 +650,15 @@ void rb_display_draw_line_to(int x, int y) {
     d->graphics_y += y;
 }
 
-void rb_display_draw_vstring(char *str, int x, int y) {
+void rb_display_draw_vstring(int display, char *str, int x, int y) {
+    rb_display *d = rb_get_display(display);
     int x2 = x;
 
     while (*str != 0) {
         char ch = *str;
 
         rb_vec_moveto(x2, y + RB_FONT_HEIGHT);
-        rb_vec_drawchar(ch);
+        rb_vec_drawchar(d, ch);
 
         str++;
         x2 += RB_FONT_WIDTH + RB_VFONT_SPACE;

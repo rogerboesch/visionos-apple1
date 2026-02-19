@@ -5,15 +5,10 @@
 #include <string.h>
 
 /* -------------------------------------------------------------------------- */
-/*  Display array and current display tracking                                */
+/*  Display array                                                             */
 /* -------------------------------------------------------------------------- */
 
 static rb_display rb_displays[RB_DISPLAY_MAX];
-static int rb_current_display = 0;
-
-rb_display *rb_get_current(void) {
-    return &rb_displays[rb_current_display];
-}
 
 rb_display *rb_get_display(int index) {
     if (index < 0 || index >= RB_DISPLAY_MAX) {
@@ -81,8 +76,6 @@ void rb_display_init(int cols, int rows) {
     rb_displays[0].active = 1;
     rb_display_alloc_buffers(&rb_displays[0], cols, rows);
     rb_display_init_defaults(&rb_displays[0]);
-
-    rb_current_display = 0;
 }
 
 int rb_display_create(int cols, int rows) {
@@ -114,16 +107,6 @@ void rb_display_destroy(int display) {
     free(d->pixel_data);
 
     memset(d, 0, sizeof(rb_display));
-}
-
-void rb_display_set_current(int display) {
-    if (display >= 0 && display < RB_DISPLAY_MAX && rb_displays[display].active) {
-        rb_current_display = display;
-    }
-}
-
-int rb_display_get_current(void) {
-    return rb_current_display;
 }
 
 /* -------------------------------------------------------------------------- */
