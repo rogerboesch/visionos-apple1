@@ -2,8 +2,15 @@
 #define RB_DISPLAY_H
 
 #include "ret_palette.h"
-#include "ret_font.h"
 #include "ret_platform_types.h"
+
+/* Font dimensions */
+#define RET_FONT_WIDTH  8
+#define RET_FONT_HEIGHT 8
+
+#define RET_FONT_VEC_WIDTH  10
+#define RET_FONT_VEC_HEIGHT 16
+#define RET_VFONT_SPACE 2
 
 /* Maximum number of simultaneous displays */
 #define RB_DISPLAY_MAX 16
