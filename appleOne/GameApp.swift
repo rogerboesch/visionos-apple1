@@ -23,11 +23,6 @@ struct GameApp: App {
         WindowGroup(id: "main_window") {
             MainWindow()
         }
-        .defaultSize(width: 0.6, height: 0.4, depth: 0.0, in: .meters)
-
-        ImmersiveSpace(id: "game_space") {
-            GameSpace()
-        }
-        .immersionStyle(selection: .constant(.mixed), in: .mixed)
+        .defaultSize(width: 0.8, height: 0.6, depth: 0.0, in: .meters)
     }
 }

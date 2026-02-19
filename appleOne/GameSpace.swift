@@ -19,55 +19,12 @@ import SwiftUI
 import RealityKit
 import RealityKitContent
 
+// Kept for potential future use (e.g. 3D Apple I model in immersive space)
 struct GameSpace: View {
-    @State private var state_anchor: AnchorEntity? = nil        // Anchor where all game objecst are assigned
-    @State private var apple1: Entity? = nil              // Models
-
     var body: some View {
         RealityView { content in
             if let scene = try? await Entity(named: "Immersive", in: realityKitContentBundle) {
                 content.add(scene)
-                
-                // Anchor used for game objects
-                if isVisionOSDevice() {
-                    state_anchor = AnchorEntity(.plane(.horizontal, classification: .table, minimumBounds: [0.5, 0.5]))
-                    rbDebug("Created plane anchor at \(state_anchor!.position.x),\(state_anchor!.position.y),\(state_anchor!.position.z)")
-                }
-                else {
-                    state_anchor = AnchorEntity(world: [1, 1, -1.5])
-                    rbDebug("Created world anchor at 1, 1, -1.5")
-                }
-                scene.addChild(state_anchor!)
-
-                let parent = Entity()
-                parent.scale = [0.6, 0.6, 0.6]
-                state_anchor!.addChild(parent)
-                
-                if let apple = scene.findEntity(named: "Apple_I") as Entity? {
-                    apple1 = apple
-                    apple1?.isEnabled = true
-                    parent.addChild(apple1!)
-                    
-                    if let model = apple.children[0] as? ModelEntity {
-                        model.model?.materials = [SimpleMaterial(color: UIColor.brown, isMetallic: false)]
-                    }
-                }
-
-                let box = MeshResource.generateBox(size: 1.0)
-                let material = SimpleMaterial(color: UIColor.white, isMetallic: false)
-                let boxEntity = ModelEntity(mesh: box, materials: [material])
-                boxEntity.scale = [0.4, 0.4, 0.01]
-                boxEntity.position = [-0.01, 0.4, -0.2]
-                
-                Renderer.entity = boxEntity
-                parent.addChild(boxEntity)
-                
-                EmulatorInit()
-                
-                let interval = 1.0/60.0
-                Timer.scheduledTimer(withTimeInterval: interval, repeats: true) { timer in
-                    EmulatorFrame()
-                }
             }
         }
     }
