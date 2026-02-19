@@ -37,6 +37,11 @@ struct MainWindow: View {
 
     var body: some View {
         VStack(spacing: 16) {
+            // Title
+            Text("APPLE I")
+                .font(.system(size: 42, weight: .bold, design: .monospaced))
+                .kerning(6)
+
             // Emulator screen
             Group {
                 if let image = renderer.screenImage {
