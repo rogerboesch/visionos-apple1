@@ -94,6 +94,10 @@ Building an immersive visionOS experience featuring the Apple I emulator with mu
 - Rebuild phase: art chars fall from above screen back to final position, snap when landed
 - Uses existing persistent `portrait_display_a` slot via `portrait_hires_get_display_a()` getter
 - State machine driven by `portrait_matrix_frame()` called from `emulator_frame()` at 60 FPS
+- Pair mode: `portrait_matrix_start_pair()` runs two independent slot animations for BOTH mode
+- Pair mode uses `rb_render_portrait_pair` bridge so alternating circle displays update together
+- Per-slot RNG seeds differ so Jobs and Woz columns animate with different patterns
+- `portrait_hires_get_display_b()` getter added for pair mode display access
 - Tapping portrait button during animation restarts cleanly (re-initializes all state)
 - Same phosphor-green tinting as normal portrait rendering
 - Builds successfully for visionOS simulator
