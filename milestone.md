@@ -98,6 +98,9 @@ Building an immersive visionOS experience featuring the Apple I emulator with mu
 - Pair mode uses `rb_render_portrait_pair` bridge so alternating circle displays update together
 - Per-slot RNG seeds differ so Jobs and Woz columns animate with different patterns
 - `portrait_hires_get_display_b()` getter added for pair mode display access
+- Auto-looping: after rebuild, 5-second pause on final portrait, then restarts with new seed — loops indefinitely
+- `portrait_matrix_stop()` kills animation on MIRROR switch or hard reset
+- Fixed buffer aliasing: `fromBuffer:` now copies pixel data via `CFDataCreate` so async Swift texture tasks read stable snapshots
 - Tapping portrait button during animation restarts cleanly (re-initializes all state)
 - Same phosphor-green tinting as normal portrait rendering
 - Builds successfully for visionOS simulator
