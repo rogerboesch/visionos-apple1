@@ -14,7 +14,7 @@ extern void ret_render_frame(byte *data, int index);
 /*  Palette data                                                              */
 /* -------------------------------------------------------------------------- */
 
-static ret_color rb_palette[] = {
+static rb_color rb_palette[] = {
 	{0x00, 0x00, 0x00}, /* Black      0 */
 	{0xff, 0xff, 0xff}, /* White      1 */
 	{0x88, 0x00, 0x00}, /* Red        2 */
@@ -40,20 +40,20 @@ static float rb_brightness_table[] = {
 	1.75f, 1.9f, 2.0f, 2.1f
 };
 
-ret_color RETPaletteGetColor(byte index) {
+rb_color rb_display_palette_get_color(byte index) {
 	if (index >= RET_PALETTE_SIZE) {
-		return RETPaletteGetColor(2);
+		return rb_display_palette_get_color(2);
 	}
 	return rb_palette[index];
 }
 
-ret_color RETPaletteGetColorWithBrightness(byte index, byte bindex) {
+rb_color rb_display_palette_get_color_brightness(byte index, byte bindex) {
 	if (index >= RET_PALETTE_SIZE) {
-		return RETPaletteGetColor(2);
+		return rb_display_palette_get_color(2);
 	}
 
 	float brightness = rb_brightness_table[bindex];
-	ret_color color = rb_palette[index];
+	rb_color color = rb_palette[index];
 
 	if (color.r * brightness > 255) color.r = 255;
 	else color.r = (byte)(color.r * brightness);
@@ -324,7 +324,7 @@ static void rb_set_pixel_internal(int x, int y, int r, int g, int b) {
 }
 
 static void rb_set_pixel(int x, int y, byte palette_color, byte brightness) {
-    ret_color fg = RETPaletteGetColorWithBrightness(palette_color, brightness);
+    rb_color fg = rb_display_palette_get_color_brightness(palette_color, brightness);
     rb_set_pixel_internal(x, y, fg.r, fg.g, fg.b);
 }
 
@@ -441,8 +441,8 @@ void rb_display_render_draw_char(int x, int y, char ch, int invert, byte palette
 
     byte *dest = d->pixel_data + y * (stride * 4) + (x * 4);
 
-    ret_color bg = RETPaletteGetColor(d->bg_color);
-    ret_color fg = RETPaletteGetColorWithBrightness(paletteColor, d->fg_brightness);
+    rb_color bg = rb_display_palette_get_color(d->bg_color);
+    rb_color fg = rb_display_palette_get_color_brightness(paletteColor, d->fg_brightness);
 
     int xStart = x;
     for (int iy = 0; iy < h; iy++) {
@@ -495,7 +495,7 @@ void rb_display_render_clear(void) {
     int total = d->pixel_width * d->pixel_height;
     int offset = 0;
 
-    ret_color color = RETPaletteGetColor(d->bg_color);
+    rb_color color = rb_display_palette_get_color(d->bg_color);
 
     for (int i = 0; i < total; i++) {
         d->pixel_data[offset] = color.r;
@@ -522,7 +522,7 @@ void rb_display_render_scroll_up(int height) {
         memcpy(dest, source, w * 4);
     }
 
-    ret_color color = RETPaletteGetColor(d->bg_color);
+    rb_color color = rb_display_palette_get_color(d->bg_color);
 
     int offset = (h - height) * w * 4;
     for (int i = 0; i < height * w; i++) {

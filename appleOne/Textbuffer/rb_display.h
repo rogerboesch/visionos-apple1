@@ -33,12 +33,12 @@
 #define RET_COLOR_BLUELIGHT     14
 #define RET_COLOR_GRAY3         15
 
-typedef struct ret_color_ {
+typedef struct rb_color_ {
 	byte r, g, b;
-} ret_color;
+} rb_color;
 
-ret_color RETPaletteGetColor(byte index);
-ret_color RETPaletteGetColorWithBrightness(byte index, byte bindex);
+rb_color rb_display_palette_get_color(byte index);
+rb_color rb_display_palette_get_color_brightness(byte index, byte bindex);
 
 /* Font dimensions */
 #define RET_FONT_WIDTH  8
