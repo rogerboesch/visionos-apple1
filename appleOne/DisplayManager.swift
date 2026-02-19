@@ -21,11 +21,11 @@ let PANEL_VERTICAL_OFFSET: Float = -0.3
 let PANEL_SMOOTHING: Float = 0.1
 
 // Circle layout
-let CIRCLE_DISPLAY_COUNT = 8
-let CIRCLE_RADIUS: Float = 10.0
+let CIRCLE_DISPLAY_COUNT = 16
+let CIRCLE_RADIUS: Float = 20.0
 
 // Maximum number of displays
-let DISPLAY_MAX_COUNT = 18
+let DISPLAY_MAX_COUNT = 26
 
 @Observable
 @MainActor
