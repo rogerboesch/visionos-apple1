@@ -4,9 +4,13 @@ import RealityKit
 import QuartzCore
 
 // Display size in meters
-let DISPLAY_WIDTH: Float = 1.5 * 4.0
-let DISPLAY_HEIGHT: Float = (1.5 * (208.0 / 336.0)) * 3.0
+let DISPLAY_WIDTH: Float = 1.5 * 5.0
+let DISPLAY_HEIGHT: Float = (1.5 * (208.0 / 336.0)) * 4.0
+
 let DISPLAY_DEPTH: Float = 0.005
+
+// Minimum distance from floor to bottom of display (in meters)
+let DISPLAY_MIN_FLOOR_GAP: Float = 0.5
 
 // Offset from head: placed slightly in front of the user
 let DISPLAY_PLACE_DISTANCE: Float = 0.5
@@ -95,7 +99,11 @@ class DisplayManager {
 
         // Create display entity
         let display = createDisplayEntity()
-        display.position = simd_float3(worldPos.x, worldPos.y, worldPos.z)
+
+        // Clamp Y so bottom edge stays above floor
+        let minY = DISPLAY_MIN_FLOOR_GAP + DISPLAY_HEIGHT / 2.0
+        let clampedY = max(worldPos.y, minY)
+        display.position = simd_float3(worldPos.x, clampedY, worldPos.z)
 
         // Use head orientation so display faces the user
         let headTransform = Transform(matrix: headMatrix)
@@ -115,7 +123,8 @@ class DisplayManager {
         }
 
         let display = createDisplayEntity()
-        display.position = [0, 1.6, -3.7]
+        let fallbackY = DISPLAY_MIN_FLOOR_GAP + DISPLAY_HEIGHT / 2.0
+        display.position = [0, fallbackY, -3.7]
         root.addChild(display)
         displayEntity = display
     }
