@@ -77,7 +77,6 @@
 		BB000001265B000100000002 /* rb_display.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = rb_display.c; sourceTree = "<group>"; };
 		BB000001265B000100000004 /* rb_display_render.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = rb_display_render.c; sourceTree = "<group>"; };
 		BB000001265B000100000006 /* rb_display_text.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = rb_display_text.c; sourceTree = "<group>"; };
-		DB728F022B8CAAC2006E60FD /* ret_platform_types.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ret_platform_types.h; sourceTree = "<group>"; };
 		DB728F032B8CAB10006E60FD /* ret_palette.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ret_palette.c; sourceTree = "<group>"; };
 		DB728F052B8CAB10006E60FD /* ret_palette.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ret_palette.h; sourceTree = "<group>"; };
 		DB728F092B8CD34E006E60FD /* Renderer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Renderer.swift; sourceTree = "<group>"; };
@@ -108,7 +107,6 @@
 		DB2043142B8D2313008A464B /* Textbuffer */ = {
 			isa = PBXGroup;
 			children = (
-				DB728F022B8CAAC2006E60FD /* ret_platform_types.h */,
 				DB728F052B8CAB10006E60FD /* ret_palette.h */,
 				DB728F032B8CAB10006E60FD /* ret_palette.c */,
 				BB000001265B000100000007 /* rb_display.h */,

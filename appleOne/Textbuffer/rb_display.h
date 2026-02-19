@@ -1,8 +1,18 @@
 #ifndef RB_DISPLAY_H
 #define RB_DISPLAY_H
 
+/* Datatypes */
+#ifndef byte
+	typedef unsigned char byte;
+#endif
+
+#ifndef boolean
+	#define boolean int
+	#define true 1
+	#define false 0
+#endif
+
 #include "ret_palette.h"
-#include "ret_platform_types.h"
 
 /* Font dimensions */
 #define RET_FONT_WIDTH  8
