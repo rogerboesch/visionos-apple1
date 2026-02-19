@@ -155,7 +155,9 @@ class DisplayManager {
 
             let display = createDisplayEntity()
             display.position = simd_float3(x, displayY, z)
-            display.orientation = simd_quatf(angle: angle, axis: [0, 1, 0])
+
+            let center = simd_float3(centerX, displayY, centerZ)
+            display.look(at: center, from: display.position, relativeTo: nil)
 
             root.addChild(display)
             displayEntities.append(display)
