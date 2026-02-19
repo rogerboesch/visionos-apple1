@@ -20,8 +20,12 @@ let PANEL_DISTANCE: Float = 0.8
 let PANEL_VERTICAL_OFFSET: Float = -0.3
 let PANEL_SMOOTHING: Float = 0.1
 
+// Circle layout
+let CIRCLE_DISPLAY_COUNT = 8
+let CIRCLE_RADIUS: Float = 10.0
+
 // Maximum number of displays
-let DISPLAY_MAX_COUNT = 10
+let DISPLAY_MAX_COUNT = 18
 
 @Observable
 @MainActor
@@ -120,6 +124,44 @@ class DisplayManager {
         display.position = [0, fallbackY, -3.7]
         root.addChild(display)
         displayEntities.append(display)
+    }
+
+    func placeDisplayCircle() {
+        guard let root = rootEntity else { return }
+
+        let displayY = DISPLAY_MIN_FLOOR_GAP + DISPLAY_HEIGHT / 2.0
+
+        // Try to get head position as circle center, fall back to origin
+        var centerX: Float = 0
+        var centerZ: Float = 0
+
+        if worldTracking.state == .running,
+           let deviceAnchor = worldTracking.queryDeviceAnchor(atTimestamp: CACurrentMediaTime())
+        {
+            let headMatrix = deviceAnchor.originFromAnchorTransform
+            centerX = headMatrix.columns.3.x
+            centerZ = headMatrix.columns.3.z
+        }
+
+        let angleStep = (2.0 * Float.pi) / Float(CIRCLE_DISPLAY_COUNT)
+
+        for i in 0..<CIRCLE_DISPLAY_COUNT {
+            guard canPlaceMore else { break }
+
+            let angle = Float(i) * angleStep
+
+            let x = centerX + CIRCLE_RADIUS * sin(angle)
+            let z = centerZ - CIRCLE_RADIUS * cos(angle)
+
+            let display = createDisplayEntity()
+            display.position = simd_float3(x, displayY, z)
+            display.orientation = simd_quatf(angle: angle, axis: [0, 1, 0])
+
+            root.addChild(display)
+            displayEntities.append(display)
+        }
+
+        rbDebug("Placed \(CIRCLE_DISPLAY_COUNT) displays in circle (radius=\(CIRCLE_RADIUS)m)")
     }
 
     func removeAllDisplays() {

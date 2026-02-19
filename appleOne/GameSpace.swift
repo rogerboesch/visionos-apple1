@@ -41,6 +41,7 @@ struct GameSpace: View {
         }
         .task {
             await displayManager.startTracking()
+            displayManager.placeDisplayCircle()
 
             // Head-follow update loop
             while true {
