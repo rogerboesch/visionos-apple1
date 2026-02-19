@@ -51,16 +51,6 @@ rb_color rb_display_palette_get_color_brightness(byte index, byte bindex);
 /* Maximum number of simultaneous displays */
 #define RB_DISPLAY_MAX 16
 
-/* Default display dimensions (Apple I) */
-#define RB_DEFAULT_COLS         42
-#define RB_DEFAULT_ROWS         26
-#define RB_DEFAULT_PIXEL_WIDTH  336
-#define RB_DEFAULT_PIXEL_HEIGHT 208
-
-/* Legacy aliases for post-processing (fixed-size buffer) */
-#define RB_PIXEL_WIDTH  RB_DEFAULT_PIXEL_WIDTH
-#define RB_PIXEL_HEIGHT RB_DEFAULT_PIXEL_HEIGHT
-
 /* Standard colors */
 #define RB_COLOR_BG        RB_COLOR_BLACK
 #define RB_COLOR_FG        RB_COLOR_WHITE
@@ -125,7 +115,7 @@ typedef struct rb_display {
 /*  Lifecycle                                                                 */
 /* -------------------------------------------------------------------------- */
 
-void rb_display_init(void);                     /* Creates display 0 (42x26, 336x208) */
+void rb_display_init(int cols, int rows);       /* Creates display 0 with given dimensions */
 int  rb_display_create(int cols, int rows);     /* Returns index, malloc's buffers */
 void rb_display_destroy(int display);           /* Free buffers, mark inactive */
 void rb_display_set_current(int display);       /* Switch active display */

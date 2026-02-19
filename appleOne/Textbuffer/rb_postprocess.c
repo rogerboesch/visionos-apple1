@@ -2,6 +2,7 @@
 #include "rb_postprocess.h"
 #include "rb_display.h"
 
+#include <stdlib.h>
 #include <string.h>
 #include <math.h>
 
@@ -22,8 +23,9 @@
 // Brightness threshold to count as "lit" pixel
 #define LIT_THRESHOLD 30
 
-// Output buffer with glow applied
-static byte rb_glow_buffer[RB_PIXEL_WIDTH * RB_PIXEL_HEIGHT * 4];
+// Dynamic output buffer
+static byte *rb_glow_buffer = NULL;
+static int rb_glow_buffer_size = 0;
 
 // Pre-computed glow kernel
 static float glow_kernel[GLOW_RADIUS * 2 + 1][GLOW_RADIUS * 2 + 1];
@@ -68,12 +70,8 @@ static inline int clamp_byte(int v) {
     return v;
 }
 
-void rb_postprocess_apply(byte *source, byte *dest) {
+void rb_postprocess_apply(byte *source, byte *dest, int w, int h) {
     build_glow_kernel();
-
-    int w = RB_PIXEL_WIDTH;
-    int h = RB_PIXEL_HEIGHT;
-    int stride = w * 4;
 
     // Start with black background
     memset(dest, 0, w * h * 4);
@@ -157,6 +155,14 @@ void rb_postprocess_apply(byte *source, byte *dest) {
     }
 }
 
-byte *rb_postprocess_get_buffer(void) {
+byte *rb_postprocess_get_buffer(int w, int h) {
+    int needed = w * h * 4;
+
+    if (rb_glow_buffer == NULL || rb_glow_buffer_size < needed) {
+        free(rb_glow_buffer);
+        rb_glow_buffer = (byte *)malloc(needed);
+        rb_glow_buffer_size = needed;
+    }
+
     return rb_glow_buffer;
 }

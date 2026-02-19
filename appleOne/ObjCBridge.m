@@ -78,13 +78,7 @@ char* platform_file_path(char *name, char *extension) {
 }
 
 // Called from C to Swift
-void rb_render_frame(unsigned char *data, int index) {
-    UIImage* image = [UIImage fromBuffer:data width:RB_PIXEL_WIDTH height:RB_PIXEL_HEIGHT];
-    [Renderer render:image];
-}
-
-// Called from C to Swift — dynamic size variant for hi-res portraits
-void rb_render_frame_sized(unsigned char *data, int width, int height) {
+void rb_render_frame(unsigned char *data, int width, int height) {
     UIImage* image = [UIImage fromBuffer:data width:width height:height];
     [Renderer render:image];
 }

@@ -8,7 +8,7 @@
 /* Access to current display from rb_display.c */
 extern rb_display *rb_get_current(void);
 
-extern void rb_render_frame(byte *data, int index);
+extern void rb_render_frame(byte *data, int width, int height);
 
 /* -------------------------------------------------------------------------- */
 /*  Palette data                                                              */
@@ -540,10 +540,13 @@ void rb_display_render_scroll_up(int height) {
 void rb_display_render_frame(void) {
     rb_display *d = rb_get_current();
 
-    byte *output = rb_postprocess_get_buffer();
-    rb_postprocess_apply(d->pixel_data, output);
+    int w = d->pixel_width;
+    int h = d->pixel_height;
 
-    rb_render_frame(output, 0);
+    byte *output = rb_postprocess_get_buffer(w, h);
+    rb_postprocess_apply(d->pixel_data, output, w, h);
+
+    rb_render_frame(output, w, h);
 }
 
 void rb_display_render_set_direct(int mode) {
