@@ -27,6 +27,7 @@
 #define RET_TEXT_HEIGHT RET_PIXEL_HEIGHT/RET_FONT_HEIGHT
 
 void ret_rend_set_pixel(int x, int y, byte paletteColor, byte brightness);
+void ret_rend_draw_line(int x1, int y1, int x2, int y2, byte paletteColor, byte brightness);
 void ret_rend_clear_screen(void);
 
 void ret_rend_draw_char(int x, int y, const char ch, int invert, byte paletteColor);
