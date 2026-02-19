@@ -30,8 +30,16 @@ struct GameSpace: View {
 
     var body: some View {
         RealityView { content in
-            // Anchor to the nearest vertical wall
-            let wallAnchor = AnchorEntity(.plane(.vertical, classification: .wall, minimumBounds: [1.0, 0.5]))
+            let anchor: AnchorEntity
+
+            if isVisionOSDevice() {
+                // On device: attach to the nearest vertical wall
+                anchor = AnchorEntity(.plane(.vertical, classification: .wall, minimumBounds: [1.0, 0.5]))
+            }
+            else {
+                // In simulator: place at a fixed position in front of the user
+                anchor = AnchorEntity(world: [0, 1.5, -2.0])
+            }
 
             // Create a flat box as the display surface
             let mesh = MeshResource.generateBox(size: 1.0)
@@ -39,8 +47,8 @@ struct GameSpace: View {
             let display = ModelEntity(mesh: mesh, materials: [material])
             display.scale = [WALL_DISPLAY_WIDTH, WALL_DISPLAY_HEIGHT, WALL_DISPLAY_DEPTH]
 
-            wallAnchor.addChild(display)
-            content.add(wallAnchor)
+            anchor.addChild(display)
+            content.add(anchor)
 
             wallEntity = display
         }
