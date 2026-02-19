@@ -78,25 +78,25 @@ char* platform_file_path(char *name, char *extension) {
 }
 
 // Called from C to Swift
-void ret_render_frame(unsigned char *data, int index) {
+void rb_render_frame(unsigned char *data, int index) {
     UIImage* image = [UIImage fromBuffer:data width:RB_PIXEL_WIDTH height:RB_PIXEL_HEIGHT];
     [Renderer render:image];
 }
 
 // Called from C to Swift — dynamic size variant for hi-res portraits
-void ret_render_frame_sized(unsigned char *data, int width, int height) {
+void rb_render_frame_sized(unsigned char *data, int width, int height) {
     UIImage* image = [UIImage fromBuffer:data width:width height:height];
     [Renderer render:image];
 }
 
 // Called from C to Swift — single portrait for circle displays
-void ret_render_portrait(unsigned char *data, int width, int height) {
+void rb_render_portrait(unsigned char *data, int width, int height) {
     UIImage* image = [UIImage fromBuffer:data width:width height:height];
     [Renderer renderPortrait:image];
 }
 
 // Called from C to Swift — portrait pair for alternating displays
-void ret_render_portrait_pair(unsigned char *dataA, int widthA, int heightA,
+void rb_render_portrait_pair(unsigned char *dataA, int widthA, int heightA,
                               unsigned char *dataB, int widthB, int heightB) {
     UIImage* imageA = [UIImage fromBuffer:dataA width:widthA height:heightA];
     UIImage* imageB = [UIImage fromBuffer:dataB width:widthB height:heightB];

@@ -6,8 +6,8 @@
 #include <string.h>
 
 /* Bridge functions declared in ObjCBridge.m */
-void ret_render_portrait(unsigned char *data, int width, int height);
-void ret_render_portrait_pair(unsigned char *dataA, int widthA, int heightA,
+void rb_render_portrait(unsigned char *data, int width, int height);
+void rb_render_portrait_pair(unsigned char *dataA, int widthA, int heightA,
                               unsigned char *dataB, int widthB, int heightB);
 
 /* Phosphor green — must match ret_postprocess.c for consistent color */
@@ -82,7 +82,7 @@ void portrait_hires_show_jobs(void) {
                               PORTRAIT_HIRES_JOBS_ROWS,
                               PORTRAIT_HIRES_JOBS_COLS,
                               &pixels, &w, &h);
-    ret_render_portrait(pixels, w, h);
+    rb_render_portrait(pixels, w, h);
 
     /* Find and destroy the temporary display */
     for (int i = 1; i < RB_DISPLAY_MAX; i++) {
@@ -100,7 +100,7 @@ void portrait_hires_show_wozniak(void) {
                               PORTRAIT_HIRES_WOZ_ROWS,
                               PORTRAIT_HIRES_WOZ_COLS,
                               &pixels, &w, &h);
-    ret_render_portrait(pixels, w, h);
+    rb_render_portrait(pixels, w, h);
 
     for (int i = 1; i < RB_DISPLAY_MAX; i++) {
         if (rb_display_get_pixel_data(i) == pixels) {
@@ -124,7 +124,7 @@ void portrait_hires_show_both(void) {
                               PORTRAIT_HIRES_WOZ_COLS,
                               &woz_pixels, &woz_w, &woz_h);
 
-    ret_render_portrait_pair(jobs_pixels, jobs_w, jobs_h,
+    rb_render_portrait_pair(jobs_pixels, jobs_w, jobs_h,
                              woz_pixels, woz_w, woz_h);
 
     /* Destroy both temporary displays */

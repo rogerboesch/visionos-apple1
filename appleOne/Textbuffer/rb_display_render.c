@@ -8,7 +8,7 @@
 /* Access to current display from rb_display.c */
 extern rb_display *rb_get_current(void);
 
-extern void ret_render_frame(byte *data, int index);
+extern void rb_render_frame(byte *data, int index);
 
 /* -------------------------------------------------------------------------- */
 /*  Palette data                                                              */
@@ -543,7 +543,7 @@ void rb_display_render_frame(void) {
     byte *output = rb_postprocess_get_buffer();
     rb_postprocess_apply(d->pixel_data, output);
 
-    ret_render_frame(output, 0);
+    rb_render_frame(output, 0);
 }
 
 void rb_display_render_set_direct(int mode) {
