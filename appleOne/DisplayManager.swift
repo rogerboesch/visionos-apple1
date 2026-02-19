@@ -15,9 +15,9 @@ let DISPLAY_MIN_FLOOR_GAP: Float = 0.2
 // Offset from head: placed slightly in front of the user
 let DISPLAY_PLACE_DISTANCE: Float = 0.5
 
-// Head-follow panel distance and position
+// Panel placement (fixed position, billboard rotation only)
 let PANEL_DISTANCE: Float = 0.8
-let PANEL_VERTICAL_OFFSET: Float = -0.3
+let PANEL_VERTICAL_OFFSET: Float = -0.1
 let PANEL_SMOOTHING: Float = 0.1
 let PANEL_TILT_DEGREES: Float = 30.0
 
@@ -58,7 +58,26 @@ class DisplayManager {
         }
     }
 
-    func updatePanelPosition() {
+    func placePanel() {
+        guard let panel = panelEntity else { return }
+
+        guard worldTracking.state == .running,
+              let deviceAnchor = worldTracking.queryDeviceAnchor(atTimestamp: CACurrentMediaTime())
+        else {
+            // Fallback: place at fixed position in front of origin
+            panel.position = simd_float3(0, DISPLAY_MIN_FLOOR_GAP, -PANEL_DISTANCE)
+            return
+        }
+
+        let headMatrix = deviceAnchor.originFromAnchorTransform
+
+        // Place in front of the head, slightly below eye level
+        let offset = simd_float4(0, PANEL_VERTICAL_OFFSET, -PANEL_DISTANCE, 1)
+        let targetPos = headMatrix * offset
+        panel.position = simd_float3(targetPos.x, targetPos.y, targetPos.z)
+    }
+
+    func updatePanelBillboard() {
         guard let panel = panelEntity else { return }
 
         guard worldTracking.state == .running,
@@ -69,15 +88,6 @@ class DisplayManager {
 
         let headMatrix = deviceAnchor.originFromAnchorTransform
 
-        // Target position: in front of the head, slightly below eye level
-        let offset = simd_float4(0, PANEL_VERTICAL_OFFSET, -PANEL_DISTANCE, 1)
-        let targetPos = headMatrix * offset
-        let target = simd_float3(targetPos.x, targetPos.y, targetPos.z)
-
-        // Smooth follow (lerp)
-        let current = panel.position
-        panel.position = current + (target - current) * PANEL_SMOOTHING
-
         // Billboard: face user using yaw only (ignore head pitch/roll)
         let headPos = simd_float3(headMatrix.columns.3.x,
                                   headMatrix.columns.3.y,
@@ -86,7 +96,7 @@ class DisplayManager {
         let yaw = atan2(dir.x, dir.z)
         let tilt = PANEL_TILT_DEGREES * (.pi / 180.0)
 
-        // Yaw rotation (face user) then tilt forward like a table
+        // Yaw rotation (face user) then tilt like a table
         let yawQuat = simd_quatf(angle: yaw, axis: simd_float3(0, 1, 0))
         let tiltQuat = simd_quatf(angle: -tilt, axis: simd_float3(1, 0, 0))
         let targetRot = yawQuat * tiltQuat

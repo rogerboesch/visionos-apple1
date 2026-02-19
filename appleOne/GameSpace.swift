@@ -42,11 +42,12 @@ struct GameSpace: View {
         }
         .task {
             await displayManager.startTracking()
+            displayManager.placePanel()
             displayManager.placeDisplayCircle()
 
-            // Head-follow update loop for control panel
+            // Billboard rotation update loop (panel stays in place)
             while true {
-                displayManager.updatePanelPosition()
+                displayManager.updatePanelBillboard()
                 try? await Task.sleep(for: .milliseconds(16))
             }
         }

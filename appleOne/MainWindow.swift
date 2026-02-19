@@ -47,13 +47,39 @@ struct MainWindow: View {
     }
 }
 
-// Control panel UI — used as attachment in the immersive space
+// MARK: - Colored button style (Shockwave-inspired)
+
+struct PanelButton: View {
+    let label: String
+    var color: Color = .white
+    let action: () -> Void
+
+    var body: some View {
+        Button(action: action) {
+            Text(label)
+                .font(.system(size: 13, weight: .bold, design: .monospaced))
+                .foregroundColor(color)
+                .padding(.horizontal, 14)
+                .padding(.vertical, 10)
+                .background(
+                    RoundedRectangle(cornerRadius: 10)
+                        .fill(color.opacity(0.15))
+                )
+                .overlay(
+                    RoundedRectangle(cornerRadius: 10)
+                        .strokeBorder(color.opacity(0.5), lineWidth: 1)
+                )
+        }
+        .buttonStyle(.plain)
+    }
+}
+
+// MARK: - Control panel UI (attachment in the immersive space)
+
 struct ControlPanel: View {
     @State private var renderer = ScreenRenderer.shared
     @State var basicState = AppleState.cold
     @State var assemblerState = AppleState.cold
-
-    let apple1Info = "The Apple Computer 1 (Apple-1), later known predominantly as the Apple I (written with a Roman numeral), is an 8-bit motherboard-only personal computer designed by Steve Wozniak and released by the Apple Computer Company (now Apple Inc.) in 1976."
 
     let basicListing = "10 PRINT \"Hello Apple I \";\n20 GOTO 10\nRUN\n"
     let assemblerListing = " LDA #'A'\nLOOP JSR $FFEF\n CLC\n ADC #$1\n CMP #'Z'+1\n BNE LOOP\n RTS\n~a\n"
@@ -81,28 +107,17 @@ struct ControlPanel: View {
             }
             .clipShape(RoundedRectangle(cornerRadius: 8))
 
-            // Info text
-            Text(apple1Info)
-                .font(.system(size: 14))
-                .foregroundColor(.secondary)
-
             // Control buttons
-            HStack(spacing: 12) {
-                Button(action: {
+            HStack(spacing: 8) {
+                PanelButton(label: "RESET", color: .red) {
                     EmulatorHardReset()
                     self.basicState = .cold
                     self.assemblerState = .cold
-                }) {
-                    Text("RESET")
                 }
-                .buttonStyle(.bordered)
 
-                Button(action: {
+                PanelButton(label: "BREAK", color: .orange) {
                     KeyboardHandler().sendText("~")
-                }) {
-                    Text("BREAK")
                 }
-                .buttonStyle(.bordered)
 
                 basicButtons
 
@@ -110,20 +125,14 @@ struct ControlPanel: View {
             }
 
             // Portrait buttons
-            HStack(spacing: 12) {
-                Button(action: {
+            HStack(spacing: 8) {
+                PanelButton(label: "STEVE JOBS", color: .green) {
                     EmulatorShowJobs()
-                }) {
-                    Text("STEVE JOBS")
                 }
-                .buttonStyle(.bordered)
 
-                Button(action: {
+                PanelButton(label: "STEVE WOZNIAK", color: .green) {
                     EmulatorShowWozniak()
-                }) {
-                    Text("STEVE WOZNIAK")
                 }
-                .buttonStyle(.bordered)
             }
         }
         .padding()
@@ -133,28 +142,19 @@ struct ControlPanel: View {
     private var basicButtons: some View {
         switch self.basicState {
         case .cold:
-            Button(action: {
+            PanelButton(label: "LOAD BASIC", color: .cyan) {
                 EmulatorLoadBasic()
                 self.basicState = .loaded
-            }) {
-                Text("LOAD BASIC")
             }
-            .buttonStyle(.bordered)
         case .loaded:
-            Button(action: {
+            PanelButton(label: "START BASIC", color: .green) {
                 KeyboardHandler().sendText("e000r\n")
                 self.basicState = .started
-            }) {
-                Text("START BASIC")
             }
-            .buttonStyle(.bordered)
         case .started:
-            Button(action: {
+            PanelButton(label: "TYPE LISTING", color: .blue) {
                 KeyboardHandler().sendText(basicListing)
-            }) {
-                Text("TYPE LISTING")
             }
-            .buttonStyle(.bordered)
         }
     }
 
@@ -162,40 +162,28 @@ struct ControlPanel: View {
     private var assemblerButtons: some View {
         switch self.assemblerState {
         case .cold:
-            Button(action: {
+            PanelButton(label: "LOAD ASSEMBLER", color: .cyan) {
                 EmulatorLoadCore()
                 self.assemblerState = .loaded
-            }) {
-                Text("LOAD ASSEMBLER")
             }
-            .buttonStyle(.bordered)
         case .loaded:
-            HStack(spacing: 12) {
-                Button(action: {
+            HStack(spacing: 8) {
+                PanelButton(label: "START ASSEMBLER", color: .green) {
                     KeyboardHandler().sendText("f000r\n")
                     self.assemblerState = .started
-                }) {
-                    Text("START ASSEMBLER")
                 }
-                .buttonStyle(.bordered)
 
-                Button(action: {
+                PanelButton(label: "RUN EXAMPLE", color: .blue) {
                     KeyboardHandler().sendText("e2b3r\n")
                     KeyboardHandler().sendText("run\n", wait: 1.0)
-                }) {
-                    Text("RUN EXAMPLE")
                 }
-                .buttonStyle(.bordered)
             }
         case .started:
-            Button(action: {
+            PanelButton(label: "TYPE LISTING", color: .blue) {
                 KeyboardHandler().sendText("n\n")
                 KeyboardHandler().sendText(assemblerListing, wait: 1.0)
                 KeyboardHandler().sendText("r $300\n", wait: 10.0)
-            }) {
-                Text("TYPE LISTING")
             }
-            .buttonStyle(.bordered)
         }
     }
 }
