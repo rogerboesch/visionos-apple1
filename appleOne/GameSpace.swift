@@ -23,31 +23,14 @@ struct GameSpace: View {
     @State private var displayManager = DisplayManager.shared
 
     var body: some View {
-        RealityView { content, attachments in
+        RealityView { content in
             let root = Entity()
             content.add(root)
             displayManager.rootEntity = root
-
-            // Add the head-tracked placement panel
-            if let panelAttachment = attachments.entity(for: "placement_panel") {
-                root.addChild(panelAttachment)
-                displayManager.panelEntity = panelAttachment
-            }
-        } attachments: {
-            Attachment(id: "placement_panel") {
-                PlacementPanel()
-                    .glassBackgroundEffect()
-            }
         }
         .task {
             await displayManager.startTracking()
             displayManager.placeDisplayCircle()
-
-            // Head-follow update loop
-            while true {
-                displayManager.updatePanelPosition()
-                try? await Task.sleep(for: .milliseconds(16))
-            }
         }
         .onChange(of: renderer.screenImage) { oldValue, newValue in
             guard let image = newValue, let cgImage = image.cgImage else { return }
