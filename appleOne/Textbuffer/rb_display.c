@@ -28,8 +28,8 @@ rb_display *rb_get_display(int index) {
 
 static void rb_display_alloc_buffers(rb_display *d, int cols, int rows) {
     int text_size = cols * rows;
-    int pixel_w = cols * RET_FONT_WIDTH;
-    int pixel_h = rows * RET_FONT_HEIGHT;
+    int pixel_w = cols * RB_FONT_WIDTH;
+    int pixel_h = rows * RB_FONT_HEIGHT;
     int pixel_size = pixel_w * pixel_h * 4;
 
     d->text_cols = cols;
@@ -55,9 +55,9 @@ static void rb_display_init_defaults(rb_display *d) {
     d->cursor_cycles = 0;
     d->cursor_visible = true;
 
-    d->bg_color = RET_COLOR_BG;
-    d->fg_color = RET_COLOR_FG;
-    d->fg_brightness = RET_BRIGHTNESS_NORMAL;
+    d->bg_color = RB_COLOR_BG;
+    d->fg_color = RB_COLOR_FG;
+    d->fg_brightness = RB_BRIGHTNESS_NORMAL;
     d->invert_mode = false;
 
     d->graphics_x = 0;

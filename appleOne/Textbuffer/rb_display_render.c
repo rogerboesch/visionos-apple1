@@ -41,14 +41,14 @@ static float rb_brightness_table[] = {
 };
 
 rb_color rb_display_palette_get_color(byte index) {
-	if (index >= RET_PALETTE_SIZE) {
+	if (index >= RB_PALETTE_SIZE) {
 		return rb_display_palette_get_color(2);
 	}
 	return rb_palette[index];
 }
 
 rb_color rb_display_palette_get_color_brightness(byte index, byte bindex) {
-	if (index >= RET_PALETTE_SIZE) {
+	if (index >= RB_PALETTE_SIZE) {
 		return rb_display_palette_get_color(2);
 	}
 
@@ -434,8 +434,8 @@ static void rb_vec_drawchar(char ch) {
 
 void rb_display_render_draw_char(int x, int y, char ch, int invert, byte paletteColor) {
     rb_display *d = rb_get_current();
-    int w = RET_FONT_WIDTH;
-    int h = RET_FONT_HEIGHT;
+    int w = RB_FONT_WIDTH;
+    int h = RB_FONT_HEIGHT;
     int offset = (int)ch * 8;
     int stride = d->pixel_width;
 
@@ -656,10 +656,10 @@ void rb_display_draw_vstring(char *str, int x, int y) {
     while (*str != 0) {
         char ch = *str;
 
-        rb_vec_moveto(x2, y + RET_FONT_HEIGHT);
+        rb_vec_moveto(x2, y + RB_FONT_HEIGHT);
         rb_vec_drawchar(ch);
 
         str++;
-        x2 += RET_FONT_WIDTH + RET_VFONT_SPACE;
+        x2 += RB_FONT_WIDTH + RB_VFONT_SPACE;
     }
 }

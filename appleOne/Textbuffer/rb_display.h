@@ -13,25 +13,25 @@
 #endif
 
 /* Palette */
-#define RET_PALETTE_SIZE 16
-#define RET_BRIGHTNESS_NORMAL 7
+#define RB_PALETTE_SIZE 16
+#define RB_BRIGHTNESS_NORMAL 7
 
-#define RET_COLOR_BLACK         0
-#define RET_COLOR_WHITE         1
-#define RET_COLOR_RED           2
-#define RET_COLOR_TURKEY        3
-#define RET_COLOR_VIOLETT       4
-#define RET_COLOR_GREEN         5
-#define RET_COLOR_BLUE          6
-#define RET_COLOR_YELLOW        7
-#define RET_COLOR_ORANGE        8
-#define RET_COLOR_BROWN         9
-#define RET_COLOR_REDLIGHT      10
-#define RET_COLOR_GRAY1         11
-#define RET_COLOR_GRAY2         12
-#define RET_COLOR_GREENLIGHT    13
-#define RET_COLOR_BLUELIGHT     14
-#define RET_COLOR_GRAY3         15
+#define RB_COLOR_BLACK         0
+#define RB_COLOR_WHITE         1
+#define RB_COLOR_RED           2
+#define RB_COLOR_TURKEY        3
+#define RB_COLOR_VIOLETT       4
+#define RB_COLOR_GREEN         5
+#define RB_COLOR_BLUE          6
+#define RB_COLOR_YELLOW        7
+#define RB_COLOR_ORANGE        8
+#define RB_COLOR_BROWN         9
+#define RB_COLOR_REDLIGHT      10
+#define RB_COLOR_GRAY1         11
+#define RB_COLOR_GRAY2         12
+#define RB_COLOR_GREENLIGHT    13
+#define RB_COLOR_BLUELIGHT     14
+#define RB_COLOR_GRAY3         15
 
 typedef struct rb_color_ {
 	byte r, g, b;
@@ -41,12 +41,12 @@ rb_color rb_display_palette_get_color(byte index);
 rb_color rb_display_palette_get_color_brightness(byte index, byte bindex);
 
 /* Font dimensions */
-#define RET_FONT_WIDTH  8
-#define RET_FONT_HEIGHT 8
+#define RB_FONT_WIDTH  8
+#define RB_FONT_HEIGHT 8
 
-#define RET_FONT_VEC_WIDTH  10
-#define RET_FONT_VEC_HEIGHT 16
-#define RET_VFONT_SPACE 2
+#define RB_FONT_VEC_WIDTH  10
+#define RB_FONT_VEC_HEIGHT 16
+#define RB_VFONT_SPACE 2
 
 /* Maximum number of simultaneous displays */
 #define RB_DISPLAY_MAX 16
@@ -58,18 +58,18 @@ rb_color rb_display_palette_get_color_brightness(byte index, byte bindex);
 #define RB_DEFAULT_PIXEL_HEIGHT 208
 
 /* Legacy aliases for post-processing (fixed-size buffer) */
-#define RET_PIXEL_WIDTH  RB_DEFAULT_PIXEL_WIDTH
-#define RET_PIXEL_HEIGHT RB_DEFAULT_PIXEL_HEIGHT
+#define RB_PIXEL_WIDTH  RB_DEFAULT_PIXEL_WIDTH
+#define RB_PIXEL_HEIGHT RB_DEFAULT_PIXEL_HEIGHT
 
 /* Standard colors */
-#define RET_COLOR_BG        RET_COLOR_BLACK
-#define RET_COLOR_FG        RET_COLOR_WHITE
-#define RET_COLOR_CURSOR    RET_COLOR_BLUELIGHT
+#define RB_COLOR_BG        RB_COLOR_BLACK
+#define RB_COLOR_FG        RB_COLOR_WHITE
+#define RB_COLOR_CURSOR    RB_COLOR_BLUELIGHT
 
 /* Color escape codes for inline color changes in print strings */
-#define RET_ESCAPE_BASE_INDEX_FOR_COLOR 240
-#define RET_ESCAPE_INVERT_ON  (RET_ESCAPE_BASE_INDEX_FOR_COLOR - 2)
-#define RET_ESCAPE_INVERT_OFF (RET_ESCAPE_INVERT_ON + 1)
+#define RB_ESCAPE_BASE_INDEX_FOR_COLOR 240
+#define RB_ESCAPE_INVERT_ON  (RB_ESCAPE_BASE_INDEX_FOR_COLOR - 2)
+#define RB_ESCAPE_INVERT_OFF (RB_ESCAPE_INVERT_ON + 1)
 
 /* Vector font drawing helpers */
 #define P(x,y) ((((x) & 0xF) << 4) | (((y) & 0xF) << 0))

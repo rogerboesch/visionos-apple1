@@ -118,7 +118,7 @@ int splash_frame(void) {
 
     rb_display_render_clear();
 
-    byte old_fg = rb_display_set_fg_color(RET_COLOR_GREEN);
+    byte old_fg = rb_display_set_fg_color(RB_COLOR_GREEN);
     byte old_bright = rb_display_set_fg_brightness((unsigned char)brightness);
 
     rb_display_text_set_immediate(1);

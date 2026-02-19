@@ -41,7 +41,7 @@ static void render_portrait_to_buffer(const char **art, int art_rows, int art_co
     rb_display_set_current(d);
 
     /* Render glyphs as white — we tint to phosphor green afterwards */
-    rb_display_set_fg_color(RET_COLOR_WHITE);
+    rb_display_set_fg_color(RB_COLOR_WHITE);
     rb_display_set_fg_brightness(15);
     rb_display_text_set_immediate(1);
 

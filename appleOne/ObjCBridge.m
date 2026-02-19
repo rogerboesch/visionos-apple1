@@ -79,7 +79,7 @@ char* platform_file_path(char *name, char *extension) {
 
 // Called from C to Swift
 void ret_render_frame(unsigned char *data, int index) {
-    UIImage* image = [UIImage fromBuffer:data width:RET_PIXEL_WIDTH height:RET_PIXEL_HEIGHT];
+    UIImage* image = [UIImage fromBuffer:data width:RB_PIXEL_WIDTH height:RB_PIXEL_HEIGHT];
     [Renderer render:image];
 }
 

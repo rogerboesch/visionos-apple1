@@ -22,8 +22,8 @@ void rb_display_text_flush(void) {
             char ch = d->text_buffer[row * d->text_cols + col];
             byte paletteColor = d->text_colbuf[row * d->text_cols + col];
 
-            int x = col * RET_FONT_WIDTH;
-            int y = row * RET_FONT_HEIGHT;
+            int x = col * RB_FONT_WIDTH;
+            int y = row * RB_FONT_HEIGHT;
 
             rb_display_render_draw_char(x, y, ch, 0, paletteColor);
         }
@@ -48,18 +48,18 @@ boolean rb_display_text_print_char(int row, int col, char ch, byte color) {
     rb_display *d = rb_get_current();
 
     byte code = (byte)ch;
-    if (code >= RET_ESCAPE_BASE_INDEX_FOR_COLOR && code <= RET_ESCAPE_BASE_INDEX_FOR_COLOR + 15) {
-        int new_color = (int)code - RET_ESCAPE_BASE_INDEX_FOR_COLOR;
+    if (code >= RB_ESCAPE_BASE_INDEX_FOR_COLOR && code <= RB_ESCAPE_BASE_INDEX_FOR_COLOR + 15) {
+        int new_color = (int)code - RB_ESCAPE_BASE_INDEX_FOR_COLOR;
         rb_display_set_fg_color(new_color);
         return false;
     }
 
-    if (code == RET_ESCAPE_INVERT_ON) {
+    if (code == RB_ESCAPE_INVERT_ON) {
         rb_display_set_invert(true);
         return false;
     }
 
-    if (code == RET_ESCAPE_INVERT_OFF) {
+    if (code == RB_ESCAPE_INVERT_OFF) {
         rb_display_set_invert(false);
         return false;
     }
@@ -71,8 +71,8 @@ boolean rb_display_text_print_char(int row, int col, char ch, byte color) {
         d->text_colbuf[offset] = color;
 
         if (d->immediate_print == 1) {
-            int x = col * RET_FONT_WIDTH;
-            int y = row * RET_FONT_HEIGHT;
+            int x = col * RB_FONT_WIDTH;
+            int y = row * RB_FONT_HEIGHT;
 
             if (d->invert_mode) {
                 rb_display_render_draw_char(x, y, ch, 1, color);
@@ -107,7 +107,7 @@ void rb_display_text_scroll_up(void) {
         memcpy(dest, source, d->text_cols);
     }
 
-    rb_display_render_scroll_up(RET_FONT_HEIGHT);
+    rb_display_render_scroll_up(RB_FONT_HEIGHT);
 
     /* Clear last line */
     dest = &d->text_buffer[(d->text_rows - 1) * d->text_cols];
@@ -129,19 +129,19 @@ void rb_display_cursor_draw(void) {
         return;
     }
 
-    int x = d->cursor_col * RET_FONT_WIDTH;
-    int y = d->cursor_row * RET_FONT_HEIGHT;
+    int x = d->cursor_col * RB_FONT_WIDTH;
+    int y = d->cursor_row * RB_FONT_HEIGHT;
 
     char ch = d->text_buffer[d->cursor_row * d->text_cols + d->cursor_col];
 
-    rb_display_render_draw_char(x, y, ch, 1, RET_COLOR_CURSOR);
+    rb_display_render_draw_char(x, y, ch, 1, RB_COLOR_CURSOR);
 }
 
 static void rb_cursor_reset_char(void) {
     rb_display *d = rb_get_current();
 
-    int x = d->cursor_col * RET_FONT_WIDTH;
-    int y = d->cursor_row * RET_FONT_HEIGHT;
+    int x = d->cursor_col * RB_FONT_WIDTH;
+    int y = d->cursor_row * RB_FONT_HEIGHT;
 
     char ch = d->text_buffer[d->cursor_row * d->text_cols + d->cursor_col];
     byte paletteColor = d->text_colbuf[d->cursor_row * d->text_cols + d->cursor_col];
