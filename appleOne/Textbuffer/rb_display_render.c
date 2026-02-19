@@ -540,8 +540,8 @@ void rb_display_render_scroll_up(int height) {
 void rb_display_render_frame(void) {
     rb_display *d = rb_get_current();
 
-    byte *output = ret_postprocess_get_buffer();
-    ret_postprocess_apply(d->pixel_data, output);
+    byte *output = rb_postprocess_get_buffer();
+    rb_postprocess_apply(d->pixel_data, output);
 
     ret_render_frame(output, 0);
 }

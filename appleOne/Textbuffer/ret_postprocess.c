@@ -23,7 +23,7 @@
 #define LIT_THRESHOLD 30
 
 // Output buffer with glow applied
-static byte ret_glow_buffer[RB_PIXEL_WIDTH * RB_PIXEL_HEIGHT * 4];
+static byte rb_glow_buffer[RB_PIXEL_WIDTH * RB_PIXEL_HEIGHT * 4];
 
 // Pre-computed glow kernel
 static float glow_kernel[GLOW_RADIUS * 2 + 1][GLOW_RADIUS * 2 + 1];
@@ -68,7 +68,7 @@ static inline int clamp_byte(int v) {
     return v;
 }
 
-void ret_postprocess_apply(byte *source, byte *dest) {
+void rb_postprocess_apply(byte *source, byte *dest) {
     build_glow_kernel();
 
     int w = RB_PIXEL_WIDTH;
@@ -157,6 +157,6 @@ void ret_postprocess_apply(byte *source, byte *dest) {
     }
 }
 
-byte *ret_postprocess_get_buffer(void) {
-    return ret_glow_buffer;
+byte *rb_postprocess_get_buffer(void) {
+    return rb_glow_buffer;
 }
