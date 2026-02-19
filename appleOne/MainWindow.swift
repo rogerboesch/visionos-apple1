@@ -25,9 +25,9 @@ enum AppleState {
 
 struct MainWindow: View {
     @Environment(\.openImmersiveSpace) var openImmersiveSpace
+    @Environment(\.openWindow) var openWindow
 
     @State private var renderer = ScreenRenderer.shared
-    @State private var displayManager = DisplayManager.shared
     @State var basicState = AppleState.cold
     @State var assemblerState = AppleState.cold
 
@@ -84,13 +84,6 @@ struct MainWindow: View {
                 }
                 .buttonStyle(.bordered)
 
-                Button(action: {
-                    displayManager.placeDisplay()
-                }) {
-                    Text("PLACE DISPLAY")
-                }
-                .buttonStyle(.borderedProminent)
-
                 basicButtons
 
                 assemblerButtons
@@ -107,6 +100,8 @@ struct MainWindow: View {
             Task {
                 await openImmersiveSpace(id: "wall_display")
             }
+
+            openWindow(id: "placement_panel")
         }
     }
 

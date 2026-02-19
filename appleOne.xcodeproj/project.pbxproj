@@ -38,6 +38,7 @@
 		AA000001265A000100000001 /* ret_postprocess.c in Sources */ = {isa = PBXBuildFile; fileRef = AA000001265A000100000002 /* ret_postprocess.c */; };
 		AA000001265A000100000003 /* splash.c in Sources */ = {isa = PBXBuildFile; fileRef = AA000001265A000100000004 /* splash.c */; };
 		AA000002265A000200000001 /* DisplayManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002265A000200000002 /* DisplayManager.swift */; };
+		AA000003265A000300000001 /* PlacementPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000003265A000300000002 /* PlacementPanel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -90,6 +91,7 @@
 		AA000001265A000100000004 /* splash.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = splash.c; sourceTree = "<group>"; };
 		AA000001265A000100000006 /* splash.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = splash.h; sourceTree = "<group>"; };
 		AA000002265A000200000002 /* DisplayManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayManager.swift; sourceTree = "<group>"; };
+		AA000003265A000300000002 /* PlacementPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlacementPanel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -188,6 +190,7 @@
 				DB728EEC2B8C988C006E60FD /* ObjCBridge.m */,
 				DB728F092B8CD34E006E60FD /* Renderer.swift */,
 				AA000002265A000200000002 /* DisplayManager.swift */,
+				AA000003265A000300000002 /* PlacementPanel.swift */,
 				DB728ED42B8C9167006E60FD /* GameApp.swift */,
 				DB728ED82B8C9167006E60FD /* GameSpace.swift */,
 				DB728ED62B8C9167006E60FD /* MainWindow.swift */,
@@ -317,6 +320,7 @@
 				AA000001265A000100000001 /* ret_postprocess.c in Sources */,
 				AA000001265A000100000003 /* splash.c in Sources */,
 				AA000002265A000200000001 /* DisplayManager.swift in Sources */,
+				AA000003265A000300000001 /* PlacementPanel.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
