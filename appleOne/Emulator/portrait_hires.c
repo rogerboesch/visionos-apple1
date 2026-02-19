@@ -56,8 +56,8 @@ static int ensure_portrait_display(int *slot) {
         *slot = rb_display_create(PORTRAIT_COLS, PORTRAIT_ROWS);
     }
     else {
-        rb_display_render_clear(*slot);
         rb_display_text_clear(*slot);
+        rb_display_render_clear(*slot);
     }
     return *slot;
 }

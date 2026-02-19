@@ -66,7 +66,8 @@ typedef struct {
 #define SLOT_COUNT 2
 
 static matrix_slot slots[SLOT_COUNT];
-static int matrix_pair_mode = 0;  /* 1 when both portraits animate together */
+static int matrix_pair_mode = 0;    /* 1 when both portraits animate together */
+static unsigned int invoke_count = 0; /* varies seed across invocations */
 
 /* Simple pseudo-random number generator (per-slot) */
 static int slot_rand(matrix_slot *s) {
@@ -135,8 +136,8 @@ static int all_columns_landed(matrix_slot *s) {
 
 /* Render one slot's rain frame into a display (no bridge call) */
 static void render_rain_to_display(matrix_slot *s, int d) {
-    rb_display_render_clear(d);
     rb_display_text_clear(d);
+    rb_display_render_clear(d);
     rb_display_set_fg_color(d, RB_COLOR_WHITE);
     rb_display_set_fg_brightness(d, 15);
     rb_display_text_set_immediate(d, 1);
@@ -184,8 +185,8 @@ static void render_rain_to_display(matrix_slot *s, int d) {
 
 /* Render one slot's rebuild frame into a display (no bridge call) */
 static void render_rebuild_to_display(matrix_slot *s, int d) {
-    rb_display_render_clear(d);
     rb_display_text_clear(d);
+    rb_display_render_clear(d);
     rb_display_set_fg_color(d, RB_COLOR_WHITE);
     rb_display_set_fg_brightness(d, 15);
     rb_display_text_set_immediate(d, 1);
@@ -236,8 +237,8 @@ static void render_rebuild_to_display(matrix_slot *s, int d) {
 
 /* Render final clean portrait into a display (no bridge call) */
 static void render_final_to_display(matrix_slot *s, int d) {
-    rb_display_render_clear(d);
     rb_display_text_clear(d);
+    rb_display_render_clear(d);
     rb_display_set_fg_color(d, RB_COLOR_WHITE);
     rb_display_set_fg_brightness(d, 15);
     rb_display_text_set_immediate(d, 1);
@@ -316,18 +317,21 @@ void portrait_matrix_start(const char **art, int rows, int cols) {
     /* Cancel any previous pair mode */
     slots[SLOT_B].active = 0;
     matrix_pair_mode = 0;
+    invoke_count++;
 
     init_slot(&slots[SLOT_A], art, rows, cols,
-              (unsigned int)(rows * 7919 + cols * 104729));
+              (unsigned int)(rows * 7919 + cols * 104729 + invoke_count * 31337));
 }
 
 void portrait_matrix_start_pair(const char **art_a, int rows_a, int cols_a,
                                 const char **art_b, int rows_b, int cols_b) {
     matrix_pair_mode = 1;
+    invoke_count++;
+
     init_slot(&slots[SLOT_A], art_a, rows_a, cols_a,
-              (unsigned int)(rows_a * 7919 + cols_a * 104729));
+              (unsigned int)(rows_a * 7919 + cols_a * 104729 + invoke_count * 31337));
     init_slot(&slots[SLOT_B], art_b, rows_b, cols_b,
-              (unsigned int)(rows_b * 6311 + cols_b * 87491));
+              (unsigned int)(rows_b * 6311 + cols_b * 87491 + invoke_count * 48611));
 }
 
 int portrait_matrix_frame(void) {
@@ -348,10 +352,16 @@ int portrait_matrix_frame(void) {
             return 0;
         }
 
-        int still_a = advance_slot(&slots[SLOT_A], da);
-        int still_b = advance_slot(&slots[SLOT_B], db);
+        /* During hold phase, portrait is already displayed — skip rendering */
+        if (slots[SLOT_A].phase == PHASE_HOLD && slots[SLOT_B].phase == PHASE_HOLD) {
+            advance_slot(&slots[SLOT_A], da);
+            advance_slot(&slots[SLOT_B], db);
+            return 1;
+        }
 
-        /* Always send pair update so both displays refresh together */
+        advance_slot(&slots[SLOT_A], da);
+        advance_slot(&slots[SLOT_B], db);
+
         rb_render_portrait_pair(rb_display_get_pixel_data(da),
                                 rb_display_get_pixel_width(da),
                                 rb_display_get_pixel_height(da),
@@ -359,10 +369,11 @@ int portrait_matrix_frame(void) {
                                 rb_display_get_pixel_width(db),
                                 rb_display_get_pixel_height(db));
 
-        return (still_a || still_b) ? 1 : 0;
+        return (slots[SLOT_A].active || slots[SLOT_B].active) ? 1 : 0;
     }
     else {
         int still = advance_slot(&slots[SLOT_A], da);
+        /* During hold phase, portrait is already displayed — skip bridge call */
         if (slots[SLOT_A].phase != PHASE_HOLD) {
             rb_render_portrait(rb_display_get_pixel_data(da),
                                rb_display_get_pixel_width(da),
