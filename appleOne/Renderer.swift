@@ -16,7 +16,7 @@ class Renderer : NSObject {
                 texture_count += 1
                 
                 var material = SimpleMaterial(color: UIColor.red, roughness: 0, isMetallic: false)
-                let resource = try await TextureResource.generate(from: image.cgImage!, named: "asset-\(texture_count)", options: TextureResource.CreateOptions.init(semantic: .raw))
+                let resource = try await TextureResource(image: image.cgImage!, withName: "asset-\(texture_count)", options: TextureResource.CreateOptions.init(semantic: .raw))
                 material.color = .init(tint: .white, texture: .init(resource))
                 
                 if Renderer.entity != nil {
