@@ -45,9 +45,11 @@ struct GameSpace: View {
             displayManager.placePanel()
             displayManager.placeDisplayCircle()
 
-            // Billboard rotation update loop (panel stays in place)
+            // Update loop: billboard rotation + carousel
+            let frameDelta: Float = 1.0 / 60.0
             while true {
                 displayManager.updatePanelBillboard()
+                displayManager.updateCarousel(deltaTime: frameDelta)
                 try? await Task.sleep(for: .milliseconds(16))
             }
         }

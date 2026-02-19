@@ -78,6 +78,7 @@ struct PanelButton: View {
 
 struct ControlPanel: View {
     @State private var renderer = ScreenRenderer.shared
+    @State private var displayManager = DisplayManager.shared
     @State var basicState = AppleState.cold
     @State var assemblerState = AppleState.cold
 
@@ -121,6 +122,13 @@ struct ControlPanel: View {
 
                     PanelButton(label: "BOTH") {
                         EmulatorShowBothSteves()
+                    }
+
+                    PanelButton(
+                        label: "ROTATE",
+                        color: displayManager.carouselRotating ? .green : .white
+                    ) {
+                        displayManager.carouselRotating.toggle()
                     }
                 }
             }

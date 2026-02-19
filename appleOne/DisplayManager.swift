@@ -25,6 +25,9 @@ let PANEL_TILT_DEGREES: Float = 30.0
 let CIRCLE_DISPLAY_COUNT = 8
 let CIRCLE_RADIUS: Float = 10.0
 
+// Carousel rotation speed (radians per second)
+let CAROUSEL_SPEED: Float = 0.15
+
 // Maximum number of displays
 let DISPLAY_MAX_COUNT = 26
 
@@ -40,8 +43,13 @@ class DisplayManager {
     var panelEntity: Entity? = nil
     var displayEntities: [ModelEntity] = []
 
+    var carouselRotating = false
+
     private var textureIndex = 0
     private var trackingStarted = false
+    private var carouselAngle: Float = 0
+    private var circleCenter = simd_float2(0, 0)
+    private var circleY: Float = 0
 
     var displayCount: Int { displayEntities.count }
     var canPlaceMore: Bool { displayEntities.count < DISPLAY_MAX_COUNT }
@@ -165,6 +173,11 @@ class DisplayManager {
             centerZ = headMatrix.columns.3.z
         }
 
+        // Store circle parameters for carousel rotation
+        circleCenter = simd_float2(centerX, centerZ)
+        circleY = displayY
+        carouselAngle = 0
+
         let angleStep = (2.0 * Float.pi) / Float(CIRCLE_DISPLAY_COUNT)
 
         for i in 0..<CIRCLE_DISPLAY_COUNT {
@@ -186,6 +199,28 @@ class DisplayManager {
         }
 
         rbDebug("Placed \(CIRCLE_DISPLAY_COUNT) displays in circle (radius=\(CIRCLE_RADIUS)m)")
+    }
+
+    func updateCarousel(deltaTime: Float) {
+        guard carouselRotating, !displayEntities.isEmpty else { return }
+
+        carouselAngle += CAROUSEL_SPEED * deltaTime
+
+        let angleStep = (2.0 * Float.pi) / Float(displayEntities.count)
+        let cx = circleCenter.x
+        let cz = circleCenter.y
+
+        for (i, display) in displayEntities.enumerated() {
+            let angle = Float(i) * angleStep + carouselAngle
+
+            let x = cx + CIRCLE_RADIUS * sin(angle)
+            let z = cz - CIRCLE_RADIUS * cos(angle)
+
+            display.position = simd_float3(x, circleY, z)
+
+            let center = simd_float3(cx, circleY, cz)
+            display.look(at: center, from: display.position, relativeTo: nil)
+        }
     }
 
     func removeAllDisplays() {
