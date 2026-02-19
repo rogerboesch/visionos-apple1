@@ -25,7 +25,6 @@ enum AppleState {
 
 struct MainWindow: View {
     @Environment(\.openImmersiveSpace) var openImmersiveSpace
-    @Environment(\.openWindow) var openWindow
 
     @State private var renderer = ScreenRenderer.shared
     @State var basicState = AppleState.cold
@@ -100,8 +99,6 @@ struct MainWindow: View {
             Task {
                 await openImmersiveSpace(id: "wall_display")
             }
-
-            openWindow(id: "placement_panel")
         }
     }
 

@@ -25,12 +25,6 @@ struct GameApp: App {
         }
         .defaultSize(width: 0.8, height: 0.6, depth: 0.0, in: .meters)
 
-        WindowGroup(id: "placement_panel") {
-            PlacementPanel()
-        }
-        .windowStyle(.plain)
-        .defaultSize(width: 0.25, height: 0.08, depth: 0.0, in: .meters)
-
         ImmersiveSpace(id: "wall_display") {
             GameSpace()
         }

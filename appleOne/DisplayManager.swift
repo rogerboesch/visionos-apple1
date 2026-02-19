@@ -11,15 +11,21 @@ let DISPLAY_DEPTH: Float = 0.005
 // Offset from head: placed slightly in front of the user
 let DISPLAY_PLACE_DISTANCE: Float = 0.5
 
+// Head-follow panel distance and position
+let PANEL_DISTANCE: Float = 0.8
+let PANEL_VERTICAL_OFFSET: Float = -0.3
+let PANEL_SMOOTHING: Float = 0.1
+
 @Observable
 @MainActor
 class DisplayManager {
     static let shared = DisplayManager()
 
-    private let session = ARKitSession()
-    private let worldTracking = WorldTrackingProvider()
+    let session = ARKitSession()
+    let worldTracking = WorldTrackingProvider()
 
     var rootEntity: Entity? = nil
+    var panelEntity: Entity? = nil
     var displayEntity: ModelEntity? = nil
 
     private var textureIndex = 0
@@ -35,6 +41,32 @@ class DisplayManager {
         catch {
             rbDebug("ARKit session failed: \(error.localizedDescription)")
         }
+    }
+
+    func updatePanelPosition() {
+        guard let panel = panelEntity else { return }
+
+        guard worldTracking.state == .running,
+              let deviceAnchor = worldTracking.queryDeviceAnchor(atTimestamp: CACurrentMediaTime())
+        else {
+            return
+        }
+
+        let headMatrix = deviceAnchor.originFromAnchorTransform
+
+        // Target position: in front of the head, slightly below eye level
+        let offset = simd_float4(0, PANEL_VERTICAL_OFFSET, -PANEL_DISTANCE, 1)
+        let targetPos = headMatrix * offset
+        let target = simd_float3(targetPos.x, targetPos.y, targetPos.z)
+
+        // Smooth follow (lerp)
+        let current = panel.position
+        panel.position = current + (target - current) * PANEL_SMOOTHING
+
+        // Face the user
+        let headTransform = Transform(matrix: headMatrix)
+        let currentRot = panel.orientation
+        panel.orientation = simd_slerp(currentRot, headTransform.rotation, PANEL_SMOOTHING)
     }
 
     func placeDisplay() {
@@ -65,8 +97,7 @@ class DisplayManager {
         let display = createDisplayEntity()
         display.position = simd_float3(worldPos.x, worldPos.y, worldPos.z)
 
-        // Use head orientation but only keep the Y rotation (yaw)
-        // so the display hangs flat like on a wall
+        // Use head orientation so display faces the user
         let headTransform = Transform(matrix: headMatrix)
         display.orientation = headTransform.rotation
 
