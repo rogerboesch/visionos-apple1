@@ -44,6 +44,22 @@ Building an immersive visionOS experience featuring the Apple I emulator with mu
 - Fade-out takes 0.75s, then emulator boots the CPU normally
 - Added `splash_fading_out` / `splash_fadeout_frame` state tracking
 
+### Alternating Portraits + Carousel (2026-02-19)
+- BOTH button renders Jobs and Wozniak, alternating across circle displays (even=Jobs, odd=Woz)
+- Portrait pair pipeline: C renders both buffers → ObjCBridge creates two UIImages → `Renderer.renderPortraitPair` → `DisplayManager.updatePortraitPair` applies alternating materials
+- Carousel rotation: displays orbit around center at `CAROUSEL_SPEED = 0.15 rad/s`, enabled by default
+- ROTATE toggle button (green when active)
+
+### Circle Display Modes — Radio Buttons (2026-02-19)
+- `CircleDisplayMode` enum: `.mirror`, `.jobs`, `.woz`, `.both`
+- MIRROR (default): circle displays show emulator output
+- JOBS/WOZ: single portrait on all circle displays via `ret_render_portrait` path
+- BOTH: alternating Jobs/Woz via `ret_render_portrait_pair` path
+- Main panel always shows emulator — portraits never overwrite `screenImage`
+- Radio button UI: active mode = green, others = white
+- Round button style for side panel (56pt circle, 9pt font)
+- Title changed to "TERMINAL", subtitle "Apple I Emulator" between display and controls
+
 ### Previous Work
 - Hi-res portrait renderer with phosphor-green display
 - ASCII art portraits of Steve Jobs and Steve Wozniak
