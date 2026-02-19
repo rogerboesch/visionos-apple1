@@ -1,10 +1,7 @@
 #include "portrait_hires.h"
 #include "portrait_data_jobs.h"
 #include "portrait_data_wozniak.h"
-#include "ret_platform_types.h"
-#include "ret_renderer.h"
-#include "ret_textbuffer.h"
-#include "ret_font.h"
+#include "rb_display.h"
 
 #include <string.h>
 
@@ -17,15 +14,6 @@ void ret_render_portrait_pair(unsigned char *dataA, int widthA, int heightA,
 #define PHOSPHOR_R 51
 #define PHOSPHOR_G 255
 #define PHOSPHOR_B 51
-
-/* Buffer dimensions: cols * font_width, rows * font_height */
-#define JOBS_BUF_W (PORTRAIT_HIRES_JOBS_COLS * RET_FONT_WIDTH)
-#define JOBS_BUF_H (PORTRAIT_HIRES_JOBS_ROWS * RET_FONT_HEIGHT)
-static byte jobs_buffer[JOBS_BUF_W * JOBS_BUF_H * 4];
-
-#define WOZ_BUF_W (PORTRAIT_HIRES_WOZ_COLS * RET_FONT_WIDTH)
-#define WOZ_BUF_H (PORTRAIT_HIRES_WOZ_ROWS * RET_FONT_HEIGHT)
-static byte woz_buffer[WOZ_BUF_W * WOZ_BUF_H * 4];
 
 static void tint_buffer_phosphor(byte *buffer, int buf_w, int buf_h) {
     int total = buf_w * buf_h;
@@ -45,18 +33,16 @@ static void tint_buffer_phosphor(byte *buffer, int buf_w, int buf_h) {
 }
 
 static void render_portrait_to_buffer(const char **art, int art_rows, int art_cols,
-                                      byte *buffer, int buf_w, int buf_h) {
-    memset(buffer, 0, buf_w * buf_h * 4);
+                                      byte **out_pixels, int *out_w, int *out_h) {
+    int saved = rb_display_get_current();
 
-    /* Resize text buffer to match portrait grid */
-    ret_text_resize(art_cols, art_rows);
-
-    /* Set custom render target */
-    ret_rend_set_custom_target(buffer, buf_w, buf_h);
+    /* Create a temporary display sized for this portrait */
+    int d = rb_display_create(art_cols, art_rows);
+    rb_display_set_current(d);
 
     /* Render glyphs as white — we tint to phosphor green afterwards */
-    byte old_fg = RETSetFgColor(RET_COLOR_WHITE);
-    byte old_bright = RETSetFgBrightness(15);
+    rb_display_set_fg_color(RET_COLOR_WHITE);
+    rb_display_set_fg_brightness(15);
 
     /* Draw each character using the bitmap font */
     for (int row = 0; row < art_rows; row++) {
@@ -68,52 +54,82 @@ static void render_portrait_to_buffer(const char **art, int art_rows, int art_co
             }
             int px = col * RET_FONT_WIDTH;
             int py = row * RET_FONT_HEIGHT;
-            ret_rend_draw_char(px, py, ch, 0, RETGetFgColor());
+            rb_display_render_draw_char(px, py, ch, 0, rb_display_get_fg_color());
         }
     }
 
-    /* Restore renderer and text buffer */
-    ret_rend_restore_target();
-    ret_text_restore_default();
-
-    RETSetFgColor(old_fg);
-    RETSetFgBrightness(old_bright);
+    int w = rb_display_get_pixel_width(d);
+    int h = rb_display_get_pixel_height(d);
+    byte *pixels = rb_display_get_pixel_data(d);
 
     /* Tint white glyphs to phosphor green (matches post-processor) */
-    tint_buffer_phosphor(buffer, buf_w, buf_h);
+    tint_buffer_phosphor(pixels, w, h);
+
+    *out_pixels = pixels;
+    *out_w = w;
+    *out_h = h;
+
+    /* Restore current display (don't destroy yet — caller needs pixel data) */
+    rb_display_set_current(saved);
 }
 
 void portrait_hires_show_jobs(void) {
+    byte *pixels;
+    int w, h;
     render_portrait_to_buffer(portrait_hires_jobs_art,
                               PORTRAIT_HIRES_JOBS_ROWS,
                               PORTRAIT_HIRES_JOBS_COLS,
-                              jobs_buffer,
-                              JOBS_BUF_W, JOBS_BUF_H);
-    ret_render_portrait(jobs_buffer, JOBS_BUF_W, JOBS_BUF_H);
+                              &pixels, &w, &h);
+    ret_render_portrait(pixels, w, h);
+
+    /* Find and destroy the temporary display */
+    for (int i = 1; i < RB_DISPLAY_MAX; i++) {
+        if (rb_display_get_pixel_data(i) == pixels) {
+            rb_display_destroy(i);
+            break;
+        }
+    }
 }
 
 void portrait_hires_show_wozniak(void) {
+    byte *pixels;
+    int w, h;
     render_portrait_to_buffer(portrait_hires_woz_art,
                               PORTRAIT_HIRES_WOZ_ROWS,
                               PORTRAIT_HIRES_WOZ_COLS,
-                              woz_buffer,
-                              WOZ_BUF_W, WOZ_BUF_H);
-    ret_render_portrait(woz_buffer, WOZ_BUF_W, WOZ_BUF_H);
+                              &pixels, &w, &h);
+    ret_render_portrait(pixels, w, h);
+
+    for (int i = 1; i < RB_DISPLAY_MAX; i++) {
+        if (rb_display_get_pixel_data(i) == pixels) {
+            rb_display_destroy(i);
+            break;
+        }
+    }
 }
 
 void portrait_hires_show_both(void) {
+    byte *jobs_pixels, *woz_pixels;
+    int jobs_w, jobs_h, woz_w, woz_h;
+
     render_portrait_to_buffer(portrait_hires_jobs_art,
                               PORTRAIT_HIRES_JOBS_ROWS,
                               PORTRAIT_HIRES_JOBS_COLS,
-                              jobs_buffer,
-                              JOBS_BUF_W, JOBS_BUF_H);
+                              &jobs_pixels, &jobs_w, &jobs_h);
 
     render_portrait_to_buffer(portrait_hires_woz_art,
                               PORTRAIT_HIRES_WOZ_ROWS,
                               PORTRAIT_HIRES_WOZ_COLS,
-                              woz_buffer,
-                              WOZ_BUF_W, WOZ_BUF_H);
+                              &woz_pixels, &woz_w, &woz_h);
 
-    ret_render_portrait_pair(jobs_buffer, JOBS_BUF_W, JOBS_BUF_H,
-                             woz_buffer, WOZ_BUF_W, WOZ_BUF_H);
+    ret_render_portrait_pair(jobs_pixels, jobs_w, jobs_h,
+                             woz_pixels, woz_w, woz_h);
+
+    /* Destroy both temporary displays */
+    for (int i = 1; i < RB_DISPLAY_MAX; i++) {
+        byte *pd = rb_display_get_pixel_data(i);
+        if (pd == jobs_pixels || pd == woz_pixels) {
+            rb_display_destroy(i);
+        }
+    }
 }
