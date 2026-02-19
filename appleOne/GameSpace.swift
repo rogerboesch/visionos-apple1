@@ -18,67 +18,22 @@
 import SwiftUI
 import RealityKit
 
-// Wall display size in meters
-private let WALL_DISPLAY_WIDTH: Float = 2.0
-private let WALL_DISPLAY_HEIGHT: Float = WALL_DISPLAY_WIDTH * (208.0 / 336.0)
-private let WALL_DISPLAY_DEPTH: Float = 0.01
-
 struct GameSpace: View {
     @State private var renderer = ScreenRenderer.shared
-    @State private var wallEntity: ModelEntity? = nil
-    @State private var textureIndex = 0
+    @State private var displayManager = DisplayManager.shared
 
     var body: some View {
         RealityView { content in
-            let anchor: AnchorEntity
-
-            if isVisionOSDevice() {
-                // On device: attach to the nearest vertical wall
-                anchor = AnchorEntity(.plane(.vertical, classification: .wall, minimumBounds: [1.0, 0.5]))
-            }
-            else {
-                // In simulator (museum room): position over the painting on the front wall
-                anchor = AnchorEntity(world: [0, 1.6, -3.7])
-            }
-
-            // Create a flat box as the display surface
-            let mesh = MeshResource.generateBox(size: 1.0)
-            let material = SimpleMaterial(color: .black, isMetallic: false)
-            let display = ModelEntity(mesh: mesh, materials: [material])
-            display.scale = [WALL_DISPLAY_WIDTH, WALL_DISPLAY_HEIGHT, WALL_DISPLAY_DEPTH]
-
-            anchor.addChild(display)
-            content.add(anchor)
-
-            wallEntity = display
+            let root = Entity()
+            content.add(root)
+            displayManager.rootEntity = root
+        }
+        .task {
+            await displayManager.startTracking()
         }
         .onChange(of: renderer.screenImage) { oldValue, newValue in
             guard let image = newValue, let cgImage = image.cgImage else { return }
-            updateWallTexture(cgImage)
-        }
-    }
-
-    private func updateWallTexture(_ cgImage: CGImage) {
-        guard let entity = wallEntity else { return }
-
-        textureIndex += 1
-        let name = "wall-\(textureIndex)"
-
-        Task {
-            do {
-                let resource = try await TextureResource(
-                    image: cgImage,
-                    withName: name,
-                    options: TextureResource.CreateOptions(semantic: .raw)
-                )
-
-                var material = SimpleMaterial(color: .white, isMetallic: false)
-                material.color = .init(tint: .white, texture: .init(resource))
-                entity.model?.materials = [material]
-            }
-            catch {
-                rbError("Wall texture: \(error.localizedDescription)")
-            }
+            displayManager.updateTexture(cgImage)
         }
     }
 }

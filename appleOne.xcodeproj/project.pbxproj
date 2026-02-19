@@ -37,6 +37,7 @@
 		DBF75C312B93CCF200609966 /* ret_font_pet.c in Sources */ = {isa = PBXBuildFile; fileRef = DBF75C302B93CCF200609966 /* ret_font_pet.c */; };
 		AA000001265A000100000001 /* ret_postprocess.c in Sources */ = {isa = PBXBuildFile; fileRef = AA000001265A000100000002 /* ret_postprocess.c */; };
 		AA000001265A000100000003 /* splash.c in Sources */ = {isa = PBXBuildFile; fileRef = AA000001265A000100000004 /* splash.c */; };
+		AA000002265A000200000001 /* DisplayManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002265A000200000002 /* DisplayManager.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -88,6 +89,7 @@
 		AA000001265A000100000005 /* ret_postprocess.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ret_postprocess.h; sourceTree = "<group>"; };
 		AA000001265A000100000004 /* splash.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = splash.c; sourceTree = "<group>"; };
 		AA000001265A000100000006 /* splash.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = splash.h; sourceTree = "<group>"; };
+		AA000002265A000200000002 /* DisplayManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayManager.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -185,6 +187,7 @@
 				DB728EF32B8C9A2B006E60FD /* terminal.c */,
 				DB728EEC2B8C988C006E60FD /* ObjCBridge.m */,
 				DB728F092B8CD34E006E60FD /* Renderer.swift */,
+				AA000002265A000200000002 /* DisplayManager.swift */,
 				DB728ED42B8C9167006E60FD /* GameApp.swift */,
 				DB728ED82B8C9167006E60FD /* GameSpace.swift */,
 				DB728ED62B8C9167006E60FD /* MainWindow.swift */,
@@ -313,6 +316,7 @@
 				DBF75C2F2B93C8CB00609966 /* ret_font_apple2.c in Sources */,
 				AA000001265A000100000001 /* ret_postprocess.c in Sources */,
 				AA000001265A000100000003 /* splash.c in Sources */,
+				AA000002265A000200000001 /* DisplayManager.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

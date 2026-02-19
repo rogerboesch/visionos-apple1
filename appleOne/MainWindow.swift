@@ -27,6 +27,7 @@ struct MainWindow: View {
     @Environment(\.openImmersiveSpace) var openImmersiveSpace
 
     @State private var renderer = ScreenRenderer.shared
+    @State private var displayManager = DisplayManager.shared
     @State var basicState = AppleState.cold
     @State var assemblerState = AppleState.cold
 
@@ -82,6 +83,13 @@ struct MainWindow: View {
                     Text("BREAK")
                 }
                 .buttonStyle(.bordered)
+
+                Button(action: {
+                    displayManager.placeDisplay()
+                }) {
+                    Text("PLACE DISPLAY")
+                }
+                .buttonStyle(.borderedProminent)
 
                 basicButtons
 
