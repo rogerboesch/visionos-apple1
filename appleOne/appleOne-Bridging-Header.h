@@ -15,3 +15,4 @@ void EmulatorShowWozniak(void);
 void EmulatorShowBothSteves(void);
 
 void EmulatorSkipSplash(void);
+void EmulatorRefreshDisplay(void);

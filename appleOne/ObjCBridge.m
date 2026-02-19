@@ -151,3 +151,7 @@ void EmulatorShowBothSteves(void) {
     emulator_task(10);
 }
 
+void EmulatorRefreshDisplay(void) {
+    terminal_refresh();
+}
+

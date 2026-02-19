@@ -135,6 +135,7 @@ struct ControlPanel: View {
                         rounded: true
                     ) {
                         displayManager.circleMode = .mirror
+                        EmulatorRefreshDisplay()
                     }
 
                     PanelButton(
