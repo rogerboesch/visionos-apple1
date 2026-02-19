@@ -9,7 +9,7 @@
 #include <string.h>
 
 /* Bridge functions declared in ObjCBridge.m */
-void ret_render_frame_sized(unsigned char *data, int width, int height);
+void ret_render_portrait(unsigned char *data, int width, int height);
 void ret_render_portrait_pair(unsigned char *dataA, int widthA, int heightA,
                               unsigned char *dataB, int widthB, int heightB);
 
@@ -89,7 +89,7 @@ void portrait_hires_show_jobs(void) {
                               PORTRAIT_HIRES_JOBS_COLS,
                               jobs_buffer,
                               JOBS_BUF_W, JOBS_BUF_H);
-    ret_render_frame_sized(jobs_buffer, JOBS_BUF_W, JOBS_BUF_H);
+    ret_render_portrait(jobs_buffer, JOBS_BUF_W, JOBS_BUF_H);
 }
 
 void portrait_hires_show_wozniak(void) {
@@ -98,7 +98,7 @@ void portrait_hires_show_wozniak(void) {
                               PORTRAIT_HIRES_WOZ_COLS,
                               woz_buffer,
                               WOZ_BUF_W, WOZ_BUF_H);
-    ret_render_frame_sized(woz_buffer, WOZ_BUF_W, WOZ_BUF_H);
+    ret_render_portrait(woz_buffer, WOZ_BUF_W, WOZ_BUF_H);
 }
 
 void portrait_hires_show_both(void) {

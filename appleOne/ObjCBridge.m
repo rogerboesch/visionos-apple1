@@ -89,6 +89,12 @@ void ret_render_frame_sized(unsigned char *data, int width, int height) {
     [Renderer render:image];
 }
 
+// Called from C to Swift — single portrait for circle displays
+void ret_render_portrait(unsigned char *data, int width, int height) {
+    UIImage* image = [UIImage fromBuffer:data width:width height:height];
+    [Renderer renderPortrait:image];
+}
+
 // Called from C to Swift — portrait pair for alternating displays
 void ret_render_portrait_pair(unsigned char *dataA, int widthA, int heightA,
                               unsigned char *dataB, int widthB, int heightB) {

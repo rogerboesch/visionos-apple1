@@ -110,17 +110,36 @@ struct ControlPanel: View {
                 }
                 .clipShape(RoundedRectangle(cornerRadius: 8))
 
-                // Portrait buttons (right of screen)
+                // Circle display mode buttons (right of screen)
                 VStack(spacing: 8) {
-                    PanelButton(label: "JOBS") {
+                    PanelButton(
+                        label: "MIRROR",
+                        color: displayManager.circleMode == .mirror ? .green : .white
+                    ) {
+                        displayManager.circleMode = .mirror
+                    }
+
+                    PanelButton(
+                        label: "JOBS",
+                        color: displayManager.circleMode == .jobs ? .green : .white
+                    ) {
+                        displayManager.circleMode = .jobs
                         EmulatorShowJobs()
                     }
 
-                    PanelButton(label: "WOZ") {
+                    PanelButton(
+                        label: "WOZ",
+                        color: displayManager.circleMode == .woz ? .green : .white
+                    ) {
+                        displayManager.circleMode = .woz
                         EmulatorShowWozniak()
                     }
 
-                    PanelButton(label: "BOTH") {
+                    PanelButton(
+                        label: "BOTH",
+                        color: displayManager.circleMode == .both ? .green : .white
+                    ) {
+                        displayManager.circleMode = .both
                         EmulatorShowBothSteves()
                     }
 

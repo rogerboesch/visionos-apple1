@@ -31,6 +31,14 @@ let CAROUSEL_SPEED: Float = 0.15
 // Maximum number of displays
 let DISPLAY_MAX_COUNT = 26
 
+// What the circle displays show
+enum CircleDisplayMode {
+    case mirror
+    case jobs
+    case woz
+    case both
+}
+
 @Observable
 @MainActor
 class DisplayManager {
@@ -43,7 +51,8 @@ class DisplayManager {
     var panelEntity: Entity? = nil
     var displayEntities: [ModelEntity] = []
 
-    var carouselRotating = false
+    var carouselRotating = true
+    var circleMode: CircleDisplayMode = .mirror
 
     private var textureIndex = 0
     private var trackingStarted = false
@@ -231,7 +240,7 @@ class DisplayManager {
     }
 
     func updateTexture(_ cgImage: CGImage) {
-        guard !displayEntities.isEmpty else { return }
+        guard circleMode == .mirror, !displayEntities.isEmpty else { return }
 
         textureIndex += 1
         let name = "display-\(textureIndex)"
@@ -253,6 +262,33 @@ class DisplayManager {
             }
             catch {
                 rbError("Display texture: \(error.localizedDescription)")
+            }
+        }
+    }
+
+    func updatePortraitSingle(_ cgImage: CGImage) {
+        guard !displayEntities.isEmpty else { return }
+
+        textureIndex += 1
+        let name = "portrait-\(textureIndex)"
+
+        Task {
+            do {
+                let resource = try await TextureResource(
+                    image: cgImage,
+                    withName: name,
+                    options: TextureResource.CreateOptions(semantic: .raw)
+                )
+
+                var material = SimpleMaterial(color: .white, isMetallic: false)
+                material.color = .init(tint: .white, texture: .init(resource))
+
+                for entity in displayEntities {
+                    entity.model?.materials = [material]
+                }
+            }
+            catch {
+                rbError("Portrait texture: \(error.localizedDescription)")
             }
         }
     }
