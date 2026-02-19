@@ -23,9 +23,32 @@ enum AppleState {
     case started
 }
 
+// Launcher window — initializes emulator and opens the immersive space
 struct MainWindow: View {
     @Environment(\.openImmersiveSpace) var openImmersiveSpace
+    @Environment(\.dismissWindow) var dismissWindow
 
+    private let emulatorFPS = 1.0 / 60.0
+
+    var body: some View {
+        Color.clear
+            .onAppear {
+                EmulatorInit()
+
+                Timer.scheduledTimer(withTimeInterval: emulatorFPS, repeats: true) { _ in
+                    EmulatorFrame()
+                }
+
+                Task {
+                    await openImmersiveSpace(id: "wall_display")
+                    dismissWindow(id: "main_window")
+                }
+            }
+    }
+}
+
+// Control panel UI — used as attachment in the immersive space
+struct ControlPanel: View {
     @State private var renderer = ScreenRenderer.shared
     @State var basicState = AppleState.cold
     @State var assemblerState = AppleState.cold
@@ -34,8 +57,6 @@ struct MainWindow: View {
 
     let basicListing = "10 PRINT \"Hello Apple I \";\n20 GOTO 10\nRUN\n"
     let assemblerListing = " LDA #'A'\nLOOP JSR $FFEF\n CLC\n ADC #$1\n CMP #'Z'+1\n BNE LOOP\n RTS\n~a\n"
-
-    private let emulatorFPS = 1.0 / 60.0
 
     var body: some View {
         VStack(spacing: 16) {
@@ -106,17 +127,6 @@ struct MainWindow: View {
             }
         }
         .padding()
-        .onAppear {
-            EmulatorInit()
-
-            Timer.scheduledTimer(withTimeInterval: emulatorFPS, repeats: true) { _ in
-                EmulatorFrame()
-            }
-
-            Task {
-                await openImmersiveSpace(id: "wall_display")
-            }
-        }
     }
 
     @ViewBuilder

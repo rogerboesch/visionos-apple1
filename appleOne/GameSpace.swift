@@ -23,14 +23,32 @@ struct GameSpace: View {
     @State private var displayManager = DisplayManager.shared
 
     var body: some View {
-        RealityView { content in
+        RealityView { content, attachments in
             let root = Entity()
             content.add(root)
             displayManager.rootEntity = root
+
+            // Add the main control panel as a tilted attachment
+            if let panelAttachment = attachments.entity(for: "control_panel") {
+                root.addChild(panelAttachment)
+                displayManager.panelEntity = panelAttachment
+            }
+        } attachments: {
+            Attachment(id: "control_panel") {
+                ControlPanel()
+                    .frame(width: 600, height: 500)
+                    .glassBackgroundEffect()
+            }
         }
         .task {
             await displayManager.startTracking()
             displayManager.placeDisplayCircle()
+
+            // Head-follow update loop for control panel
+            while true {
+                displayManager.updatePanelPosition()
+                try? await Task.sleep(for: .milliseconds(16))
+            }
         }
         .onChange(of: renderer.screenImage) { oldValue, newValue in
             guard let image = newValue, let cgImage = image.cgImage else { return }

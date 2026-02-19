@@ -22,14 +22,8 @@ struct GameApp: App {
     var body: some Scene {
         WindowGroup(id: "main_window") {
             MainWindow()
-                .rotation3DEffect(
-                    .degrees(30),
-                    axis: (x: 1, y: 0, z: 0),
-                    anchor: .bottom
-                )
         }
-        .windowStyle(.volumetric)
-        .defaultSize(width: 0.8, height: 0.6, depth: 0.4, in: .meters)
+        .defaultSize(width: 0.8, height: 0.6, depth: 0.0, in: .meters)
 
         ImmersiveSpace(id: "wall_display") {
             GameSpace()
