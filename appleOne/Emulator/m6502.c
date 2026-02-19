@@ -1684,6 +1684,7 @@ void m6502_stop(void)
 	if (thread)
 	{
 		pthread_cancel(thread);
+		thread = 0;
 	}
 }
 
