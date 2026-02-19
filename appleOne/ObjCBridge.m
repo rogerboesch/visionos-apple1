@@ -13,6 +13,7 @@
 #include "rb_display.h"
 #include "terminal.h"
 #include "Emulator.h"
+#include "portrait_matrix.h"
 
 @implementation UIImage (Buffer)
 
@@ -154,6 +155,7 @@ void EmulatorShowBothSteves(void) {
 }
 
 void EmulatorRefreshDisplay(void) {
+    portrait_matrix_stop();
     terminal_refresh();
 }
 

@@ -39,6 +39,7 @@ static void _soft_reset(void) {
 }
 
 static void _hard_reset(void) {
+    portrait_matrix_stop();
     m6502_stop();
     screen_reset();
     pia6820_reset();

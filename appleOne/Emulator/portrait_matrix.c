@@ -412,6 +412,12 @@ int portrait_matrix_frame(void) {
     }
 }
 
+void portrait_matrix_stop(void) {
+    slots[SLOT_A].active = 0;
+    slots[SLOT_B].active = 0;
+    matrix_pair_mode = 0;
+}
+
 int portrait_matrix_is_active(void) {
     return slots[SLOT_A].active || slots[SLOT_B].active;
 }
