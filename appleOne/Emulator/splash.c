@@ -1,15 +1,14 @@
 
 #include "splash.h"
-#include "ret_renderer.h"
-#include "ret_textbuffer.h"
+#include "rb_display.h"
 
 #include <string.h>
 
-// Splash timing (in frames at 60 fps)
-#define SPLASH_FADE_IN_FRAMES   90   // 1.5 seconds
-#define SPLASH_FADE_OUT_FRAMES  45   // 0.75 seconds
+/* Splash timing (in frames at 60 fps) */
+#define SPLASH_FADE_IN_FRAMES   90   /* 1.5 seconds */
+#define SPLASH_FADE_OUT_FRAMES  45   /* 0.75 seconds */
 
-// Screen grid: 42 columns x 26 rows (8x8 font, 336x208 pixels)
+/* Screen grid: 42 columns x 26 rows (8x8 font, 336x208 pixels) */
 #define SPLASH_COLS  42
 #define SPLASH_ROWS  26
 
@@ -18,7 +17,7 @@ static int splash_active = 0;
 static int splash_fading_out = 0;
 static int splash_fadeout_frame = 0;
 
-// Apple logo in ASCII art (16 rows x 14 columns)
+/* Apple logo in ASCII art (16 rows x 14 columns) */
 #define LOGO_ROWS 16
 #define LOGO_COLS 14
 
@@ -41,7 +40,7 @@ static const char *apple_logo[LOGO_ROWS] = {
     "    ####      "
 };
 
-// Draw a string centered on a given text row
+/* Draw a string centered on a given text row */
 static void splash_draw_centered(const char *str, int row) {
     int len = (int)strlen(str);
     int col = (SPLASH_COLS - len) / 2;
@@ -49,11 +48,11 @@ static void splash_draw_centered(const char *str, int row) {
     for (int i = 0; i < len; i++) {
         int px = (col + i) * RET_FONT_WIDTH;
         int py = row * RET_FONT_HEIGHT;
-        ret_rend_draw_char(px, py, str[i], 0, RETGetFgColor());
+        rb_display_render_draw_char(px, py, str[i], 0, rb_display_get_fg_color());
     }
 }
 
-// Draw the apple logo centered, starting at a given text row
+/* Draw the apple logo centered, starting at a given text row */
 static void splash_draw_logo(int start_row) {
     int col_offset = (SPLASH_COLS - LOGO_COLS) / 2;
 
@@ -64,8 +63,7 @@ static void splash_draw_logo(int start_row) {
             if (line[col] == '#') {
                 int px = (col_offset + col) * RET_FONT_WIDTH;
                 int py = (start_row + row) * RET_FONT_HEIGHT;
-                // Draw a solid block character (inverted space)
-                ret_rend_draw_char(px, py, ' ', 1, RETGetFgColor());
+                rb_display_render_draw_char(px, py, ' ', 1, rb_display_get_fg_color());
             }
         }
     }
@@ -91,48 +89,35 @@ int splash_frame(void) {
 
     splash_frame_count++;
 
-    // Calculate brightness based on phase
+    /* Calculate brightness based on phase */
     float alpha;
 
     if (splash_fading_out) {
-        // Fade out triggered by skip
         splash_fadeout_frame++;
         alpha = 1.0f - (float)splash_fadeout_frame / (float)SPLASH_FADE_OUT_FRAMES;
 
         if (splash_fadeout_frame >= SPLASH_FADE_OUT_FRAMES) {
             splash_active = 0;
-            ret_rend_clear_screen();
-            RETRenderFrame();
+            rb_display_render_clear();
+            rb_display_render_frame();
             return 0;
         }
     }
     else if (splash_frame_count <= SPLASH_FADE_IN_FRAMES) {
-        // Fade in
         alpha = (float)splash_frame_count / (float)SPLASH_FADE_IN_FRAMES;
     }
     else {
-        // Hold at full brightness indefinitely
         alpha = 1.0f;
     }
 
-    // Map alpha to brightness index (0-15)
     int brightness = (int)(alpha * 15.0f);
     if (brightness < 0) brightness = 0;
     if (brightness > 15) brightness = 15;
 
-    // Clear screen
-    ret_rend_clear_screen();
+    rb_display_render_clear();
 
-    // Set green color for phosphor look
-    byte old_fg = RETSetFgColor(RET_COLOR_GREEN);
-    byte old_bright = RETSetFgBrightness((unsigned char)brightness);
-
-    // Layout (26 rows total):
-    // Row 1:      Apple logo starts (16 rows tall)
-    // Row 18:     "50 YEARS OF APPLE"
-    // Row 20:     "APPLE COMPUTER INC"
-    // Row 22:     "1976 - 2026"
-    // Row 24:     "CUPERTINO CALIFORNIA"
+    byte old_fg = rb_display_set_fg_color(RET_COLOR_GREEN);
+    byte old_bright = rb_display_set_fg_brightness((unsigned char)brightness);
 
     splash_draw_logo(1);
     splash_draw_centered("50 YEARS OF APPLE", 18);
@@ -140,11 +125,10 @@ int splash_frame(void) {
     splash_draw_centered("1976 - 2026", 22);
     splash_draw_centered("CUPERTINO CALIFORNIA", 24);
 
-    // Restore colors
-    RETSetFgColor(old_fg);
-    RETSetFgBrightness(old_bright);
+    rb_display_set_fg_color(old_fg);
+    rb_display_set_fg_brightness(old_bright);
 
-    RETRenderFrame();
+    rb_display_render_frame();
 
     return 1;
 }
