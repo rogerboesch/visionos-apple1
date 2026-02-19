@@ -3,9 +3,9 @@ import ARKit
 import RealityKit
 import QuartzCore
 
-// Display size in meters
-let DISPLAY_WIDTH: Float = 1.5 * 5.0
-let DISPLAY_HEIGHT: Float = (1.5 * (208.0 / 336.0)) * 4.0
+// Display size in meters (4:3 ratio matching main window)
+let DISPLAY_WIDTH: Float = 7.5
+let DISPLAY_HEIGHT: Float = 5.625
 
 let DISPLAY_DEPTH: Float = 0.005
 
@@ -22,7 +22,7 @@ let PANEL_SMOOTHING: Float = 0.1
 
 // Circle layout
 let CIRCLE_DISPLAY_COUNT = 16
-let CIRCLE_RADIUS: Float = 10.0
+let CIRCLE_RADIUS: Float = 19.0
 
 // Maximum number of displays
 let DISPLAY_MAX_COUNT = 26
