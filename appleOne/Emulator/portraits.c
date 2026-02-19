@@ -9,62 +9,69 @@
 #define PORTRAIT_COLS 42
 #define PORTRAIT_ROWS 26
 
-// Steve Jobs ASCII art portrait (22 rows x 30 cols)
-#define JOBS_ART_ROWS 22
+// Steve Jobs - thin face, round glasses, short hair, turtleneck
+// 24 rows x 34 cols, density-shaded ASCII
+#define JOBS_ART_ROWS 24
 static const char *jobs_art[JOBS_ART_ROWS] = {
-    "          ......          ",
-    "       ..::::::::..       ",
-    "     .:::::::::::::::     ",
-    "    ::::    :::    ::::   ",
-    "   :::  @@  :::  @@  ::  ",
-    "   ::   @@  :::  @@  ::  ",
-    "   ::       :::       :: ",
-    "   :::      :::      ::: ",
-    "    ::      ...      ::  ",
-    "    :::   .......   :::  ",
-    "     ::::.........::::   ",
-    "      ::::::::::::::     ",
-    "     :::::::  :::::::    ",
-    "    ::::::::  ::::::::   ",
-    "   :::::::::::::::::::   ",
-    "   :::::::::::::::::::   ",
-    "  ::::::::::::::::::::   ",
-    "  ::::::::::::::::::::   ",
-    "  ::::::::::::::::::::   ",
-    "  ::::::::::::::::::::   ",
-    "   ::::::::::::::::::    ",
-    "    ::::::::::::::::     "
+    "        .:-==++===-:.        ",
+    "      :=*##%%%%%%%%#*=:      ",
+    "    .=*%%%%%%%%%%%%%###*=.   ",
+    "   :+#%%%%%##****##%%%%%+:   ",
+    "  .+#%%%%*+==----==+*%%%#+.  ",
+    "  :*%%%#+=:.      .:=+#%%*:  ",
+    "  =#%%#+:   .=**=.   :+#%#= ",
+    "  +#%%+.   =##%%##=   .+%%+ ",
+    "  *%%%=   .*%#++#%*.   =#%* ",
+    "  *%%%=   .+#*==*#+.   =#%* ",
+    "  +#%%+.   :=++++=:   .+%%+ ",
+    "  =#%%#+.     ..     .+#%#= ",
+    "  :*%%%#=:   .==.   :=#%%*: ",
+    "  .+#%%%%+=-+####+-=+%%%#+. ",
+    "   :+#%%%%%########%%%%%+:  ",
+    "    .=*%%%%%%%##%%%%%%%*=.  ",
+    "      :=*##%%%%%%%%%%*=:    ",
+    "     .:-=+*###%%###*+=-:.   ",
+    "    :+#%%%%%%%%%%%%%%%%%#+: ",
+    "   .+#%%%%%%%%%%%%%%%%%%%+. ",
+    "   =#%%%%%%%%%%%%%%%%%%%%%# ",
+    "   *%%%%%%%%%%%%%%%%%%%%%#* ",
+    "   *%%%%%%%%%%%%%%%%%%%%%#* ",
+    "   =#%%%%%%%%%%%%%%%%%%%#%= "
 };
 
-// Steve Wozniak ASCII art portrait (22 rows x 30 cols)
-#define WOZ_ART_ROWS 22
+// Steve Wozniak - rounder face, beard, curly hair, glasses
+// 24 rows x 34 cols, density-shaded ASCII
+#define WOZ_ART_ROWS 24
 static const char *woz_art[WOZ_ART_ROWS] = {
-    "        ............      ",
-    "     ..................   ",
-    "    ..::::::::::::::::..  ",
-    "   .:::::::::::::::::::.  ",
-    "   :::::::::::::::::::::: ",
-    "  ::: @@@ ::::: @@@ :::  ",
-    "  ::: @@@ ::::: @@@ :::  ",
-    "  :::::::::.:.::::::::::  ",
-    "  :::::::::::::::::::::.  ",
-    "   :::::  .::::.  :::::  ",
-    "   ::::::........::::::  ",
-    "    ::::::::::::::::::::  ",
-    "    .:::::::::::::::::::  ",
-    "   ...##################  ",
-    "  ######################  ",
-    "  ######################  ",
-    "  ######################  ",
-    "   ####################   ",
-    "    ##################    ",
-    "      ##############      ",
-    "     ::::::::::::::::     ",
-    "    ::::::::::::::::::    "
+    "      .-=+**####**+=-..     ",
+    "    :=*####%%%%%%%%%##*=:   ",
+    "   =*##%%%%%%%%%%%%%%%%%*=  ",
+    "  :*#%%%%%%%%%%%%%%%%%%%%*: ",
+    "  +#%%%%%####**####%%%%%#+  ",
+    "  *%%%%#+=:.    .:=+#%%%%*  ",
+    " :#%%%+: .=*##*=. :+%%%#:  ",
+    " :#%%+. :#%%%%%%#: .+%%#:  ",
+    " :#%%=  +%%#++#%%+  =%%#:  ",
+    " :#%%=  =##*==*##=  =%%#:  ",
+    " :#%%+. :=*#%%#*=: .+%%#:  ",
+    " :#%%%+:  .:==:.  :+%%%#:  ",
+    "  *%%%%=:  :==:  :=%%%%*   ",
+    "  +#%%%%+==*%%*==+%%%%#+   ",
+    "  :*#%%%%%######%%%%%#*:   ",
+    "   =*%%*+*######*+*%%*=    ",
+    "   :+#%*=+#%%%%#+=#%#+:    ",
+    "   .+#%%####%%####%%#+.    ",
+    "    =#%%%%%%%%%%%%#%%%=    ",
+    "    :*#%%%%%##%%%%%#*:     ",
+    "     :=+*########*+=:      ",
+    "    .=*##%%%%##%%%%##*=.   ",
+    "   :+#%%%%%%%%%%%%%%%%%%+: ",
+    "   =#%%%%%%%%%%%%%%%%%%%%#="
 };
 
 // Draw a portrait centered on screen with name below
-static void draw_portrait(const char **art, int art_rows, const char *name) {
+static void draw_portrait(const char **art, int art_rows,
+                          const char *name) {
     ret_rend_clear_screen();
 
     byte old_fg = RETSetFgColor(RET_COLOR_GREEN);
@@ -86,21 +93,14 @@ static void draw_portrait(const char **art, int art_rows, const char *name) {
             int px = (col_offset + col) * RET_FONT_WIDTH;
             int py = (start_row + row) * RET_FONT_HEIGHT;
 
-            if (ch == '#' || ch == '@') {
-                // Solid block (inverted space)
-                ret_rend_draw_char(px, py, ' ', 1, RETGetFgColor());
-            }
-            else {
-                // Use the character itself
-                ret_rend_draw_char(px, py, ch, 0, RETGetFgColor());
-            }
+            ret_rend_draw_char(px, py, ch, 0, RETGetFgColor());
         }
     }
 
     // Draw name centered below the portrait
     int name_len = (int)strlen(name);
     int name_col = (PORTRAIT_COLS - name_len) / 2;
-    int name_row = start_row + art_rows + 1;
+    int name_row = start_row + art_rows;
 
     for (int i = 0; i < name_len; i++) {
         int px = (name_col + i) * RET_FONT_WIDTH;
@@ -115,9 +115,11 @@ static void draw_portrait(const char **art, int art_rows, const char *name) {
 }
 
 void portrait_show_jobs(void) {
-    draw_portrait(jobs_art, JOBS_ART_ROWS, "STEVE JOBS  1955-2011");
+    draw_portrait(jobs_art, JOBS_ART_ROWS,
+                  "STEVE JOBS  1955-2011");
 }
 
 void portrait_show_wozniak(void) {
-    draw_portrait(woz_art, WOZ_ART_ROWS, "STEVE WOZNIAK");
+    draw_portrait(woz_art, WOZ_ART_ROWS,
+                  "STEVE WOZNIAK");
 }
