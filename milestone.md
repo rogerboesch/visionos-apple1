@@ -5,6 +5,20 @@ Building an immersive visionOS experience featuring the Apple I emulator with mu
 
 ## Completed Steps
 
+### Refactoring: rb_display Unified Display Abstraction (2026-02-19)
+- Combined `ret_renderer.c`/`.h` and `ret_textbuffer.c`/`.h` into a single `rb_display` system
+- New `rb_display` struct contains: pixel buffer, text buffer, cursor, color state, graphics cursor, rendering flags — all per-display
+- **New files**: `rb_display.h` (struct + API), `rb_display.c` (lifecycle), `rb_display_render.c` (pixel rendering), `rb_display_text.c` (text operations)
+- **Deleted files**: `ret_renderer.h`, `ret_renderer.c`, `ret_textbuffer.h`, `ret_textbuffer.c`
+- Up to 16 displays (`RB_DISPLAY_MAX`), each with malloc'd buffers, identified by index
+- Display 0 is the main terminal (42x26, 336x208), created by `rb_display_init()`
+- Portrait rendering now uses temporary displays via `rb_display_create()`/`rb_display_destroy()` instead of the old `set_custom_target`/`restore_target` hack
+- All callers updated: `terminal.c`, `splash.c`, `portraits.c`, `portrait_hires.c`, `ObjCBridge.m`, `ret_postprocess.c`
+- Legacy defines `RET_PIXEL_WIDTH`/`RET_PIXEL_HEIGHT` aliased in `rb_display.h` for postprocess compatibility
+- Removed unused multi-platform resolution defines (`RET_PIXEL_WIDTH_C64`, `_ATARIXL`, etc.)
+- Removed `RETSetMainScreen`/`RETSetGameScreen`/mirror logic — replaced by `rb_display_set_current()`
+- Builds successfully for visionOS simulator
+
 ### Circle Display Layout (2026-02-19)
 - Added `placeDisplayCircle()` to `DisplayManager.swift` that places 8 displays in a 10m radius circle around the user at startup
 - Constants: `CIRCLE_DISPLAY_COUNT = 8`, `CIRCLE_RADIUS = 10.0m`
