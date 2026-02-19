@@ -18,8 +18,8 @@ void rb_render_portrait_pair(unsigned char *dataA, int widthA, int heightA,
 /* Standard portrait size in text columns/rows.
  * Pixel size = cols*8 x rows*8 = 960x640.
  * Persistent displays avoid use-after-free when Swift reads the buffer async. */
-#define PORTRAIT_COLS 120
-#define PORTRAIT_ROWS 80
+#define PORTRAIT_COLS 100
+#define PORTRAIT_ROWS 63
 
 /* Two persistent display slots — created on first use, never destroyed */
 static int portrait_display_a = -1;
