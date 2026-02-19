@@ -20,6 +20,9 @@ let PANEL_DISTANCE: Float = 0.8
 let PANEL_VERTICAL_OFFSET: Float = -0.3
 let PANEL_SMOOTHING: Float = 0.1
 
+// Maximum number of displays
+let DISPLAY_MAX_COUNT = 10
+
 @Observable
 @MainActor
 class DisplayManager {
@@ -30,10 +33,13 @@ class DisplayManager {
 
     var rootEntity: Entity? = nil
     var panelEntity: Entity? = nil
-    var displayEntity: ModelEntity? = nil
+    var displayEntities: [ModelEntity] = []
 
     private var textureIndex = 0
     private var trackingStarted = false
+
+    var displayCount: Int { displayEntities.count }
+    var canPlaceMore: Bool { displayEntities.count < DISPLAY_MAX_COUNT }
 
     func startTracking() async {
         guard !trackingStarted else { return }
@@ -74,13 +80,7 @@ class DisplayManager {
     }
 
     func placeDisplay() {
-        guard let root = rootEntity else { return }
-
-        // Remove existing display
-        if let existing = displayEntity {
-            existing.removeFromParent()
-            displayEntity = nil
-        }
+        guard let root = rootEntity, canPlaceMore else { return }
 
         // Get current head pose
         guard worldTracking.state == .running,
@@ -97,7 +97,6 @@ class DisplayManager {
         let forward = simd_float4(0, 0, -DISPLAY_PLACE_DISTANCE, 1)
         let worldPos = headMatrix * forward
 
-        // Create display entity
         let display = createDisplayEntity()
 
         // Clamp Y so bottom edge stays above floor
@@ -110,27 +109,28 @@ class DisplayManager {
         display.orientation = headTransform.rotation
 
         root.addChild(display)
-        displayEntity = display
+        displayEntities.append(display)
     }
 
     func placeDisplayAtFallback() {
-        guard let root = rootEntity else { return }
-
-        // Remove existing display
-        if let existing = displayEntity {
-            existing.removeFromParent()
-            displayEntity = nil
-        }
+        guard let root = rootEntity, canPlaceMore else { return }
 
         let display = createDisplayEntity()
         let fallbackY = DISPLAY_MIN_FLOOR_GAP + DISPLAY_HEIGHT / 2.0
         display.position = [0, fallbackY, -3.7]
         root.addChild(display)
-        displayEntity = display
+        displayEntities.append(display)
+    }
+
+    func removeAllDisplays() {
+        for entity in displayEntities {
+            entity.removeFromParent()
+        }
+        displayEntities.removeAll()
     }
 
     func updateTexture(_ cgImage: CGImage) {
-        guard let entity = displayEntity else { return }
+        guard !displayEntities.isEmpty else { return }
 
         textureIndex += 1
         let name = "display-\(textureIndex)"
@@ -145,7 +145,10 @@ class DisplayManager {
 
                 var material = SimpleMaterial(color: .white, isMetallic: false)
                 material.color = .init(tint: .white, texture: .init(resource))
-                entity.model?.materials = [material]
+
+                for entity in displayEntities {
+                    entity.model?.materials = [material]
+                }
             }
             catch {
                 rbError("Display texture: \(error.localizedDescription)")
