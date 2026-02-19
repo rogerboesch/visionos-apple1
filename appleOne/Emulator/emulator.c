@@ -8,6 +8,7 @@
 #include "statusbar.h"
 #include "splash.h"
 #include "portraits.h"
+#include "portrait_hires.h"
 
 static int emulator_splash_done = 0;
 static int emulator_cpu_started = 0;
@@ -76,10 +77,10 @@ void emulator_task(int task) {
             _flip_mode();
             break;
         case 7:
-            portrait_show_jobs();
+            portrait_hires_show_jobs();
             break;
         case 8:
-            portrait_show_wozniak();
+            portrait_hires_show_wozniak();
             break;
         default:
             break;

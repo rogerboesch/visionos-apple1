@@ -83,6 +83,12 @@ void ret_render_frame(unsigned char *data, int index) {
     [Renderer render:image];
 }
 
+// Called from C to Swift — dynamic size variant for hi-res portraits
+void ret_render_frame_sized(unsigned char *data, int width, int height) {
+    UIImage* image = [UIImage fromBuffer:data width:width height:height];
+    [Renderer render:image];
+}
+
 // Called from Swift to C
 
 NSMutableArray *queue = nil;
