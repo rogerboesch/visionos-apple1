@@ -52,23 +52,40 @@ struct MainWindow: View {
 struct PanelButton: View {
     let label: String
     var color: Color = .white
+    var rounded: Bool = false
     let action: () -> Void
+
+    private let roundSize: CGFloat = 56
 
     var body: some View {
         Button(action: action) {
-            Text(label)
-                .font(.system(size: 13, weight: .bold, design: .monospaced))
-                .foregroundColor(color)
-                .padding(.horizontal, 14)
-                .padding(.vertical, 10)
-                .background(
-                    RoundedRectangle(cornerRadius: 10)
-                        .fill(color.opacity(0.15))
-                )
-                .overlay(
-                    RoundedRectangle(cornerRadius: 10)
-                        .strokeBorder(color.opacity(0.5), lineWidth: 1)
-                )
+            if rounded {
+                Text(label)
+                    .font(.system(size: 9, weight: .bold, design: .monospaced))
+                    .foregroundColor(color)
+                    .frame(width: roundSize, height: roundSize)
+                    .background(
+                        Circle().fill(color.opacity(0.15))
+                    )
+                    .overlay(
+                        Circle().strokeBorder(color.opacity(0.5), lineWidth: 1)
+                    )
+            }
+            else {
+                Text(label)
+                    .font(.system(size: 13, weight: .bold, design: .monospaced))
+                    .foregroundColor(color)
+                    .padding(.horizontal, 14)
+                    .padding(.vertical, 10)
+                    .background(
+                        RoundedRectangle(cornerRadius: 10)
+                            .fill(color.opacity(0.15))
+                    )
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 10)
+                            .strokeBorder(color.opacity(0.5), lineWidth: 1)
+                    )
+            }
         }
         .buttonStyle(.plain)
     }
@@ -114,14 +131,16 @@ struct ControlPanel: View {
                 VStack(spacing: 8) {
                     PanelButton(
                         label: "MIRROR",
-                        color: displayManager.circleMode == .mirror ? .green : .white
+                        color: displayManager.circleMode == .mirror ? .green : .white,
+                        rounded: true
                     ) {
                         displayManager.circleMode = .mirror
                     }
 
                     PanelButton(
                         label: "JOBS",
-                        color: displayManager.circleMode == .jobs ? .green : .white
+                        color: displayManager.circleMode == .jobs ? .green : .white,
+                        rounded: true
                     ) {
                         displayManager.circleMode = .jobs
                         EmulatorShowJobs()
@@ -129,7 +148,8 @@ struct ControlPanel: View {
 
                     PanelButton(
                         label: "WOZ",
-                        color: displayManager.circleMode == .woz ? .green : .white
+                        color: displayManager.circleMode == .woz ? .green : .white,
+                        rounded: true
                     ) {
                         displayManager.circleMode = .woz
                         EmulatorShowWozniak()
@@ -137,7 +157,8 @@ struct ControlPanel: View {
 
                     PanelButton(
                         label: "BOTH",
-                        color: displayManager.circleMode == .both ? .green : .white
+                        color: displayManager.circleMode == .both ? .green : .white,
+                        rounded: true
                     ) {
                         displayManager.circleMode = .both
                         EmulatorShowBothSteves()
@@ -147,7 +168,8 @@ struct ControlPanel: View {
 
                     PanelButton(
                         label: "ROTATE",
-                        color: displayManager.carouselRotating ? .green : .white
+                        color: displayManager.carouselRotating ? .green : .white,
+                        rounded: true
                     ) {
                         displayManager.carouselRotating.toggle()
                     }
