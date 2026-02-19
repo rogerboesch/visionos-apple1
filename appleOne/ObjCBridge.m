@@ -10,7 +10,7 @@
 #import <UIKit/UIKit.h>
 #import "appleOne-Swift.h"
 
-#include "ret_renderer.h"
+#include "rb_display.h"
 #include "terminal.h"
 #include "Emulator.h"
 
