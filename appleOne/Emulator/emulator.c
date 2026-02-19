@@ -6,6 +6,10 @@
 #include "keyboard.h"
 #include "screen.h"
 #include "statusbar.h"
+#include "splash.h"
+
+static int emulator_splash_done = 0;
+static int emulator_cpu_started = 0;
 
 // Internal emulation functions (call trough emulator_task(number)
 
@@ -77,7 +81,7 @@ int emulator_init(void) {
 	statusbar_init();
 
 	screen_reset();
-    
+
     // 1M Hz. Sync emulation every 50 msec
 	m6502_set_speed(1000000, 50);
 
@@ -87,14 +91,32 @@ int emulator_init(void) {
 	}
 
     memory_reset();
-
 	m6502_reset();
-	m6502_start();
-    
+
+    // Start with splash instead of immediately booting the CPU
+    splash_init();
+    emulator_splash_done = 0;
+    emulator_cpu_started = 0;
+
     return 0;
 }
 
 int emulator_frame(void) {
+    // Run splash animation first
+    if (!emulator_splash_done) {
+        if (!splash_frame()) {
+            emulator_splash_done = 1;
+        }
+        return 0;
+    }
+
+    // Start CPU once after splash finishes
+    if (!emulator_cpu_started) {
+        screen_reset();
+        m6502_start();
+        emulator_cpu_started = 1;
+    }
+
     keyboard_process_input();
     return 0;
 }
