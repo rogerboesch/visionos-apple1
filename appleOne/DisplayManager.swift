@@ -88,7 +88,7 @@ class DisplayManager {
 
         // Yaw rotation (face user) then tilt forward like a table
         let yawQuat = simd_quatf(angle: yaw, axis: simd_float3(0, 1, 0))
-        let tiltQuat = simd_quatf(angle: tilt, axis: simd_float3(1, 0, 0))
+        let tiltQuat = simd_quatf(angle: -tilt, axis: simd_float3(1, 0, 0))
         let targetRot = yawQuat * tiltQuat
 
         let currentRot = panel.orientation
