@@ -37,10 +37,15 @@ static void _soft_reset(void) {
 }
 
 static void _hard_reset(void) {
+    m6502_stop();
     screen_reset();
     pia6820_reset();
     memory_reset();
     m6502_reset();
+
+    splash_init();
+    emulator_splash_done = 0;
+    emulator_cpu_started = 0;
 }
 
 static void _flip_mode(void) {
