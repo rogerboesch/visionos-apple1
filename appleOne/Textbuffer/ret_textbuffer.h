@@ -17,6 +17,10 @@
 #define RET_TEXT_HEIGHT RET_PIXEL_HEIGHT/RET_FONT_HEIGHT
 
 void ret_text_initialize(void);
+void ret_text_resize(int cols, int rows);
+void ret_text_restore_default(void);
+int ret_text_get_width(void);
+int ret_text_get_height(void);
 void ret_text_set_immediate_mode(int flag); // 0=text buffering until flush, 1=print directly
 void ret_text_flush_buffer(void);
 void ret_text_clear_screen(void);

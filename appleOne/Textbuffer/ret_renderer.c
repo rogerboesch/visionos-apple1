@@ -42,6 +42,11 @@ static RETScreen *ret_screen_current;
 static int ret_screen_index = 0;  // 1=main, 2=game
 static int ret_screen_mirror = 1; // Just works together with ret_screen_index=1
 
+/* Runtime pixel dimensions for draw_char stride (custom target support) */
+static int ret_pixel_width_active = RET_PIXEL_WIDTH;
+static int ret_pixel_height_active = RET_PIXEL_HEIGHT;
+static byte *ret_saved_pointer = NULL;
+
 // -----------------------------------------------------------------------------
 #pragma mark - Vector font table
 
@@ -275,9 +280,10 @@ void ret_rend_draw_char(int x, int y, const char ch, int invert, byte paletteCol
     int w = RET_FONT_WIDTH;
     int h = RET_FONT_HEIGHT;
     int offset = (int)ch * 8;
+    int stride = ret_pixel_width_active;
 
-    byte* dest = ret_screen_current->pointer + y * (RET_PIXEL_WIDTH*4) + (x*4);
-    
+    byte* dest = ret_screen_current->pointer + y * (stride*4) + (x*4);
+
     ret_color bg = RETPaletteGetColor(ret_screen_current->bg_color);
     ret_color fg = RETPaletteGetColorWithBrightness(paletteColor, ret_screen_current->fg_brightness);
 
@@ -286,7 +292,7 @@ void ret_rend_draw_char(int x, int y, const char ch, int invert, byte paletteCol
         byte line = ret_font_apple2[offset+iy];
 
         for (int ix = w-1; ix >= 0; ix--) {
-			if (x >= 0 && x < RET_PIXEL_WIDTH && y >= 0 && y < RET_PIXEL_HEIGHT) {
+			if (x >= 0 && x < stride && y >= 0 && y < ret_pixel_height_active) {
                 if (ch == ' ' && invert) {
                     // Draw pixel
                     *dest = fg.r; dest++;
@@ -309,23 +315,42 @@ void ret_rend_draw_char(int x, int y, const char ch, int invert, byte paletteCol
 					*dest = 0xff; dest++;
 				}
 			}
-			
+
 			// Next pixel
 			x++;
         }
-        
+
         // Next line
         y++;
 		x = xStart;
-		
-        dest = ret_screen_current->pointer + y * (RET_PIXEL_WIDTH*4) + (x*4);
+
+        dest = ret_screen_current->pointer + y * (stride*4) + (x*4);
     }
-    
+
     ret_rend_enable_dirty_bit();
-	
+
 	if (ret_screen_current->direct_render) {
 		RETRenderFrame();
 	}
+}
+
+// -----------------------------------------------------------------------------
+#pragma mark - Custom render target
+
+void ret_rend_set_custom_target(byte *buffer, int width, int height) {
+    ret_saved_pointer = ret_screen_current->pointer;
+    ret_screen_current->pointer = buffer;
+    ret_pixel_width_active = width;
+    ret_pixel_height_active = height;
+}
+
+void ret_rend_restore_target(void) {
+    if (ret_saved_pointer) {
+        ret_screen_current->pointer = ret_saved_pointer;
+        ret_saved_pointer = NULL;
+    }
+    ret_pixel_width_active = RET_PIXEL_WIDTH;
+    ret_pixel_height_active = RET_PIXEL_HEIGHT;
 }
 
 // -----------------------------------------------------------------------------

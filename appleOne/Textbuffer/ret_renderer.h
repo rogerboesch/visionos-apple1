@@ -33,6 +33,9 @@ void ret_rend_clear_screen(void);
 void ret_rend_draw_char(int x, int y, const char ch, int invert, byte paletteColor);
 void ret_rend_scroll_up(int height);
 
+void ret_rend_set_custom_target(byte *buffer, int width, int height);
+void ret_rend_restore_target(void);
+
 void ret_rend_initialize(void);
 ret_color ret_rend_get_bg_color(void);
 

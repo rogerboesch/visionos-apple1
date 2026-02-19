@@ -13,10 +13,21 @@
 #include <assert.h>
 #include <errno.h>
 
-byte ret_text_screen[RET_TEXT_WIDTH*RET_TEXT_HEIGHT];		// text buffer
-byte* ret_text_buffer;										// pointer to text buffer
-byte ret_text_color[RET_TEXT_WIDTH*RET_TEXT_HEIGHT];		// text color buffer
-byte* ret_text_colbuf;										// pointer to text color buffer
+/* Runtime text buffer dimensions (default to compile-time constants) */
+static int ret_text_width = RET_TEXT_WIDTH;
+static int ret_text_height = RET_TEXT_HEIGHT;
+
+/* Static default buffers */
+static byte ret_text_screen_default[RET_TEXT_WIDTH * RET_TEXT_HEIGHT];
+static byte ret_text_color_default[RET_TEXT_WIDTH * RET_TEXT_HEIGHT];
+static char ret_line_buffer_default[RET_TEXT_WIDTH];
+
+/* Active pointers (initially point to static defaults) */
+byte *ret_text_buffer;
+byte *ret_text_colbuf;
+static char *ret_line_buffer_ptr;
+static int ret_text_is_dynamic = 0;
+
 int ret_text_immediate_print = 1;							// 0=needs a flush to print
 boolean ret_text_cursor_visible = true;						// Cursor visible
 boolean ret_invert_mode = false;                            // Draw characer inverted
@@ -25,7 +36,6 @@ int ret_cursor_row = 0;											// Cursor position
 int ret_cursor_col = 0;
 int cursor_blink = 0;										// Cursor blink state, 0=Off
 int ret_cursor_cycles = 0;										// Cursor cycle count
-char ret_line_buffer[RET_TEXT_WIDTH];							// Text from a single line after press return
 
 // -----------------------------------------------------------------------------
 #pragma mark - Text buffer rendering
@@ -36,10 +46,10 @@ void ret_text_set_immediate_mode(int flag) {
 }
 
 void ret_text_flush_buffer() {
-	for (int row = 0; row < RET_TEXT_HEIGHT; row++) {
-		for (int col = 0; col < RET_TEXT_WIDTH; col++) {
-			char ch = ret_text_buffer[row*RET_TEXT_WIDTH+col];
-			byte paletteColor = ret_text_colbuf[row*RET_TEXT_WIDTH+col];
+	for (int row = 0; row < ret_text_height; row++) {
+		for (int col = 0; col < ret_text_width; col++) {
+			char ch = ret_text_buffer[row*ret_text_width+col];
+			byte paletteColor = ret_text_colbuf[row*ret_text_width+col];
 
 			int x = col * RET_FONT_WIDTH;
 			int y = row * RET_FONT_HEIGHT;
@@ -50,7 +60,7 @@ void ret_text_flush_buffer() {
 }
 
 void ret_text_fast_clear_screen() {
-	memset(ret_text_buffer, 0, RET_TEXT_WIDTH*RET_TEXT_HEIGHT);
+	memset(ret_text_buffer, 0, ret_text_width * ret_text_height);
 }
 
 void ret_text_clear_screen() {
@@ -62,36 +72,36 @@ void ret_text_clear_screen() {
 }
 
 boolean ret_text_print_character(int row, int col, char ch, byte color) {
-    int width = RET_TEXT_WIDTH;
-    int height = RET_TEXT_HEIGHT;
-        
+    int width = ret_text_width;
+    int height = ret_text_height;
+
     byte code = (byte)ch;
     if (code >= RET_ESCAPE_BASE_INDEX_FOR_COLOR && code <= RET_ESCAPE_BASE_INDEX_FOR_COLOR + 15) {
         // Color escape
         int color = (int)code - RET_ESCAPE_BASE_INDEX_FOR_COLOR;
         RETSetFgColor(color);
-        
+
         return false;
     }
-    
+
     if (code == RET_ESCAPE_INVERT_ON) {
         RETSetInvertMode(true);
-        
+
         return false;
     }
 
     if (code == RET_ESCAPE_INVERT_OFF) {
         RETSetInvertMode(false);
-        
+
         return false;
     }
 
     // Is the pixel actually visible?
     if (col >= 0 && col < width && row >= 0 && row < height) {
-        int offset = row * RET_TEXT_WIDTH + col;
-        
-        ret_text_screen[offset] = ch;
-        ret_text_color[offset] = color;
+        int offset = row * ret_text_width + col;
+
+        ret_text_buffer[offset] = ch;
+        ret_text_colbuf[offset] = color;
         
         if (ret_text_immediate_print == 1) {
             int x = col * RET_FONT_WIDTH;
@@ -110,8 +120,8 @@ boolean ret_text_print_character(int row, int col, char ch, byte color) {
 }
 
 char ret_text_get_character(int row, int col) {
-    int offset = row * RET_TEXT_WIDTH + col;
-    return ret_text_screen[offset];
+    int offset = row * ret_text_width + col;
+    return ret_text_buffer[offset];
 }
 
 boolean ret_text_print_character_internal(int row, int col, char ch) {
@@ -121,19 +131,19 @@ boolean ret_text_print_character_internal(int row, int col, char ch) {
 void ret_text_scroll_up() {
 	byte* source;
 	byte* dest;
-	
-	for (int row = 1; row < RET_TEXT_HEIGHT; row++) {
-		source = &ret_text_screen[row*RET_TEXT_WIDTH];
-		dest = &ret_text_screen[(row-1)*RET_TEXT_WIDTH];
-		
-		memcpy(dest, source, RET_TEXT_WIDTH);
+
+	for (int row = 1; row < ret_text_height; row++) {
+		source = &ret_text_buffer[row*ret_text_width];
+		dest = &ret_text_buffer[(row-1)*ret_text_width];
+
+		memcpy(dest, source, ret_text_width);
 	}
 
 	ret_rend_scroll_up(RET_FONT_HEIGHT);
 
 	// Clear last line
-	dest = &ret_text_screen[(RET_TEXT_HEIGHT-1)*RET_TEXT_WIDTH];
-	memset(dest, '\0', RET_TEXT_WIDTH);
+	dest = &ret_text_buffer[(ret_text_height-1)*ret_text_width];
+	memset(dest, '\0', ret_text_width);
 }
 
 
@@ -152,7 +162,7 @@ void ret_text_draw_cursor() {
 	int x = ret_cursor_col * RET_FONT_WIDTH;
 	int y = ret_cursor_row * RET_FONT_HEIGHT;
 
-    char ch = ret_text_screen[ret_cursor_row*RET_TEXT_WIDTH+ret_cursor_col];
+    char ch = ret_text_buffer[ret_cursor_row*ret_text_width+ret_cursor_col];
 
     ret_rend_draw_char(x, y, ch, 1, RET_COLOR_CURSOR);
 }
@@ -161,8 +171,8 @@ void ret_text_reset_character() {
 	int x = ret_cursor_col * RET_FONT_WIDTH;
 	int y = ret_cursor_row * RET_FONT_HEIGHT;
 
-    char ch = ret_text_screen[ret_cursor_row*RET_TEXT_WIDTH+ret_cursor_col];
-    byte paletteColor = ret_text_colbuf[ret_cursor_row*RET_TEXT_WIDTH+ret_cursor_col];
+    char ch = ret_text_buffer[ret_cursor_row*ret_text_width+ret_cursor_col];
+    byte paletteColor = ret_text_colbuf[ret_cursor_row*ret_text_width+ret_cursor_col];
 
     ret_rend_draw_char(x, y, ch, 0, paletteColor);
 }
@@ -174,9 +184,9 @@ void ret_text_cursor_left() {
 	
 	if (ret_cursor_col < 0) {
 		ret_cursor_row--;
-		ret_cursor_col = RET_TEXT_WIDTH-1;
+		ret_cursor_col = ret_text_width-1;
 	}
-	
+
 	if (ret_cursor_row < 0) {
 		ret_cursor_row = 0;
 		ret_cursor_col = 0;
@@ -189,16 +199,16 @@ void ret_text_cursor_right() {
 	ret_text_reset_character();
 
 	ret_cursor_col++;
-	
-	if (ret_cursor_col > RET_TEXT_WIDTH-1) {
+
+	if (ret_cursor_col > ret_text_width-1) {
 		ret_cursor_row++;
 		ret_cursor_col = 0;
 	}
 
-	if (ret_cursor_row > RET_TEXT_HEIGHT-1) {
+	if (ret_cursor_row > ret_text_height-1) {
 		ret_text_scroll_up();
-		
-		ret_cursor_row = RET_TEXT_HEIGHT-1;
+
+		ret_cursor_row = ret_text_height-1;
 	}
 	
 	ret_text_draw_cursor();
@@ -220,11 +230,11 @@ void ret_text_cursor_down() {
 	ret_text_reset_character();
 
 	ret_cursor_row++;
-	
-	if (ret_cursor_row > RET_TEXT_HEIGHT-1) {
+
+	if (ret_cursor_row > ret_text_height-1) {
 		ret_text_scroll_up();
 
-		ret_cursor_row = RET_TEXT_HEIGHT-1;
+		ret_cursor_row = ret_text_height-1;
 	}
 	
 	ret_text_draw_cursor();
@@ -245,13 +255,13 @@ void ret_text_new_line() {
 	ret_cursor_row++;
 	ret_cursor_col = 0;
 	
-	if (ret_cursor_row >= RET_TEXT_HEIGHT) {
+	if (ret_cursor_row >= ret_text_height) {
 		// Scroll screen up
 		ret_text_scroll_up();
-		
-		ret_cursor_row = RET_TEXT_HEIGHT-1;
+
+		ret_cursor_row = ret_text_height-1;
 	}
-	
+
 	ret_text_draw_cursor();
 }
 
@@ -276,7 +286,7 @@ void ret_text_delete_char(void) {
 	ret_text_cursor_left();
 	
 	// Remove character
-	ret_text_screen[ret_cursor_row*RET_TEXT_WIDTH+ret_cursor_col] = '\0';
+	ret_text_buffer[ret_cursor_row*ret_text_width+ret_cursor_col] = '\0';
 }
 
 // -----------------------------------------------------------------------------
@@ -288,11 +298,62 @@ void ret_text_initialize() {
 	cursor_blink = 0;
 	ret_cursor_cycles = 0;
 
-	ret_text_buffer = &ret_text_screen[0];
-	ret_text_colbuf = &ret_text_color[0];
+	ret_text_buffer = ret_text_screen_default;
+	ret_text_colbuf = ret_text_color_default;
+	ret_line_buffer_ptr = ret_line_buffer_default;
+	ret_text_width = RET_TEXT_WIDTH;
+	ret_text_height = RET_TEXT_HEIGHT;
+	ret_text_is_dynamic = 0;
+
 	ret_text_fast_clear_screen();
-	
+
 	ret_text_draw_cursor();
+}
+
+void ret_text_resize(int cols, int rows) {
+	/* Free old dynamic buffers if any */
+	if (ret_text_is_dynamic) {
+		free(ret_text_buffer);
+		free(ret_text_colbuf);
+		free(ret_line_buffer_ptr);
+	}
+
+	ret_text_width = cols;
+	ret_text_height = rows;
+
+	int size = cols * rows;
+	ret_text_buffer = (byte *)malloc(size);
+	ret_text_colbuf = (byte *)malloc(size);
+	ret_line_buffer_ptr = (char *)malloc(cols);
+
+	memset(ret_text_buffer, 0, size);
+	memset(ret_text_colbuf, 0, size);
+	memset(ret_line_buffer_ptr, 0, cols);
+
+	ret_text_is_dynamic = 1;
+}
+
+void ret_text_restore_default(void) {
+	if (ret_text_is_dynamic) {
+		free(ret_text_buffer);
+		free(ret_text_colbuf);
+		free(ret_line_buffer_ptr);
+	}
+
+	ret_text_buffer = ret_text_screen_default;
+	ret_text_colbuf = ret_text_color_default;
+	ret_line_buffer_ptr = ret_line_buffer_default;
+	ret_text_width = RET_TEXT_WIDTH;
+	ret_text_height = RET_TEXT_HEIGHT;
+	ret_text_is_dynamic = 0;
+}
+
+int ret_text_get_width(void) {
+	return ret_text_width;
+}
+
+int ret_text_get_height(void) {
+	return ret_text_height;
 }
 
 void ret_text_print_no_line_break(char* str, int size) {
@@ -303,8 +364,8 @@ void ret_text_print_no_line_break(char* str, int size) {
         RETPrintCharAt(ret_cursor_row, ret_cursor_col, ch);
         
         ret_cursor_col++;
-        if (ret_cursor_col >= RET_TEXT_WIDTH) {
-            ret_cursor_col = RET_TEXT_WIDTH-1;
+        if (ret_cursor_col >= ret_text_width) {
+            ret_cursor_col = ret_text_width-1;
         }
         
         ret_text_draw_cursor();
@@ -319,8 +380,7 @@ void ret_text_print_no_line_break(char* str, int size) {
 }
 
 const char* ret_text_get_line_buffer(void) {
-    return &ret_line_buffer[0];
-    
+    return ret_line_buffer_ptr;
 }
 
 // -----------------------------------------------------------------------------
@@ -352,16 +412,16 @@ void RETPrintChar(char ch) {
 	}
 	
 	ret_cursor_col++;
-	if (ret_cursor_col >= RET_TEXT_WIDTH) {
+	if (ret_cursor_col >= ret_text_width) {
 		ret_cursor_row++;
 		ret_cursor_col = 0;
 	}
 
-    if (ret_cursor_row >= RET_TEXT_HEIGHT) {
+    if (ret_cursor_row >= ret_text_height) {
         // Scroll screen up
         ret_text_scroll_up();
-        
-        ret_cursor_row = RET_TEXT_HEIGHT-1;
+
+        ret_cursor_row = ret_text_height-1;
     }
 
 	ret_text_draw_cursor();
@@ -417,15 +477,15 @@ void RETProcessAsciiKey(int ch) {
 	// Check for printable ascii codes
 	if (ch == RET_KEY_ENTER) {
 		// Get current line
-		memset(&ret_line_buffer, ' ', RET_TEXT_WIDTH);
-		
+		memset(ret_line_buffer_ptr, ' ', ret_text_width);
+
 		for (int x = 0; x < ret_cursor_col; x++) {
-			if (ret_text_screen[ret_cursor_row*RET_TEXT_WIDTH+x] != '\0') {
-				ret_line_buffer[x] = ret_text_screen[ret_cursor_row*RET_TEXT_WIDTH+x];
+			if (ret_text_buffer[ret_cursor_row*ret_text_width+x] != '\0') {
+				ret_line_buffer_ptr[x] = ret_text_buffer[ret_cursor_row*ret_text_width+x];
 			}
 		}
-		
-		ret_line_buffer[ret_cursor_col] = '\0';
+
+		ret_line_buffer_ptr[ret_cursor_col] = '\0';
 
 		ret_text_new_line();
 	}
