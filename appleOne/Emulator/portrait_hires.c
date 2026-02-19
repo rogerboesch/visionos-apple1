@@ -11,6 +11,11 @@
 /* Bridge function declared in ObjCBridge.m */
 void ret_render_frame_sized(unsigned char *data, int width, int height);
 
+/* Phosphor green — must match ret_postprocess.c for consistent color */
+#define PHOSPHOR_R 51
+#define PHOSPHOR_G 255
+#define PHOSPHOR_B 51
+
 /* Buffer dimensions: cols * font_width, rows * font_height */
 #define JOBS_BUF_W (PORTRAIT_HIRES_JOBS_COLS * RET_FONT_WIDTH)
 #define JOBS_BUF_H (PORTRAIT_HIRES_JOBS_ROWS * RET_FONT_HEIGHT)
@@ -19,6 +24,23 @@ static byte jobs_buffer[JOBS_BUF_W * JOBS_BUF_H * 4];
 #define WOZ_BUF_W (PORTRAIT_HIRES_WOZ_COLS * RET_FONT_WIDTH)
 #define WOZ_BUF_H (PORTRAIT_HIRES_WOZ_ROWS * RET_FONT_HEIGHT)
 static byte woz_buffer[WOZ_BUF_W * WOZ_BUF_H * 4];
+
+static void tint_buffer_phosphor(byte *buffer, int buf_w, int buf_h) {
+    int total = buf_w * buf_h;
+    for (int i = 0; i < total; i++) {
+        int off = i * 4;
+        int brightness = buffer[off];
+        if (buffer[off + 1] > brightness) brightness = buffer[off + 1];
+        if (buffer[off + 2] > brightness) brightness = buffer[off + 2];
+
+        if (brightness > 0) {
+            float t = (float)brightness / 255.0f;
+            buffer[off]     = (byte)(PHOSPHOR_R * t);
+            buffer[off + 1] = (byte)(PHOSPHOR_G * t);
+            buffer[off + 2] = (byte)(PHOSPHOR_B * t);
+        }
+    }
+}
 
 static void render_portrait_glyphs(const char **art, int art_rows, int art_cols,
                                    byte *buffer, int buf_w, int buf_h) {
@@ -30,8 +52,8 @@ static void render_portrait_glyphs(const char **art, int art_rows, int art_cols,
     /* Set custom render target */
     ret_rend_set_custom_target(buffer, buf_w, buf_h);
 
-    /* Set phosphor green color */
-    byte old_fg = RETSetFgColor(RET_COLOR_GREEN);
+    /* Render glyphs as white — we tint to phosphor green afterwards */
+    byte old_fg = RETSetFgColor(RET_COLOR_WHITE);
     byte old_bright = RETSetFgBrightness(15);
 
     /* Draw each character using the bitmap font */
@@ -54,6 +76,9 @@ static void render_portrait_glyphs(const char **art, int art_rows, int art_cols,
 
     RETSetFgColor(old_fg);
     RETSetFgBrightness(old_bright);
+
+    /* Tint white glyphs to phosphor green (matches post-processor) */
+    tint_buffer_phosphor(buffer, buf_w, buf_h);
 
     /* Send to display */
     ret_render_frame_sized(buffer, buf_w, buf_h);
