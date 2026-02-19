@@ -105,7 +105,7 @@ struct ControlPanel: View {
     var body: some View {
         VStack(spacing: 16) {
             // Title
-            Text("APPLE I")
+            Text("TERMINAL")
                 .font(.system(size: 42, weight: .bold, design: .monospaced))
                 .kerning(6)
 
@@ -175,6 +175,10 @@ struct ControlPanel: View {
                     }
                 }
             }
+
+            Text("Apple I Emulator")
+                .font(.system(size: 14, weight: .medium, design: .monospaced))
+                .foregroundColor(.white.opacity(0.6))
 
             // Control buttons
             HStack(spacing: 8) {
