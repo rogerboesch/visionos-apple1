@@ -24,5 +24,10 @@ struct GameApp: App {
             MainWindow()
         }
         .defaultSize(width: 0.8, height: 0.6, depth: 0.0, in: .meters)
+
+        ImmersiveSpace(id: "wall_display") {
+            GameSpace()
+        }
+        .immersionStyle(selection: .constant(.mixed), in: .mixed)
     }
 }

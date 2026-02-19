@@ -17,14 +17,59 @@
 
 import SwiftUI
 import RealityKit
-import RealityKitContent
 
-// Kept for potential future use (e.g. 3D Apple I model in immersive space)
+// Wall display size in meters
+private let WALL_DISPLAY_WIDTH: Float = 2.0
+private let WALL_DISPLAY_HEIGHT: Float = WALL_DISPLAY_WIDTH * (208.0 / 336.0)
+private let WALL_DISPLAY_DEPTH: Float = 0.01
+
 struct GameSpace: View {
+    @State private var renderer = ScreenRenderer.shared
+    @State private var wallEntity: ModelEntity? = nil
+    @State private var textureIndex = 0
+
     var body: some View {
         RealityView { content in
-            if let scene = try? await Entity(named: "Immersive", in: realityKitContentBundle) {
-                content.add(scene)
+            // Anchor to the nearest vertical wall
+            let wallAnchor = AnchorEntity(.plane(.vertical, classification: .wall, minimumBounds: [1.0, 0.5]))
+
+            // Create a flat box as the display surface
+            let mesh = MeshResource.generateBox(size: 1.0)
+            let material = SimpleMaterial(color: .black, isMetallic: false)
+            let display = ModelEntity(mesh: mesh, materials: [material])
+            display.scale = [WALL_DISPLAY_WIDTH, WALL_DISPLAY_HEIGHT, WALL_DISPLAY_DEPTH]
+
+            wallAnchor.addChild(display)
+            content.add(wallAnchor)
+
+            wallEntity = display
+        }
+        .onChange(of: renderer.screenImage) { oldValue, newValue in
+            guard let image = newValue, let cgImage = image.cgImage else { return }
+            updateWallTexture(cgImage)
+        }
+    }
+
+    private func updateWallTexture(_ cgImage: CGImage) {
+        guard let entity = wallEntity else { return }
+
+        textureIndex += 1
+        let name = "wall-\(textureIndex)"
+
+        Task {
+            do {
+                let resource = try await TextureResource(
+                    image: cgImage,
+                    withName: name,
+                    options: TextureResource.CreateOptions(semantic: .raw)
+                )
+
+                var material = SimpleMaterial(color: .white, isMetallic: false)
+                material.color = .init(tint: .white, texture: .init(resource))
+                entity.model?.materials = [material]
+            }
+            catch {
+                rbError("Wall texture: \(error.localizedDescription)")
             }
         }
     }

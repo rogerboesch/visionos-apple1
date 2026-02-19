@@ -24,6 +24,8 @@ enum AppleState {
 }
 
 struct MainWindow: View {
+    @Environment(\.openImmersiveSpace) var openImmersiveSpace
+
     @State private var renderer = ScreenRenderer.shared
     @State var basicState = AppleState.cold
     @State var assemblerState = AppleState.cold
@@ -92,6 +94,10 @@ struct MainWindow: View {
 
             Timer.scheduledTimer(withTimeInterval: emulatorFPS, repeats: true) { _ in
                 EmulatorFrame()
+            }
+
+            Task {
+                await openImmersiveSpace(id: "wall_display")
             }
         }
     }
