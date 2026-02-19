@@ -4,8 +4,8 @@ import RealityKit
 import QuartzCore
 
 // Display size in meters
-let DISPLAY_WIDTH: Float = 1.5
-let DISPLAY_HEIGHT: Float = DISPLAY_WIDTH * (208.0 / 336.0)
+let DISPLAY_WIDTH: Float = 1.5 * 4.0
+let DISPLAY_HEIGHT: Float = (1.5 * (208.0 / 336.0)) * 3.0
 let DISPLAY_DEPTH: Float = 0.005
 
 // Offset from head: placed slightly in front of the user
