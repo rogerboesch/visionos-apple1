@@ -1,9 +1,24 @@
 # Milestone - Apple 50th Anniversary Feature Branch
 
 ## Key Summary
-Building an immersive visionOS experience featuring the Apple I emulator with multiple display walls, ASCII art portraits of Steve Jobs and Steve Wozniak, and a standalone Breakout game sharing the same display pipeline.
+Building an immersive visionOS experience featuring the Apple I emulator with multiple display walls, ASCII art portraits of Steve Jobs and Steve Wozniak, a standalone Breakout game, and Shockwave (WipeOut-style racing) — all sharing the same display pipeline with phosphor green postprocess.
 
 ## Completed Steps
+
+### Shockwave Integration (2026-02-20)
+- **Third game mode**: Shockwave (WipeOut-style anti-gravity racing) integrated as mode 2 alongside Emulator (0) and Breakout (1)
+- **New file `Games/platform_apple1.c`**: Platform implementation targeting Apple I display 0's pixel buffer (336x208). `platform_get_screenbuffer()` returns `rb_get_display(0)->pixel_data` so `render_software.c` draws wireframes directly into the display buffer. Bresenham line drawing for HUD text via `platform_line()`. Mach absolute time for timing. Packfile asset loading from bundle resources.
+- **29 Shockwave source files compiled**: 21 game files (camera, droid, game, hud, image, ingame_menus, intro, main_menu, menu, object, particle, race, scene, sfx, ship, ship_ai, ship_player, title, track, ui, weapon), 6 system files (input, mem, packfile, system, types, utils), 2 render files (render_software, vector_font)
+- **Uses `render_software.c`** (not `render_visionos.c`): Software renderer draws wireframe triangles into pixel buffer, with `g_reduce_lines = 1` for sparse single-edge wireframes matching Apple I aesthetic
+- **Rendering pipeline**: `shockwave_apple1_update()` → `system_update()` (clears buffer, draws wireframes) → `rb_display_render_frame(0)` (phosphor green postprocess + push to Swift)
+- **Attract mode**: `g.is_attract_mode = true` set in `system_init()` — game auto-plays with AI-controlled demo, no input required
+- **Lazy init**: `shockwave_apple1_init()` called only on first mode switch, avoids loading 600KB packfile at startup
+- **ObjCBridge.m**: `app_mode == 2` routes to `shockwave_apple1_update()`. `GameSetModeShockwave()` lazy-inits engine with bundle resource and documents paths. `GameShockwaveReset()` resets to intro scene.
+- **MainWindow.swift**: `.shockwave` case in `AppMode`, round SHOCKWAVE mode button, RESET control button
+- **Xcode project**: Shockwave subgroup under Games, `HEADER_SEARCH_PATHS` for `src-game`, `src-system`, `src-render`, `src-libs`. `shockwave.data` packfile added as bundle resource.
+- **No audio**: `sfx_load()` early-returns, audio callback stored but unused
+- **No changes** to display pipeline, ScreenRenderer, DisplayManager, GameSpace, terminal, emulator, or Breakout — existing behavior fully preserved
+- Builds cleanly for visionOS simulator with zero errors and zero warnings
 
 ### Breakout Game (2026-02-20)
 - **New module `Games/game_breakout`**: Standalone Breakout game in C sharing display 0 (336x208, phosphor postprocess)
