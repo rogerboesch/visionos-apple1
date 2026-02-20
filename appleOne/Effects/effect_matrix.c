@@ -142,6 +142,7 @@ static void render_rain_to_display(matrix_slot *s, int d) {
             if (screen_row < 0 || screen_row >= s->art_rows) continue;
 
             const char *line = s->art[r];
+            if (!line) continue;
             char ch = (c < (int)strlen(line)) ? line[c] : ' ';
             if (ch != ' ') {
                 rb_display_text_print_char(d, screen_row, c, ch, color);
@@ -191,6 +192,7 @@ static void render_rebuild_to_display(matrix_slot *s, int d) {
             if (screen_row < 0 || screen_row >= s->art_rows) continue;
 
             const char *line = s->art[r];
+            if (!line) continue;
             char ch = (c < (int)strlen(line)) ? line[c] : ' ';
             if (ch != ' ') {
                 rb_display_text_print_char(d, screen_row, c, ch, color);
@@ -237,6 +239,7 @@ static void render_final_to_display(matrix_slot *s, int d) {
 
     for (int r = 0; r < s->art_rows; r++) {
         const char *line = s->art[r];
+        if (!line) continue;
         for (int c = 0; c < s->art_cols && line[c]; c++) {
             if (line[c] != ' ') {
                 rb_display_text_print_char(d, r, c, line[c], color);
