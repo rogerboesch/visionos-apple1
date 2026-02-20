@@ -34,6 +34,7 @@ struct MainWindow: View {
         Color.clear
             .onAppear {
                 EmulatorInit()
+                EmulatorRefreshDisplay()
 
                 Timer.scheduledTimer(withTimeInterval: emulatorFPS, repeats: true) { _ in
                     EmulatorFrame()
