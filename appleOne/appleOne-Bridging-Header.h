@@ -22,3 +22,6 @@ void GameSetModeBreakout(void);
 void GameBreakoutInput(int action);
 void GameBreakoutInputRelease(void);
 void GameBreakoutReset(void);
+
+void GameSetModeShockwave(void);
+void GameShockwaveReset(void);

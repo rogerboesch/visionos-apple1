@@ -26,6 +26,7 @@ enum AppleState {
 enum AppMode {
     case emulator
     case breakout
+    case shockwave
 }
 
 // Launcher window — initializes emulator and opens the immersive space
@@ -137,6 +138,15 @@ struct ControlPanel: View {
                         appMode = .breakout
                         GameSetModeBreakout()
                     }
+
+                    PanelButton(
+                        label: "SHOCK\nWAVE",
+                        color: appMode == .shockwave ? .green : .white,
+                        rounded: true
+                    ) {
+                        appMode = .shockwave
+                        GameSetModeShockwave()
+                    }
                 }
 
                 // Screen
@@ -205,7 +215,7 @@ struct ControlPanel: View {
                 }
             }
 
-            Text(appMode == .emulator ? "APPLE I - EMULATOR" : "BREAKOUT")
+            Text(subtitleForMode)
                 .font(.system(size: 18, weight: .bold, design: .monospaced))
                 .foregroundColor(.white.opacity(0.6))
 
@@ -227,8 +237,11 @@ struct ControlPanel: View {
                     assemblerButtons
                 }
             }
-            else {
+            else if appMode == .breakout {
                 breakoutButtons
+            }
+            else if appMode == .shockwave {
+                shockwaveButtons
             }
         }
         .padding()
@@ -271,6 +284,23 @@ struct ControlPanel: View {
 
             PanelButton(label: "RESET", color: .red) {
                 GameBreakoutReset()
+            }
+        }
+    }
+
+    private var subtitleForMode: String {
+        switch appMode {
+        case .emulator: return "APPLE I - EMULATOR"
+        case .breakout: return "BREAKOUT"
+        case .shockwave: return "SHOCKWAVE"
+        }
+    }
+
+    @ViewBuilder
+    private var shockwaveButtons: some View {
+        HStack(spacing: 8) {
+            PanelButton(label: "RESET", color: .red) {
+                GameShockwaveReset()
             }
         }
     }
