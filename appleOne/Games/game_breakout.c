@@ -220,6 +220,7 @@ static void step_physics(void) {
     /* Ball fell below screen */
     if (ny >= BREAKOUT_SCREEN_H) {
         game_lives--;
+        game_breakout_on_ball_lost();
 
         if (game_lives <= 0) {
             game_state = BREAKOUT_STATE_GAMEOVER;

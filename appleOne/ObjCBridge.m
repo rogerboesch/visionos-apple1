@@ -183,7 +183,7 @@ void GameSetModeEmulator(void) {
 
 void GameSetModeBreakout(void) {
     app_mode = 1;
-    effect_ascii_art_show_portrait(0, "steve-jobs");
+    effect_ascii_art_show_portrait_static(0, "steve-jobs");
     game_breakout_init();
 }
 
@@ -197,5 +197,10 @@ void GameBreakoutInputRelease(void) {
 
 void GameBreakoutReset(void) {
     game_breakout_reset();
+}
+
+/* Called from game_breakout.c when a ball is lost */
+void game_breakout_on_ball_lost(void) {
+    effect_ascii_art_trigger_once(0);
 }
 

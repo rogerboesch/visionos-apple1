@@ -15,6 +15,8 @@ int  effect_ascii_art_get_cols(int slot);
 
 /* High-level portrait commands */
 void effect_ascii_art_show_portrait(int slot, const char *name);
+void effect_ascii_art_show_portrait_static(int slot, const char *name);
+void effect_ascii_art_trigger_once(int slot);
 void effect_ascii_art_show_portrait_pair(const char *name_a, const char *name_b);
 
 /* Frame tick — advances matrix animation + pushes to bridge. Call from main loop. */

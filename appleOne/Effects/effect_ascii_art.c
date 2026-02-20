@@ -171,6 +171,28 @@ void effect_ascii_art_show_portrait(int slot, const char *name) {
     }
 }
 
+void effect_ascii_art_show_portrait_static(int slot, const char *name) {
+    effect_ascii_art_show(slot, name);
+
+    int d = effect_ascii_art_get_display(slot);
+    if (d >= 0) {
+        rb_render_portrait(rb_display_get_pixel_data(d),
+                           rb_display_get_pixel_width(d),
+                           rb_display_get_pixel_height(d));
+    }
+}
+
+void effect_ascii_art_trigger_once(int slot) {
+    if (slot < 0 || slot >= EFFECT_ART_MAX_SLOTS) return;
+    if (slot_displays[slot] < 0) return;
+    if (!slot_art[slot].lines) return;
+
+    effect_matrix_start_once(slot,
+                              (const char **)slot_art[slot].lines,
+                              slot_art[slot].rows,
+                              slot_art[slot].cols);
+}
+
 void effect_ascii_art_show_portrait_pair(const char *name_a, const char *name_b) {
     effect_ascii_art_show(0, name_a);
     effect_ascii_art_show(1, name_b);

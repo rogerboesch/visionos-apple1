@@ -49,6 +49,7 @@ typedef struct {
     int active;
     int phase;
     int frame_count;
+    int once;   /* 1 = stop after one cycle instead of looping */
     matrix_column columns[ART_MAX_COLS];
     const char **art;
     int art_rows;
@@ -298,8 +299,12 @@ static int advance_slot(matrix_slot *s, int d) {
             break;
 
         case PHASE_PAUSE:
-            /* Show final portrait, then restart the cycle */
+            /* Show final portrait, then restart or stop */
             if (s->frame_count >= MATRIX_PAUSE_FRAMES) {
+                if (s->once) {
+                    s->active = 0;
+                    return 0;
+                }
                 restart_slot(s);
             }
             break;
@@ -332,6 +337,15 @@ void effect_matrix_start(int slot, const char **art, int rows, int cols) {
     init_slot(&slots[slot], art, rows, cols,
               (unsigned int)(rows * 7919 + cols * 104729 + invoke_count * 31337
                              + slot * 48611));
+}
+
+void effect_matrix_start_once(int slot, const char **art, int rows, int cols) {
+    if (slot < 0 || slot >= EFFECT_ART_MAX_SLOTS) return;
+    invoke_count++;
+    init_slot(&slots[slot], art, rows, cols,
+              (unsigned int)(rows * 7919 + cols * 104729 + invoke_count * 31337
+                             + slot * 48611));
+    slots[slot].once = 1;
 }
 
 void effect_matrix_stop_slot(int slot) {

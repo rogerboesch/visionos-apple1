@@ -49,6 +49,9 @@ int  game_breakout_get_score(void);
 int  game_breakout_get_lives(void);
 int  game_breakout_get_state(void);
 
+/* Platform callback — implemented in ObjCBridge.m */
+extern void game_breakout_on_ball_lost(void);
+
 /* Render API (called from game_breakout.c) */
 void game_breakout_render_frame(void);
 void game_breakout_render_title(void);
