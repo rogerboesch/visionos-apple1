@@ -105,6 +105,28 @@ Building an immersive visionOS experience featuring the Apple I emulator with mu
 - Same phosphor-green tinting as normal portrait rendering
 - Builds successfully for visionOS simulator
 
+### Refactoring: Move portrait_ files to Effects/ folder (2026-02-20)
+- Moved 6 portrait rendering files from `Emulator/` to `Emulator/Effects/` subfolder
+- Renamed all files from `portrait_*` to `effect_*` prefix
+- Renamed all public API functions: `portrait_hires_*` → `effect_hires_*`, `portrait_matrix_*` → `effect_matrix_*`
+- Renamed data constants and header guards accordingly
+- Updated all callers: `emulator.c`, `ObjCBridge.m`
+- Added `Effects` group to Xcode project structure
+- Git history preserved via `git mv`
+
+### Refactoring: Generic Slot-Based Art Loader (2026-02-20)
+- Replaced hardcoded Jobs/Wozniak portrait system with generic N-slot art loader
+- **New module `effect_art_loader`**: Loads ASCII art from bundled `.txt` files at runtime (two-pass read: count lines + max width, then malloc + pad to uniform columns)
+- **New module `effect_ascii_art`**: Slot-based display system with `EFFECT_ART_MAX_SLOTS` (8) slots. `effect_ascii_art_show(slot, name)` loads any art file into any slot
+- **Refactored `effect_matrix`**: N independent animation slots instead of 2 hardcoded + `matrix_pair_mode` flag. `effect_matrix_start(slot, ...)` starts animation on a specific slot
+- **Effect system fully independent of emulator**: `effect_ascii_art_frame()` ticked from `ObjCBridge.m` alongside `emulator_frame()` — matrix animation on circle displays never blocks the CPU emulator
+- **Bridge calls owned by `effect_ascii_art`**: Matrix module only advances animation state; `effect_ascii_art` handles bridge push via `push_to_bridge()` internally
+- **`emulator.c` clean**: Only calls `effect_ascii_art_show_portrait()`/`show_portrait_pair()` for task triggers and `effect_ascii_art_stop()` in hard reset — no bridge, matrix, or display refs
+- **Deleted**: `effect_data_jobs.h`, `effect_data_wozniak.h` (compiled-in art headers), `effect_hires.h`, `effect_hires.c` (old hardcoded portrait renderer)
+- **Added to bundle**: `steve-jobs.txt`, `steve-wozniak.txt` in `Assets/` folder as Resources
+- Art getter API: `effect_ascii_art_get_lines/rows/cols(slot)` allow matrix to access loaded art data
+- C layer is fully generic for N images; Swift bridge still supports 1 or 2 (single/pair)
+
 ### Previous Work
 - Hi-res portrait renderer with phosphor-green display
 - ASCII art portraits of Steve Jobs and Steve Wozniak

@@ -1,15 +1,11 @@
-#include "portrait_matrix.h"
-#include "portrait_hires.h"
+#include "effect_matrix.h"
+#include "effect_ascii_art.h"
+#include "effect_art_loader.h"
 #include "rb_display.h"
 
 #include <string.h>
 
-/* Bridge functions declared in ObjCBridge.m */
-void rb_render_portrait(unsigned char *data, int width, int height);
-void rb_render_portrait_pair(unsigned char *dataA, int widthA, int heightA,
-                              unsigned char *dataB, int widthB, int heightB);
-
-/* Phosphor green — must match portrait_hires.c */
+/* Phosphor green — must match effect_ascii_art.c */
 #define PHOSPHOR_R 51
 #define PHOSPHOR_G 255
 #define PHOSPHOR_B 51
@@ -35,10 +31,6 @@ void rb_render_portrait_pair(unsigned char *dataA, int widthA, int heightA,
 /* Pause between loops (frames at 60 fps) */
 #define MATRIX_PAUSE_FRAMES 300  /* 5 seconds */
 
-/* Max portrait dimensions */
-#define MATRIX_MAX_COLS 100
-#define MATRIX_MAX_ROWS 63
-
 /* Random chars used for the matrix trail effect */
 static const char matrix_chars[] =
     "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz"
@@ -57,21 +49,15 @@ typedef struct {
     int active;
     int phase;
     int frame_count;
-    matrix_column columns[MATRIX_MAX_COLS];
+    matrix_column columns[ART_MAX_COLS];
     const char **art;
     int art_rows;
     int art_cols;
     unsigned int seed;
 } matrix_slot;
 
-/* Slot A = single or Jobs half, Slot B = Woz half in pair mode */
-#define SLOT_A 0
-#define SLOT_B 1
-#define SLOT_COUNT 2
-
-static matrix_slot slots[SLOT_COUNT];
-static int matrix_pair_mode = 0;    /* 1 when both portraits animate together */
-static unsigned int invoke_count = 0; /* varies seed across invocations */
+static matrix_slot slots[EFFECT_ART_MAX_SLOTS];
+static unsigned int invoke_count = 0;
 
 /* Simple pseudo-random number generator (per-slot) */
 static int slot_rand(matrix_slot *s) {
@@ -340,84 +326,56 @@ static void init_slot(matrix_slot *s, const char **art, int rows, int cols,
 
 /* --- Public API --------------------------------------------------------- */
 
-void portrait_matrix_start(const char **art, int rows, int cols) {
-    /* Cancel any previous pair mode */
-    slots[SLOT_B].active = 0;
-    matrix_pair_mode = 0;
+void effect_matrix_start(int slot, const char **art, int rows, int cols) {
+    if (slot < 0 || slot >= EFFECT_ART_MAX_SLOTS) return;
     invoke_count++;
-
-    init_slot(&slots[SLOT_A], art, rows, cols,
-              (unsigned int)(rows * 7919 + cols * 104729 + invoke_count * 31337));
+    init_slot(&slots[slot], art, rows, cols,
+              (unsigned int)(rows * 7919 + cols * 104729 + invoke_count * 31337
+                             + slot * 48611));
 }
 
-void portrait_matrix_start_pair(const char **art_a, int rows_a, int cols_a,
-                                const char **art_b, int rows_b, int cols_b) {
-    matrix_pair_mode = 1;
-    invoke_count++;
-
-    init_slot(&slots[SLOT_A], art_a, rows_a, cols_a,
-              (unsigned int)(rows_a * 7919 + cols_a * 104729 + invoke_count * 31337));
-    init_slot(&slots[SLOT_B], art_b, rows_b, cols_b,
-              (unsigned int)(rows_b * 6311 + cols_b * 87491 + invoke_count * 48611));
+void effect_matrix_stop_slot(int slot) {
+    if (slot < 0 || slot >= EFFECT_ART_MAX_SLOTS) return;
+    slots[slot].active = 0;
 }
 
-int portrait_matrix_frame(void) {
-    if (!slots[SLOT_A].active && !slots[SLOT_B].active) return 0;
-
-    int da = portrait_hires_get_display_a();
-    if (da < 0) {
-        slots[SLOT_A].active = 0;
-        slots[SLOT_B].active = 0;
-        return 0;
-    }
-
-    if (matrix_pair_mode) {
-        int db = portrait_hires_get_display_b();
-        if (db < 0) {
-            slots[SLOT_A].active = 0;
-            slots[SLOT_B].active = 0;
-            return 0;
-        }
-
-        /* During hold/pause, portrait is static — skip bridge call */
-        int a_static = (slots[SLOT_A].phase == PHASE_HOLD || slots[SLOT_A].phase == PHASE_PAUSE);
-        int b_static = (slots[SLOT_B].phase == PHASE_HOLD || slots[SLOT_B].phase == PHASE_PAUSE);
-        if (a_static && b_static) {
-            advance_slot(&slots[SLOT_A], da);
-            advance_slot(&slots[SLOT_B], db);
-            return 1;
-        }
-
-        advance_slot(&slots[SLOT_A], da);
-        advance_slot(&slots[SLOT_B], db);
-
-        rb_render_portrait_pair(rb_display_get_pixel_data(da),
-                                rb_display_get_pixel_width(da),
-                                rb_display_get_pixel_height(da),
-                                rb_display_get_pixel_data(db),
-                                rb_display_get_pixel_width(db),
-                                rb_display_get_pixel_height(db));
-
-        return (slots[SLOT_A].active || slots[SLOT_B].active) ? 1 : 0;
-    }
-    else {
-        int still = advance_slot(&slots[SLOT_A], da);
-        /* During hold/pause, portrait is static — skip bridge call */
-        if (slots[SLOT_A].phase != PHASE_HOLD && slots[SLOT_A].phase != PHASE_PAUSE) {
-            rb_render_portrait(rb_display_get_pixel_data(da),
-                               rb_display_get_pixel_width(da),
-                               rb_display_get_pixel_height(da));
-        }
-        return still;
+void effect_matrix_stop(void) {
+    for (int i = 0; i < EFFECT_ART_MAX_SLOTS; i++) {
+        slots[i].active = 0;
     }
 }
 
-void portrait_matrix_stop(void) {
-    slots[SLOT_A].active = 0;
-    slots[SLOT_B].active = 0;
-    matrix_pair_mode = 0;
+int effect_matrix_frame(void) {
+    int any_active = 0;
+
+    for (int i = 0; i < EFFECT_ART_MAX_SLOTS; i++) {
+        if (!slots[i].active) continue;
+
+        int d = effect_ascii_art_get_display(i);
+        if (d < 0) {
+            slots[i].active = 0;
+            continue;
+        }
+
+        advance_slot(&slots[i], d);
+
+        if (slots[i].active) any_active = 1;
+    }
+
+    return any_active;
 }
 
-int portrait_matrix_is_active(void) {
-    return slots[SLOT_A].active || slots[SLOT_B].active;
+int effect_matrix_is_active(void) {
+    for (int i = 0; i < EFFECT_ART_MAX_SLOTS; i++) {
+        if (slots[i].active) return 1;
+    }
+    return 0;
+}
+
+int effect_matrix_get_active_count(void) {
+    int count = 0;
+    for (int i = 0; i < EFFECT_ART_MAX_SLOTS; i++) {
+        if (slots[i].active) count++;
+    }
+    return count;
 }

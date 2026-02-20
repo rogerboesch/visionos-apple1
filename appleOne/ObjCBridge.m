@@ -13,7 +13,7 @@
 #include "rb_display.h"
 #include "terminal.h"
 #include "Emulator.h"
-#include "portrait_matrix.h"
+#include "Effects/effect_ascii_art.h"
 
 @implementation UIImage (Buffer)
 
@@ -120,6 +120,7 @@ void EmulatorFrame(void) {
     }
 
     emulator_frame();
+    effect_ascii_art_frame();
 }
 
 void EmulatorKeyPress(int ch) {
@@ -131,6 +132,7 @@ void EmulatorLoadBasic(void) {
 }
 
 void EmulatorHardReset(void) {
+    effect_ascii_art_stop();
     emulator_task(5);
 }
 
@@ -139,11 +141,11 @@ void EmulatorLoadCore(void) {
 }
 
 void EmulatorShowJobs(void) {
-    emulator_task(7);
+    effect_ascii_art_show_portrait(0, "steve-jobs");
 }
 
 void EmulatorShowWozniak(void) {
-    emulator_task(8);
+    effect_ascii_art_show_portrait(0, "steve-wozniak");
 }
 
 void EmulatorSkipSplash(void) {
@@ -151,11 +153,11 @@ void EmulatorSkipSplash(void) {
 }
 
 void EmulatorShowBothSteves(void) {
-    emulator_task(10);
+    effect_ascii_art_show_portrait_pair("steve-jobs", "steve-wozniak");
 }
 
 void EmulatorRefreshDisplay(void) {
-    portrait_matrix_stop();
+    effect_ascii_art_show_portrait(0, "steve-wozniak");
     terminal_refresh();
 }
 
