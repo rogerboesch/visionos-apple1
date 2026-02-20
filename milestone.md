@@ -1,9 +1,24 @@
 # Milestone - Apple 50th Anniversary Feature Branch
 
 ## Key Summary
-Building an immersive visionOS experience featuring the Apple I emulator with multiple display walls and ASCII art portraits of Steve Jobs and Steve Wozniak.
+Building an immersive visionOS experience featuring the Apple I emulator with multiple display walls, ASCII art portraits of Steve Jobs and Steve Wozniak, and a standalone Breakout game sharing the same display pipeline.
 
 ## Completed Steps
+
+### Breakout Game (2026-02-20)
+- **New module `Games/game_breakout`**: Standalone Breakout game in C sharing display 0 (336x208, phosphor postprocess)
+- **New files**: `game_breakout.h` (API + constants), `game_breakout.c` (state/physics), `game_breakout_render.c` (all drawing)
+- **Playfield**: 10x7 brick grid (30x8 each, 2px gaps), 40x4 paddle, 4x4 ball, 4px walls, 24px HUD
+- **Physics**: 3-substep loop per frame, AABB collision for walls/paddle/bricks, paddle spin based on hit offset
+- **Rendering**: `fill_rect()` writes directly to `pixel_data` via `rb_get_display(0)`, HUD uses `rb_display_render_draw_char()`, different brightness per brick row for phosphor depth
+- **Title screen**: Shows "BREAKOUT" + "PRESS LAUNCH TO START" with decorative bricks
+- **Game over screen**: Shows final score + "PRESS RESET TO RETRY"
+- **Level progression**: All bricks cleared → next level, bricks rebuild, ball auto-launches
+- **ObjCBridge.m**: `app_mode` variable (0=emulator, 1=breakout) routes `EmulatorFrame()` to either `emulator_frame()` or `game_breakout_frame()`; `effect_ascii_art_frame()` always runs
+- **Bridge functions**: `GameSetModeEmulator()`, `GameSetModeBreakout()`, `GameBreakoutInput()`, `GameBreakoutInputRelease()`, `GameBreakoutReset()`
+- **MainWindow.swift**: `AppMode` enum, mode selector buttons (left of screen, radio-style green/white), conditional subtitle, context-dependent bottom buttons (emulator: RESET/BREAK/LOAD; breakout: LEFT/RIGHT/LAUNCH/RESET)
+- **No changes** to display pipeline, ScreenRenderer, DisplayManager, GameSpace, terminal, or emulator — existing behavior fully preserved
+- Builds successfully for visionOS simulator
 
 ### Refactoring: rb_display Unified Display Abstraction (2026-02-19)
 - Combined `ret_renderer.c`/`.h` and `ret_textbuffer.c`/`.h` into a single `rb_display` system
