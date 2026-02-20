@@ -1,7 +1,7 @@
-#include "portrait_hires.h"
-#include "portrait_matrix.h"
-#include "portrait_data_jobs.h"
-#include "portrait_data_wozniak.h"
+#include "effect_hires.h"
+#include "effect_matrix.h"
+#include "effect_data_jobs.h"
+#include "effect_data_wozniak.h"
 #include "rb_display.h"
 
 #include <string.h>
@@ -23,8 +23,8 @@ void rb_render_portrait_pair(unsigned char *dataA, int widthA, int heightA,
 #define PORTRAIT_ROWS 63
 
 /* Two persistent display slots — created on first use, never destroyed */
-static int portrait_display_a = -1;
-static int portrait_display_b = -1;
+static int effect_display_a = -1;
+static int effect_display_b = -1;
 
 static void tint_buffer_phosphor(byte *buffer, int buf_w, int buf_h) {
     int total = buf_w * buf_h;
@@ -43,12 +43,12 @@ static void tint_buffer_phosphor(byte *buffer, int buf_w, int buf_h) {
     }
 }
 
-int portrait_hires_get_display_a(void) {
-    return portrait_display_a;
+int effect_hires_get_display_a(void) {
+    return effect_display_a;
 }
 
-int portrait_hires_get_display_b(void) {
-    return portrait_display_b;
+int effect_hires_get_display_b(void) {
+    return effect_display_b;
 }
 
 static int ensure_portrait_display(int *slot) {
@@ -83,42 +83,42 @@ static void render_portrait_to_display(int d, const char **art,
                          rb_display_get_pixel_height(d));
 }
 
-void portrait_hires_show_jobs(void) {
-    int d = ensure_portrait_display(&portrait_display_a);
-    render_portrait_to_display(d, portrait_hires_jobs_art,
-                                PORTRAIT_HIRES_JOBS_ROWS,
-                                PORTRAIT_HIRES_JOBS_COLS);
+void effect_hires_show_jobs(void) {
+    int d = ensure_portrait_display(&effect_display_a);
+    render_portrait_to_display(d, effect_hires_jobs_art,
+                                EFFECT_HIRES_JOBS_ROWS,
+                                EFFECT_HIRES_JOBS_COLS);
     rb_render_portrait(rb_display_get_pixel_data(d),
                        rb_display_get_pixel_width(d),
                        rb_display_get_pixel_height(d));
-    portrait_matrix_start(portrait_hires_jobs_art,
-                          PORTRAIT_HIRES_JOBS_ROWS,
-                          PORTRAIT_HIRES_JOBS_COLS);
+    effect_matrix_start(effect_hires_jobs_art,
+                          EFFECT_HIRES_JOBS_ROWS,
+                          EFFECT_HIRES_JOBS_COLS);
 }
 
-void portrait_hires_show_wozniak(void) {
-    int d = ensure_portrait_display(&portrait_display_a);
-    render_portrait_to_display(d, portrait_hires_woz_art,
-                                PORTRAIT_HIRES_WOZ_ROWS,
-                                PORTRAIT_HIRES_WOZ_COLS);
+void effect_hires_show_wozniak(void) {
+    int d = ensure_portrait_display(&effect_display_a);
+    render_portrait_to_display(d, effect_hires_woz_art,
+                                EFFECT_HIRES_WOZ_ROWS,
+                                EFFECT_HIRES_WOZ_COLS);
     rb_render_portrait(rb_display_get_pixel_data(d),
                        rb_display_get_pixel_width(d),
                        rb_display_get_pixel_height(d));
-    portrait_matrix_start(portrait_hires_woz_art,
-                          PORTRAIT_HIRES_WOZ_ROWS,
-                          PORTRAIT_HIRES_WOZ_COLS);
+    effect_matrix_start(effect_hires_woz_art,
+                          EFFECT_HIRES_WOZ_ROWS,
+                          EFFECT_HIRES_WOZ_COLS);
 }
 
-void portrait_hires_show_both(void) {
-    int da = ensure_portrait_display(&portrait_display_a);
-    int db = ensure_portrait_display(&portrait_display_b);
+void effect_hires_show_both(void) {
+    int da = ensure_portrait_display(&effect_display_a);
+    int db = ensure_portrait_display(&effect_display_b);
 
-    render_portrait_to_display(da, portrait_hires_jobs_art,
-                                PORTRAIT_HIRES_JOBS_ROWS,
-                                PORTRAIT_HIRES_JOBS_COLS);
-    render_portrait_to_display(db, portrait_hires_woz_art,
-                                PORTRAIT_HIRES_WOZ_ROWS,
-                                PORTRAIT_HIRES_WOZ_COLS);
+    render_portrait_to_display(da, effect_hires_jobs_art,
+                                EFFECT_HIRES_JOBS_ROWS,
+                                EFFECT_HIRES_JOBS_COLS);
+    render_portrait_to_display(db, effect_hires_woz_art,
+                                EFFECT_HIRES_WOZ_ROWS,
+                                EFFECT_HIRES_WOZ_COLS);
 
     rb_render_portrait_pair(rb_display_get_pixel_data(da),
                             rb_display_get_pixel_width(da),
@@ -126,10 +126,10 @@ void portrait_hires_show_both(void) {
                             rb_display_get_pixel_data(db),
                             rb_display_get_pixel_width(db),
                             rb_display_get_pixel_height(db));
-    portrait_matrix_start_pair(portrait_hires_jobs_art,
-                               PORTRAIT_HIRES_JOBS_ROWS,
-                               PORTRAIT_HIRES_JOBS_COLS,
-                               portrait_hires_woz_art,
-                               PORTRAIT_HIRES_WOZ_ROWS,
-                               PORTRAIT_HIRES_WOZ_COLS);
+    effect_matrix_start_pair(effect_hires_jobs_art,
+                               EFFECT_HIRES_JOBS_ROWS,
+                               EFFECT_HIRES_JOBS_COLS,
+                               effect_hires_woz_art,
+                               EFFECT_HIRES_WOZ_ROWS,
+                               EFFECT_HIRES_WOZ_COLS);
 }

@@ -36,8 +36,8 @@
 		AA000001265A000100000003 /* splash.c in Sources */ = {isa = PBXBuildFile; fileRef = AA000001265A000100000004 /* splash.c */; };
 		AA000002265A000200000001 /* DisplayManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002265A000200000002 /* DisplayManager.swift */; };
 		AA000003265A000300000001 /* PlacementPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000003265A000300000002 /* PlacementPanel.swift */; };
-		AA000005265A000500000001 /* portrait_hires.c in Sources */ = {isa = PBXBuildFile; fileRef = AA000005265A000500000002 /* portrait_hires.c */; };
-		AA000006265A000600000001 /* portrait_matrix.c in Sources */ = {isa = PBXBuildFile; fileRef = AA000006265A000600000002 /* portrait_matrix.c */; };
+		AA000005265A000500000001 /* effect_hires.c in Sources */ = {isa = PBXBuildFile; fileRef = AA000005265A000500000002 /* effect_hires.c */; };
+		AA000006265A000600000001 /* effect_matrix.c in Sources */ = {isa = PBXBuildFile; fileRef = AA000006265A000600000002 /* effect_matrix.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -84,12 +84,12 @@
 		AA000001265A000100000006 /* splash.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = splash.h; sourceTree = "<group>"; };
 		AA000002265A000200000002 /* DisplayManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayManager.swift; sourceTree = "<group>"; };
 		AA000003265A000300000002 /* PlacementPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlacementPanel.swift; sourceTree = "<group>"; };
-		AA000005265A000500000002 /* portrait_hires.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = portrait_hires.c; sourceTree = "<group>"; };
-		AA000005265A000500000003 /* portrait_hires.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = portrait_hires.h; sourceTree = "<group>"; };
-		AA000005265A000500000004 /* portrait_data_jobs.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = portrait_data_jobs.h; sourceTree = "<group>"; };
-		AA000005265A000500000005 /* portrait_data_wozniak.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = portrait_data_wozniak.h; sourceTree = "<group>"; };
-		AA000006265A000600000002 /* portrait_matrix.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = portrait_matrix.c; sourceTree = "<group>"; };
-		AA000006265A000600000003 /* portrait_matrix.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = portrait_matrix.h; sourceTree = "<group>"; };
+		AA000005265A000500000002 /* effect_hires.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = effect_hires.c; sourceTree = "<group>"; };
+		AA000005265A000500000003 /* effect_hires.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = effect_hires.h; sourceTree = "<group>"; };
+		AA000005265A000500000004 /* effect_data_jobs.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = effect_data_jobs.h; sourceTree = "<group>"; };
+		AA000005265A000500000005 /* effect_data_wozniak.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = effect_data_wozniak.h; sourceTree = "<group>"; };
+		AA000006265A000600000002 /* effect_matrix.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = effect_matrix.c; sourceTree = "<group>"; };
+		AA000006265A000600000003 /* effect_matrix.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = effect_matrix.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -117,6 +117,19 @@
 			path = Textbuffer;
 			sourceTree = "<group>";
 		};
+		AA000007265A000700000001 /* Effects */ = {
+			isa = PBXGroup;
+			children = (
+				AA000005265A000500000003 /* effect_hires.h */,
+				AA000005265A000500000002 /* effect_hires.c */,
+				AA000005265A000500000004 /* effect_data_jobs.h */,
+				AA000005265A000500000005 /* effect_data_wozniak.h */,
+				AA000006265A000600000003 /* effect_matrix.h */,
+				AA000006265A000600000002 /* effect_matrix.c */,
+			);
+			path = Effects;
+			sourceTree = "<group>";
+		};
 		DB2043152B8D2398008A464B /* Emulator */ = {
 			isa = PBXGroup;
 			children = (
@@ -136,12 +149,7 @@
 				DB2043452B8DDB32008A464B /* emulator.h */,
 				AA000001265A000100000006 /* splash.h */,
 				AA000001265A000100000004 /* splash.c */,
-				AA000005265A000500000003 /* portrait_hires.h */,
-				AA000005265A000500000002 /* portrait_hires.c */,
-				AA000005265A000500000004 /* portrait_data_jobs.h */,
-				AA000005265A000500000005 /* portrait_data_wozniak.h */,
-				AA000006265A000600000003 /* portrait_matrix.h */,
-				AA000006265A000600000002 /* portrait_matrix.c */,
+				AA000007265A000700000001 /* Effects */,
 			);
 			path = Emulator;
 			sourceTree = "<group>";
@@ -315,8 +323,8 @@
 				AA000001265A000100000003 /* splash.c in Sources */,
 				AA000002265A000200000001 /* DisplayManager.swift in Sources */,
 				AA000003265A000300000001 /* PlacementPanel.swift in Sources */,
-				AA000005265A000500000001 /* portrait_hires.c in Sources */,
-				AA000006265A000600000001 /* portrait_matrix.c in Sources */,
+				AA000005265A000500000001 /* effect_hires.c in Sources */,
+				AA000006265A000600000001 /* effect_matrix.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

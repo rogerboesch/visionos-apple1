@@ -7,8 +7,8 @@
 #include "screen.h"
 #include "statusbar.h"
 #include "splash.h"
-#include "portrait_hires.h"
-#include "portrait_matrix.h"
+#include "Effects/effect_hires.h"
+#include "Effects/effect_matrix.h"
 
 static int emulator_splash_done = 0;
 static int emulator_cpu_started = 0;
@@ -39,7 +39,7 @@ static void _soft_reset(void) {
 }
 
 static void _hard_reset(void) {
-    portrait_matrix_stop();
+    effect_matrix_stop();
     m6502_stop();
     screen_reset();
     pia6820_reset();
@@ -78,16 +78,16 @@ void emulator_task(int task) {
             _flip_mode();
             break;
         case 7:
-            portrait_hires_show_jobs();
+            effect_hires_show_jobs();
             break;
         case 8:
-            portrait_hires_show_wozniak();
+            effect_hires_show_wozniak();
             break;
         case 9:
             splash_skip();
             break;
         case 10:
-            portrait_hires_show_both();
+            effect_hires_show_both();
             break;
         default:
             break;
@@ -123,8 +123,8 @@ int emulator_init(void) {
 
 int emulator_frame(void) {
     /* Matrix rain animation takes priority when active */
-    if (portrait_matrix_is_active()) {
-        portrait_matrix_frame();
+    if (effect_matrix_is_active()) {
+        effect_matrix_frame();
         return 0;
     }
 

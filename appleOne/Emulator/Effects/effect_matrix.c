@@ -1,5 +1,5 @@
-#include "portrait_matrix.h"
-#include "portrait_hires.h"
+#include "effect_matrix.h"
+#include "effect_hires.h"
 #include "rb_display.h"
 
 #include <string.h>
@@ -9,7 +9,7 @@ void rb_render_portrait(unsigned char *data, int width, int height);
 void rb_render_portrait_pair(unsigned char *dataA, int widthA, int heightA,
                               unsigned char *dataB, int widthB, int heightB);
 
-/* Phosphor green — must match portrait_hires.c */
+/* Phosphor green — must match effect_hires.c */
 #define PHOSPHOR_R 51
 #define PHOSPHOR_G 255
 #define PHOSPHOR_B 51
@@ -340,7 +340,7 @@ static void init_slot(matrix_slot *s, const char **art, int rows, int cols,
 
 /* --- Public API --------------------------------------------------------- */
 
-void portrait_matrix_start(const char **art, int rows, int cols) {
+void effect_matrix_start(const char **art, int rows, int cols) {
     /* Cancel any previous pair mode */
     slots[SLOT_B].active = 0;
     matrix_pair_mode = 0;
@@ -350,7 +350,7 @@ void portrait_matrix_start(const char **art, int rows, int cols) {
               (unsigned int)(rows * 7919 + cols * 104729 + invoke_count * 31337));
 }
 
-void portrait_matrix_start_pair(const char **art_a, int rows_a, int cols_a,
+void effect_matrix_start_pair(const char **art_a, int rows_a, int cols_a,
                                 const char **art_b, int rows_b, int cols_b) {
     matrix_pair_mode = 1;
     invoke_count++;
@@ -361,10 +361,10 @@ void portrait_matrix_start_pair(const char **art_a, int rows_a, int cols_a,
               (unsigned int)(rows_b * 6311 + cols_b * 87491 + invoke_count * 48611));
 }
 
-int portrait_matrix_frame(void) {
+int effect_matrix_frame(void) {
     if (!slots[SLOT_A].active && !slots[SLOT_B].active) return 0;
 
-    int da = portrait_hires_get_display_a();
+    int da = effect_hires_get_display_a();
     if (da < 0) {
         slots[SLOT_A].active = 0;
         slots[SLOT_B].active = 0;
@@ -372,7 +372,7 @@ int portrait_matrix_frame(void) {
     }
 
     if (matrix_pair_mode) {
-        int db = portrait_hires_get_display_b();
+        int db = effect_hires_get_display_b();
         if (db < 0) {
             slots[SLOT_A].active = 0;
             slots[SLOT_B].active = 0;
@@ -412,12 +412,12 @@ int portrait_matrix_frame(void) {
     }
 }
 
-void portrait_matrix_stop(void) {
+void effect_matrix_stop(void) {
     slots[SLOT_A].active = 0;
     slots[SLOT_B].active = 0;
     matrix_pair_mode = 0;
 }
 
-int portrait_matrix_is_active(void) {
+int effect_matrix_is_active(void) {
     return slots[SLOT_A].active || slots[SLOT_B].active;
 }

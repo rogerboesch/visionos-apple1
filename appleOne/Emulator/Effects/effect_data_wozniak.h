@@ -1,10 +1,10 @@
-#ifndef PORTRAIT_DATA_WOZNIAK_H
-#define PORTRAIT_DATA_WOZNIAK_H
+#ifndef EFFECT_DATA_WOZNIAK_H
+#define EFFECT_DATA_WOZNIAK_H
 
-#define PORTRAIT_HIRES_WOZ_COLS 100
-#define PORTRAIT_HIRES_WOZ_ROWS 63
+#define EFFECT_HIRES_WOZ_COLS 100
+#define EFFECT_HIRES_WOZ_ROWS 63
 
-static const char *portrait_hires_woz_art[PORTRAIT_HIRES_WOZ_ROWS] = {
+static const char *effect_hires_woz_art[EFFECT_HIRES_WOZ_ROWS] = {
     "%%%%%%%%%%%%%%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@%%%%%@%%%%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@%%%%%%%%%",
     "%%%%%%%%%%%@%@@@@@@@@@@@@@@@@@@@@@@%%#%%#######*++++*+==---=+*%%@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@%%%%%%",
     "%%%%%%%%%%%@@@@@@@@@@@@@@@@@@@@%*+*#%@%%#%%%%%#**%#*****+==++=++#%%%@@@@@@@@@@@@@@@@@@@@@@@@@@@%%%%%",
