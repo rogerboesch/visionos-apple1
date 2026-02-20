@@ -43,6 +43,37 @@
 		CC000002265C000200000003 /* steve-wozniak.txt in Resources */ = {isa = PBXBuildFile; fileRef = CC000002265C000200000004 /* steve-wozniak.txt */; };
 		DD000001265D000100000001 /* game_breakout.c in Sources */ = {isa = PBXBuildFile; fileRef = DD000001265D000100000002 /* game_breakout.c */; };
 		DD000001265D000100000003 /* game_breakout_render.c in Sources */ = {isa = PBXBuildFile; fileRef = DD000001265D000100000004 /* game_breakout_render.c */; };
+		EE000001265E00000101 /* platform_apple1.c in Sources */ = {isa = PBXBuildFile; fileRef = EE000001265E00000102 /* platform_apple1.c */; };
+		EE000002265E00000201 /* camera.c in Sources */ = {isa = PBXBuildFile; fileRef = EE000002265E00000202 /* camera.c */; };
+		EE000003265E00000301 /* droid.c in Sources */ = {isa = PBXBuildFile; fileRef = EE000003265E00000302 /* droid.c */; };
+		EE000004265E00000401 /* game.c in Sources */ = {isa = PBXBuildFile; fileRef = EE000004265E00000402 /* game.c */; };
+		EE000005265E00000501 /* hud.c in Sources */ = {isa = PBXBuildFile; fileRef = EE000005265E00000502 /* hud.c */; };
+		EE000006265E00000601 /* image.c in Sources */ = {isa = PBXBuildFile; fileRef = EE000006265E00000602 /* image.c */; };
+		EE000007265E00000701 /* ingame_menus.c in Sources */ = {isa = PBXBuildFile; fileRef = EE000007265E00000702 /* ingame_menus.c */; };
+		EE000008265E00000801 /* intro.c in Sources */ = {isa = PBXBuildFile; fileRef = EE000008265E00000802 /* intro.c */; };
+		EE000009265E00000901 /* main_menu.c in Sources */ = {isa = PBXBuildFile; fileRef = EE000009265E00000902 /* main_menu.c */; };
+		EE000010265E00001001 /* menu.c in Sources */ = {isa = PBXBuildFile; fileRef = EE000010265E00001002 /* menu.c */; };
+		EE000011265E00001101 /* object.c in Sources */ = {isa = PBXBuildFile; fileRef = EE000011265E00001102 /* object.c */; };
+		EE000012265E00001201 /* particle.c in Sources */ = {isa = PBXBuildFile; fileRef = EE000012265E00001202 /* particle.c */; };
+		EE000013265E00001301 /* race.c in Sources */ = {isa = PBXBuildFile; fileRef = EE000013265E00001302 /* race.c */; };
+		EE000014265E00001401 /* scene.c in Sources */ = {isa = PBXBuildFile; fileRef = EE000014265E00001402 /* scene.c */; };
+		EE000015265E00001501 /* sfx.c in Sources */ = {isa = PBXBuildFile; fileRef = EE000015265E00001502 /* sfx.c */; };
+		EE000016265E00001601 /* ship.c in Sources */ = {isa = PBXBuildFile; fileRef = EE000016265E00001602 /* ship.c */; };
+		EE000017265E00001701 /* ship_ai.c in Sources */ = {isa = PBXBuildFile; fileRef = EE000017265E00001702 /* ship_ai.c */; };
+		EE000018265E00001801 /* ship_player.c in Sources */ = {isa = PBXBuildFile; fileRef = EE000018265E00001802 /* ship_player.c */; };
+		EE000019265E00001901 /* title.c in Sources */ = {isa = PBXBuildFile; fileRef = EE000019265E00001902 /* title.c */; };
+		EE000020265E00002001 /* track.c in Sources */ = {isa = PBXBuildFile; fileRef = EE000020265E00002002 /* track.c */; };
+		EE000021265E00002101 /* ui.c in Sources */ = {isa = PBXBuildFile; fileRef = EE000021265E00002102 /* ui.c */; };
+		EE000022265E00002201 /* weapon.c in Sources */ = {isa = PBXBuildFile; fileRef = EE000022265E00002202 /* weapon.c */; };
+		EE000023265E00002301 /* input.c in Sources */ = {isa = PBXBuildFile; fileRef = EE000023265E00002302 /* input.c */; };
+		EE000024265E00002401 /* mem.c in Sources */ = {isa = PBXBuildFile; fileRef = EE000024265E00002402 /* mem.c */; };
+		EE000025265E00002501 /* packfile.c in Sources */ = {isa = PBXBuildFile; fileRef = EE000025265E00002502 /* packfile.c */; };
+		EE000026265E00002601 /* system.c in Sources */ = {isa = PBXBuildFile; fileRef = EE000026265E00002602 /* system.c */; };
+		EE000027265E00002701 /* types.c in Sources */ = {isa = PBXBuildFile; fileRef = EE000027265E00002702 /* types.c */; };
+		EE000028265E00002801 /* utils.c in Sources */ = {isa = PBXBuildFile; fileRef = EE000028265E00002802 /* utils.c */; };
+		EE000029265E00002901 /* render_software.c in Sources */ = {isa = PBXBuildFile; fileRef = EE000029265E00002902 /* render_software.c */; };
+		EE000030265E00003001 /* vector_font.c in Sources */ = {isa = PBXBuildFile; fileRef = EE000030265E00003002 /* vector_font.c */; };
+		EE000031265E00003101 /* shockwave.data in Resources */ = {isa = PBXBuildFile; fileRef = EE000031265E00003102 /* shockwave.data */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -100,6 +131,37 @@
 		DD000001265D000100000005 /* game_breakout.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = game_breakout.h; sourceTree = "<group>"; };
 		DD000001265D000100000002 /* game_breakout.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = game_breakout.c; sourceTree = "<group>"; };
 		DD000001265D000100000004 /* game_breakout_render.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = game_breakout_render.c; sourceTree = "<group>"; };
+		EE000001265E00000102 /* platform_apple1.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = platform_apple1.c; sourceTree = "<group>"; };
+		EE000002265E00000202 /* camera.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = camera.c; path = "../shockwave/source/src-game/camera.c"; sourceTree = SOURCE_ROOT; };
+		EE000003265E00000302 /* droid.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = droid.c; path = "../shockwave/source/src-game/droid.c"; sourceTree = SOURCE_ROOT; };
+		EE000004265E00000402 /* game.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = game.c; path = "../shockwave/source/src-game/game.c"; sourceTree = SOURCE_ROOT; };
+		EE000005265E00000502 /* hud.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = hud.c; path = "../shockwave/source/src-game/hud.c"; sourceTree = SOURCE_ROOT; };
+		EE000006265E00000602 /* image.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = image.c; path = "../shockwave/source/src-game/image.c"; sourceTree = SOURCE_ROOT; };
+		EE000007265E00000702 /* ingame_menus.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = ingame_menus.c; path = "../shockwave/source/src-game/ingame_menus.c"; sourceTree = SOURCE_ROOT; };
+		EE000008265E00000802 /* intro.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = intro.c; path = "../shockwave/source/src-game/intro.c"; sourceTree = SOURCE_ROOT; };
+		EE000009265E00000902 /* main_menu.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = main_menu.c; path = "../shockwave/source/src-game/main_menu.c"; sourceTree = SOURCE_ROOT; };
+		EE000010265E00001002 /* menu.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = menu.c; path = "../shockwave/source/src-game/menu.c"; sourceTree = SOURCE_ROOT; };
+		EE000011265E00001102 /* object.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = object.c; path = "../shockwave/source/src-game/object.c"; sourceTree = SOURCE_ROOT; };
+		EE000012265E00001202 /* particle.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = particle.c; path = "../shockwave/source/src-game/particle.c"; sourceTree = SOURCE_ROOT; };
+		EE000013265E00001302 /* race.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = race.c; path = "../shockwave/source/src-game/race.c"; sourceTree = SOURCE_ROOT; };
+		EE000014265E00001402 /* scene.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = scene.c; path = "../shockwave/source/src-game/scene.c"; sourceTree = SOURCE_ROOT; };
+		EE000015265E00001502 /* sfx.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = sfx.c; path = "../shockwave/source/src-game/sfx.c"; sourceTree = SOURCE_ROOT; };
+		EE000016265E00001602 /* ship.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = ship.c; path = "../shockwave/source/src-game/ship.c"; sourceTree = SOURCE_ROOT; };
+		EE000017265E00001702 /* ship_ai.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = ship_ai.c; path = "../shockwave/source/src-game/ship_ai.c"; sourceTree = SOURCE_ROOT; };
+		EE000018265E00001802 /* ship_player.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = ship_player.c; path = "../shockwave/source/src-game/ship_player.c"; sourceTree = SOURCE_ROOT; };
+		EE000019265E00001902 /* title.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = title.c; path = "../shockwave/source/src-game/title.c"; sourceTree = SOURCE_ROOT; };
+		EE000020265E00002002 /* track.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = track.c; path = "../shockwave/source/src-game/track.c"; sourceTree = SOURCE_ROOT; };
+		EE000021265E00002102 /* ui.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = ui.c; path = "../shockwave/source/src-game/ui.c"; sourceTree = SOURCE_ROOT; };
+		EE000022265E00002202 /* weapon.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = weapon.c; path = "../shockwave/source/src-game/weapon.c"; sourceTree = SOURCE_ROOT; };
+		EE000023265E00002302 /* input.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = input.c; path = "../shockwave/source/src-system/input.c"; sourceTree = SOURCE_ROOT; };
+		EE000024265E00002402 /* mem.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = mem.c; path = "../shockwave/source/src-system/mem.c"; sourceTree = SOURCE_ROOT; };
+		EE000025265E00002502 /* packfile.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = packfile.c; path = "../shockwave/source/src-system/packfile.c"; sourceTree = SOURCE_ROOT; };
+		EE000026265E00002602 /* system.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = system.c; path = "../shockwave/source/src-system/system.c"; sourceTree = SOURCE_ROOT; };
+		EE000027265E00002702 /* types.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = types.c; path = "../shockwave/source/src-system/types.c"; sourceTree = SOURCE_ROOT; };
+		EE000028265E00002802 /* utils.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = utils.c; path = "../shockwave/source/src-system/utils.c"; sourceTree = SOURCE_ROOT; };
+		EE000029265E00002902 /* render_software.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = render_software.c; path = "../shockwave/source/src-render/render_software.c"; sourceTree = SOURCE_ROOT; };
+		EE000030265E00003002 /* vector_font.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = vector_font.c; path = "../shockwave/source/src-render/vector_font.c"; sourceTree = SOURCE_ROOT; };
+		EE000031265E00003102 /* shockwave.data */ = {isa = PBXFileReference; lastKnownFileType = file; name = shockwave.data; path = "../shockwave/game-data/shockwave.data"; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -146,6 +208,7 @@
 				DD000001265D000100000005 /* game_breakout.h */,
 				DD000001265D000100000002 /* game_breakout.c */,
 				DD000001265D000100000004 /* game_breakout_render.c */,
+				EE000000265E00000001 /* Shockwave */,
 			);
 			path = Games;
 			sourceTree = "<group>";
@@ -254,6 +317,44 @@
 			path = "Preview Content";
 			sourceTree = "<group>";
 		};
+		EE000000265E00000001 /* Shockwave */ = {
+			isa = PBXGroup;
+			children = (
+				EE000001265E00000102 /* platform_apple1.c */,
+				EE000002265E00000202 /* camera.c */,
+				EE000003265E00000302 /* droid.c */,
+				EE000004265E00000402 /* game.c */,
+				EE000005265E00000502 /* hud.c */,
+				EE000006265E00000602 /* image.c */,
+				EE000007265E00000702 /* ingame_menus.c */,
+				EE000008265E00000802 /* intro.c */,
+				EE000009265E00000902 /* main_menu.c */,
+				EE000010265E00001002 /* menu.c */,
+				EE000011265E00001102 /* object.c */,
+				EE000012265E00001202 /* particle.c */,
+				EE000013265E00001302 /* race.c */,
+				EE000014265E00001402 /* scene.c */,
+				EE000015265E00001502 /* sfx.c */,
+				EE000016265E00001602 /* ship.c */,
+				EE000017265E00001702 /* ship_ai.c */,
+				EE000018265E00001802 /* ship_player.c */,
+				EE000019265E00001902 /* title.c */,
+				EE000020265E00002002 /* track.c */,
+				EE000021265E00002102 /* ui.c */,
+				EE000022265E00002202 /* weapon.c */,
+				EE000023265E00002302 /* input.c */,
+				EE000024265E00002402 /* mem.c */,
+				EE000025265E00002502 /* packfile.c */,
+				EE000026265E00002602 /* system.c */,
+				EE000027265E00002702 /* types.c */,
+				EE000028265E00002802 /* utils.c */,
+				EE000029265E00002902 /* render_software.c */,
+				EE000030265E00003002 /* vector_font.c */,
+				EE000031265E00003102 /* shockwave.data */,
+			);
+			name = Shockwave;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -323,6 +424,7 @@
 				DB2043422B8DBEE5008A464B /* basic.rom in Resources */,
 				CC000002265C000200000001 /* steve-jobs.txt in Resources */,
 				CC000002265C000200000003 /* steve-wozniak.txt in Resources */,
+				EE000031265E00003101 /* shockwave.data in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -361,6 +463,36 @@
 				CC000001265C000100000001 /* effect_art_loader.c in Sources */,
 				DD000001265D000100000001 /* game_breakout.c in Sources */,
 				DD000001265D000100000003 /* game_breakout_render.c in Sources */,
+				EE000001265E00000101 /* platform_apple1.c in Sources */,
+				EE000002265E00000201 /* camera.c in Sources */,
+				EE000003265E00000301 /* droid.c in Sources */,
+				EE000004265E00000401 /* game.c in Sources */,
+				EE000005265E00000501 /* hud.c in Sources */,
+				EE000006265E00000601 /* image.c in Sources */,
+				EE000007265E00000701 /* ingame_menus.c in Sources */,
+				EE000008265E00000801 /* intro.c in Sources */,
+				EE000009265E00000901 /* main_menu.c in Sources */,
+				EE000010265E00001001 /* menu.c in Sources */,
+				EE000011265E00001101 /* object.c in Sources */,
+				EE000012265E00001201 /* particle.c in Sources */,
+				EE000013265E00001301 /* race.c in Sources */,
+				EE000014265E00001401 /* scene.c in Sources */,
+				EE000015265E00001501 /* sfx.c in Sources */,
+				EE000016265E00001601 /* ship.c in Sources */,
+				EE000017265E00001701 /* ship_ai.c in Sources */,
+				EE000018265E00001801 /* ship_player.c in Sources */,
+				EE000019265E00001901 /* title.c in Sources */,
+				EE000020265E00002001 /* track.c in Sources */,
+				EE000021265E00002101 /* ui.c in Sources */,
+				EE000022265E00002201 /* weapon.c in Sources */,
+				EE000023265E00002301 /* input.c in Sources */,
+				EE000024265E00002401 /* mem.c in Sources */,
+				EE000025265E00002501 /* packfile.c in Sources */,
+				EE000026265E00002601 /* system.c in Sources */,
+				EE000027265E00002701 /* types.c in Sources */,
+				EE000028265E00002801 /* utils.c in Sources */,
+				EE000029265E00002901 /* render_software.c in Sources */,
+				EE000030265E00003001 /* vector_font.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -498,6 +630,13 @@
 				DEVELOPMENT_TEAM = F46T393V5A;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SRCROOT)/../shockwave/source/src-game",
+					"$(SRCROOT)/../shockwave/source/src-system",
+					"$(SRCROOT)/../shockwave/source/src-render",
+					"$(SRCROOT)/../shockwave/source/src-libs",
+				);
 				INFOPLIST_FILE = "$(TARGET_NAME)/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -528,6 +667,13 @@
 				DEVELOPMENT_TEAM = F46T393V5A;
 				ENABLE_PREVIEWS = YES;
 				GENERATE_INFOPLIST_FILE = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SRCROOT)/../shockwave/source/src-game",
+					"$(SRCROOT)/../shockwave/source/src-system",
+					"$(SRCROOT)/../shockwave/source/src-render",
+					"$(SRCROOT)/../shockwave/source/src-libs",
+				);
 				INFOPLIST_FILE = "$(TARGET_NAME)/Info.plist";
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
