@@ -149,7 +149,6 @@
 				DB2043452B8DDB32008A464B /* emulator.h */,
 				AA000001265A000100000006 /* splash.h */,
 				AA000001265A000100000004 /* splash.c */,
-				AA000007265A000700000001 /* Effects */,
 			);
 			path = Emulator;
 			sourceTree = "<group>";
@@ -189,6 +188,7 @@
 				DB728EDC2B8C9168006E60FD /* Preview Content */,
 				DB2043142B8D2313008A464B /* Textbuffer */,
 				DB2043152B8D2398008A464B /* Emulator */,
+				AA000007265A000700000001 /* Effects */,
 				DB20433C2B8DBE95008A464B /* Roms */,
 				DB728EF52B8C9D2D006E60FD /* terminal.h */,
 				DB728EF32B8C9A2B006E60FD /* terminal.c */,

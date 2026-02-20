@@ -7,8 +7,8 @@
 #include "screen.h"
 #include "statusbar.h"
 #include "splash.h"
-#include "Effects/effect_hires.h"
-#include "Effects/effect_matrix.h"
+#include "../Effects/effect_hires.h"
+#include "../Effects/effect_matrix.h"
 
 static int emulator_splash_done = 0;
 static int emulator_cpu_started = 0;
