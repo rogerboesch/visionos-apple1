@@ -114,6 +114,9 @@ int effect_ascii_art_show(int slot, const char *name) {
     ensure_initialized();
     if (slot < 0 || slot >= EFFECT_ART_MAX_SLOTS) return -1;
 
+    /* Stop matrix animation before freeing art it may reference */
+    effect_matrix_stop_slot(slot);
+
     /* Free old art if any */
     effect_art_free(&slot_art[slot]);
 

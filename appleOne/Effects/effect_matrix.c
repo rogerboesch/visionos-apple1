@@ -127,6 +127,7 @@ static int all_columns_landed(matrix_slot *s) {
 
 /* Render one slot's rain frame into a display (no bridge call) */
 static void render_rain_to_display(matrix_slot *s, int d) {
+    if (!s->art) { s->active = 0; return; }
     rb_display_text_clear(d);
     rb_display_render_clear(d);
     rb_display_set_fg_color(d, RB_COLOR_WHITE);
@@ -177,6 +178,7 @@ static void render_rain_to_display(matrix_slot *s, int d) {
 
 /* Render one slot's rebuild frame into a display (no bridge call) */
 static void render_rebuild_to_display(matrix_slot *s, int d) {
+    if (!s->art) { s->active = 0; return; }
     rb_display_text_clear(d);
     rb_display_render_clear(d);
     rb_display_set_fg_color(d, RB_COLOR_WHITE);
@@ -230,6 +232,7 @@ static void render_rebuild_to_display(matrix_slot *s, int d) {
 
 /* Render final clean portrait into a display (no bridge call) */
 static void render_final_to_display(matrix_slot *s, int d) {
+    if (!s->art) { s->active = 0; return; }
     rb_display_text_clear(d);
     rb_display_render_clear(d);
     rb_display_set_fg_color(d, RB_COLOR_WHITE);
