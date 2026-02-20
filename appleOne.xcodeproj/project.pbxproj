@@ -41,6 +41,8 @@
 		CC000001265C000100000001 /* effect_art_loader.c in Sources */ = {isa = PBXBuildFile; fileRef = CC000001265C000100000002 /* effect_art_loader.c */; };
 		CC000002265C000200000001 /* steve-jobs.txt in Resources */ = {isa = PBXBuildFile; fileRef = CC000002265C000200000002 /* steve-jobs.txt */; };
 		CC000002265C000200000003 /* steve-wozniak.txt in Resources */ = {isa = PBXBuildFile; fileRef = CC000002265C000200000004 /* steve-wozniak.txt */; };
+		DD000001265D000100000001 /* game_breakout.c in Sources */ = {isa = PBXBuildFile; fileRef = DD000001265D000100000002 /* game_breakout.c */; };
+		DD000001265D000100000003 /* game_breakout_render.c in Sources */ = {isa = PBXBuildFile; fileRef = DD000001265D000100000004 /* game_breakout_render.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -95,6 +97,9 @@
 		AA000006265A000600000003 /* effect_matrix.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = effect_matrix.h; sourceTree = "<group>"; };
 		CC000002265C000200000002 /* steve-jobs.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = "steve-jobs.txt"; sourceTree = "<group>"; };
 		CC000002265C000200000004 /* steve-wozniak.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = "steve-wozniak.txt"; sourceTree = "<group>"; };
+		DD000001265D000100000005 /* game_breakout.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = game_breakout.h; sourceTree = "<group>"; };
+		DD000001265D000100000002 /* game_breakout.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = game_breakout.c; sourceTree = "<group>"; };
+		DD000001265D000100000004 /* game_breakout_render.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = game_breakout_render.c; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -133,6 +138,16 @@
 				AA000006265A000600000002 /* effect_matrix.c */,
 			);
 			path = Effects;
+			sourceTree = "<group>";
+		};
+		DD000002265D000200000001 /* Games */ = {
+			isa = PBXGroup;
+			children = (
+				DD000001265D000100000005 /* game_breakout.h */,
+				DD000001265D000100000002 /* game_breakout.c */,
+				DD000001265D000100000004 /* game_breakout_render.c */,
+			);
+			path = Games;
 			sourceTree = "<group>";
 		};
 		DB2043152B8D2398008A464B /* Emulator */ = {
@@ -203,6 +218,7 @@
 				DB2043142B8D2313008A464B /* Textbuffer */,
 				DB2043152B8D2398008A464B /* Emulator */,
 				AA000007265A000700000001 /* Effects */,
+				DD000002265D000200000001 /* Games */,
 				DB20433C2B8DBE95008A464B /* Roms */,
 				CC000003265C000300000001 /* Assets */,
 				DB728EF52B8C9D2D006E60FD /* terminal.h */,
@@ -343,6 +359,8 @@
 				AA000005265A000500000001 /* effect_ascii_art.c in Sources */,
 				AA000006265A000600000001 /* effect_matrix.c in Sources */,
 				CC000001265C000100000001 /* effect_art_loader.c in Sources */,
+				DD000001265D000100000001 /* game_breakout.c in Sources */,
+				DD000001265D000100000003 /* game_breakout_render.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
