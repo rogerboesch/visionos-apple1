@@ -36,8 +36,8 @@
 #define BREAKOUT_BALL_SIZE     4
 
 #define BREAKOUT_INITIAL_LIVES 3
-#define BREAKOUT_PADDLE_SPEED  5
-#define BREAKOUT_PHYSICS_STEPS 3
+#define BREAKOUT_PADDLE_SPEED  3
+#define BREAKOUT_PHYSICS_STEPS 1
 
 /* Public API */
 void game_breakout_init(void);

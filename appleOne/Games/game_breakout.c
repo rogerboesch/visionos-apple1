@@ -34,10 +34,10 @@ static int ball_dy;
 static int ball_stuck;
 
 /* Ball speed constants */
-#define BALL_SPEED_X   2
-#define BALL_SPEED_Y  -3
-#define BALL_MAX_DX    4
-#define BALL_MAX_DY    5
+#define BALL_SPEED_X   1
+#define BALL_SPEED_Y  -1
+#define BALL_MAX_DX    2
+#define BALL_MAX_DY    2
 
 /* Bricks */
 static breakout_brick bricks[BREAKOUT_BRICK_COLS * BREAKOUT_BRICK_ROWS];
@@ -242,7 +242,7 @@ static void step_physics(void) {
         int paddle_center = paddle_x + BREAKOUT_PADDLE_W / 2;
         int offset = hit_center - paddle_center;
 
-        ball_dx = offset / 4;
+        ball_dx = offset / 10;
         if (ball_dx == 0) {
             ball_dx = (nx < paddle_center) ? -1 : 1;
         }
