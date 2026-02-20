@@ -16,8 +16,14 @@
 #include "Effects/effect_ascii_art.h"
 #include "Games/game_breakout.h"
 
-/* 0 = emulator, 1 = breakout */
+/* 0 = emulator, 1 = breakout, 2 = shockwave */
 static int app_mode = 0;
+
+/* Shockwave bridge — defined in platform_apple1.c */
+extern void shockwave_apple1_init(const char *asset_path, const char *userdata_path);
+extern void shockwave_apple1_update(void);
+extern void shockwave_apple1_reset(void);
+static int shockwave_ready = 0;
 
 @implementation UIImage (Buffer)
 
@@ -126,8 +132,11 @@ void EmulatorFrame(void) {
 
         emulator_frame();
     }
-    else {
+    else if (app_mode == 1) {
         game_breakout_frame();
+    }
+    else if (app_mode == 2) {
+        shockwave_apple1_update();
     }
 
     effect_ascii_art_frame();
@@ -202,5 +211,29 @@ void GameBreakoutReset(void) {
 /* Called from game_breakout.c when a ball is lost */
 void game_breakout_on_ball_lost(void) {
     effect_ascii_art_trigger_once(0);
+}
+
+/* -------------------------------------------------------------------------- */
+/*  Shockwave mode                                                            */
+/* -------------------------------------------------------------------------- */
+
+void GameSetModeShockwave(void) {
+    app_mode = 2;
+    effect_ascii_art_show_portrait_static(0, "steve-jobs");
+
+    if (!shockwave_ready) {
+        NSString *bundlePath = [[NSBundle mainBundle] resourcePath];
+        NSString *docsPath = [NSSearchPathForDirectoriesInDomains(
+            NSDocumentDirectory, NSUserDomainMask, YES) firstObject];
+
+        shockwave_apple1_init(bundlePath.UTF8String, docsPath.UTF8String);
+        shockwave_ready = 1;
+    }
+}
+
+void GameShockwaveReset(void) {
+    if (shockwave_ready) {
+        shockwave_apple1_reset();
+    }
 }
 
