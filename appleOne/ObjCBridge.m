@@ -132,6 +132,7 @@ void EmulatorLoadBasic(void) {
 }
 
 void EmulatorHardReset(void) {
+    effect_ascii_art_stop();
     emulator_task(5);
 }
 
@@ -140,11 +141,11 @@ void EmulatorLoadCore(void) {
 }
 
 void EmulatorShowJobs(void) {
-    emulator_task(7);
+    effect_ascii_art_show_portrait(0, "steve-jobs");
 }
 
 void EmulatorShowWozniak(void) {
-    emulator_task(8);
+    effect_ascii_art_show_portrait(0, "steve-wozniak");
 }
 
 void EmulatorSkipSplash(void) {
@@ -152,7 +153,7 @@ void EmulatorSkipSplash(void) {
 }
 
 void EmulatorShowBothSteves(void) {
-    emulator_task(10);
+    effect_ascii_art_show_portrait_pair("steve-jobs", "steve-wozniak");
 }
 
 void EmulatorRefreshDisplay(void) {

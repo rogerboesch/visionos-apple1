@@ -7,7 +7,6 @@
 #include "screen.h"
 #include "statusbar.h"
 #include "splash.h"
-#include "../Effects/effect_ascii_art.h"
 
 static int emulator_splash_done = 0;
 static int emulator_cpu_started = 0;
@@ -38,7 +37,6 @@ static void _soft_reset(void) {
 }
 
 static void _hard_reset(void) {
-    effect_ascii_art_stop();
     m6502_stop();
     screen_reset();
     pia6820_reset();
@@ -76,17 +74,8 @@ void emulator_task(int task) {
         case 6:
             _flip_mode();
             break;
-        case 7:
-            effect_ascii_art_show_portrait(0, "steve-jobs");
-            break;
-        case 8:
-            effect_ascii_art_show_portrait(0, "steve-wozniak");
-            break;
         case 9:
             splash_skip();
-            break;
-        case 10:
-            effect_ascii_art_show_portrait_pair("steve-jobs", "steve-wozniak");
             break;
         default:
             break;
