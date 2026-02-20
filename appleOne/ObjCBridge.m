@@ -177,11 +177,13 @@ void EmulatorRefreshDisplay(void) {
 
 void GameSetModeEmulator(void) {
     app_mode = 0;
+    effect_ascii_art_show_portrait(0, "steve-wozniak");
     terminal_refresh();
 }
 
 void GameSetModeBreakout(void) {
     app_mode = 1;
+    effect_ascii_art_show_portrait(0, "steve-jobs");
     game_breakout_init();
 }
 
