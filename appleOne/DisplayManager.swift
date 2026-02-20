@@ -256,8 +256,10 @@ class DisplayManager {
                 var material = SimpleMaterial(color: .white, isMetallic: false)
                 material.color = .init(tint: .white, texture: .init(resource))
 
-                for entity in displayEntities {
-                    entity.model?.materials = [material]
+                for (index, entity) in displayEntities.enumerated() {
+                    if index % 2 == 0 {
+                        entity.model?.materials = [material]
+                    }
                 }
             }
             catch {
@@ -283,8 +285,11 @@ class DisplayManager {
                 var material = SimpleMaterial(color: .white, isMetallic: false)
                 material.color = .init(tint: .white, texture: .init(resource))
 
-                for entity in displayEntities {
-                    entity.model?.materials = [material]
+                let mirrorMode = (circleMode == .mirror)
+                for (index, entity) in displayEntities.enumerated() {
+                    if !mirrorMode || index % 2 != 0 {
+                        entity.model?.materials = [material]
+                    }
                 }
             }
             catch {

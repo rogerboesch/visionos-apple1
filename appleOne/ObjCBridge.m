@@ -157,7 +157,7 @@ void EmulatorShowBothSteves(void) {
 }
 
 void EmulatorRefreshDisplay(void) {
-    effect_ascii_art_stop();
+    effect_ascii_art_show_portrait(0, "steve-wozniak");
     terminal_refresh();
 }
 
