@@ -36,8 +36,11 @@
 		AA000001265A000100000003 /* splash.c in Sources */ = {isa = PBXBuildFile; fileRef = AA000001265A000100000004 /* splash.c */; };
 		AA000002265A000200000001 /* DisplayManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000002265A000200000002 /* DisplayManager.swift */; };
 		AA000003265A000300000001 /* PlacementPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA000003265A000300000002 /* PlacementPanel.swift */; };
-		AA000005265A000500000001 /* effect_hires.c in Sources */ = {isa = PBXBuildFile; fileRef = AA000005265A000500000002 /* effect_hires.c */; };
+		AA000005265A000500000001 /* effect_ascii_art.c in Sources */ = {isa = PBXBuildFile; fileRef = AA000005265A000500000002 /* effect_ascii_art.c */; };
 		AA000006265A000600000001 /* effect_matrix.c in Sources */ = {isa = PBXBuildFile; fileRef = AA000006265A000600000002 /* effect_matrix.c */; };
+		CC000001265C000100000001 /* effect_art_loader.c in Sources */ = {isa = PBXBuildFile; fileRef = CC000001265C000100000002 /* effect_art_loader.c */; };
+		CC000002265C000200000001 /* steve-jobs.txt in Resources */ = {isa = PBXBuildFile; fileRef = CC000002265C000200000002 /* steve-jobs.txt */; };
+		CC000002265C000200000003 /* steve-wozniak.txt in Resources */ = {isa = PBXBuildFile; fileRef = CC000002265C000200000004 /* steve-wozniak.txt */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -84,12 +87,14 @@
 		AA000001265A000100000006 /* splash.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = splash.h; sourceTree = "<group>"; };
 		AA000002265A000200000002 /* DisplayManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayManager.swift; sourceTree = "<group>"; };
 		AA000003265A000300000002 /* PlacementPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlacementPanel.swift; sourceTree = "<group>"; };
-		AA000005265A000500000002 /* effect_hires.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = effect_hires.c; sourceTree = "<group>"; };
-		AA000005265A000500000003 /* effect_hires.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = effect_hires.h; sourceTree = "<group>"; };
-		AA000005265A000500000004 /* effect_data_jobs.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = effect_data_jobs.h; sourceTree = "<group>"; };
-		AA000005265A000500000005 /* effect_data_wozniak.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = effect_data_wozniak.h; sourceTree = "<group>"; };
+		AA000005265A000500000002 /* effect_ascii_art.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = effect_ascii_art.c; sourceTree = "<group>"; };
+		AA000005265A000500000003 /* effect_ascii_art.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = effect_ascii_art.h; sourceTree = "<group>"; };
+		CC000001265C000100000002 /* effect_art_loader.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = effect_art_loader.c; sourceTree = "<group>"; };
+		CC000001265C000100000003 /* effect_art_loader.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = effect_art_loader.h; sourceTree = "<group>"; };
 		AA000006265A000600000002 /* effect_matrix.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = effect_matrix.c; sourceTree = "<group>"; };
 		AA000006265A000600000003 /* effect_matrix.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = effect_matrix.h; sourceTree = "<group>"; };
+		CC000002265C000200000002 /* steve-jobs.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = "steve-jobs.txt"; sourceTree = "<group>"; };
+		CC000002265C000200000004 /* steve-wozniak.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = "steve-wozniak.txt"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -120,10 +125,10 @@
 		AA000007265A000700000001 /* Effects */ = {
 			isa = PBXGroup;
 			children = (
-				AA000005265A000500000003 /* effect_hires.h */,
-				AA000005265A000500000002 /* effect_hires.c */,
-				AA000005265A000500000004 /* effect_data_jobs.h */,
-				AA000005265A000500000005 /* effect_data_wozniak.h */,
+				CC000001265C000100000003 /* effect_art_loader.h */,
+				CC000001265C000100000002 /* effect_art_loader.c */,
+				AA000005265A000500000003 /* effect_ascii_art.h */,
+				AA000005265A000500000002 /* effect_ascii_art.c */,
 				AA000006265A000600000003 /* effect_matrix.h */,
 				AA000006265A000600000002 /* effect_matrix.c */,
 			);
@@ -163,6 +168,15 @@
 			path = Roms;
 			sourceTree = "<group>";
 		};
+		CC000003265C000300000001 /* Assets */ = {
+			isa = PBXGroup;
+			children = (
+				CC000002265C000200000002 /* steve-jobs.txt */,
+				CC000002265C000200000004 /* steve-wozniak.txt */,
+			);
+			path = Assets;
+			sourceTree = "<group>";
+		};
 		DB728EC42B8C9167006E60FD = {
 			isa = PBXGroup;
 			children = (
@@ -190,6 +204,7 @@
 				DB2043152B8D2398008A464B /* Emulator */,
 				AA000007265A000700000001 /* Effects */,
 				DB20433C2B8DBE95008A464B /* Roms */,
+				CC000003265C000300000001 /* Assets */,
 				DB728EF52B8C9D2D006E60FD /* terminal.h */,
 				DB728EF32B8C9A2B006E60FD /* terminal.c */,
 				DB728EEC2B8C988C006E60FD /* ObjCBridge.m */,
@@ -290,6 +305,8 @@
 				DB728EDB2B8C9168006E60FD /* Assets.xcassets in Resources */,
 				DB2043412B8DBEE5008A464B /* monitor.rom in Resources */,
 				DB2043422B8DBEE5008A464B /* basic.rom in Resources */,
+				CC000002265C000200000001 /* steve-jobs.txt in Resources */,
+				CC000002265C000200000003 /* steve-wozniak.txt in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -323,8 +340,9 @@
 				AA000001265A000100000003 /* splash.c in Sources */,
 				AA000002265A000200000001 /* DisplayManager.swift in Sources */,
 				AA000003265A000300000001 /* PlacementPanel.swift in Sources */,
-				AA000005265A000500000001 /* effect_hires.c in Sources */,
+				AA000005265A000500000001 /* effect_ascii_art.c in Sources */,
 				AA000006265A000600000001 /* effect_matrix.c in Sources */,
+				CC000001265C000100000001 /* effect_art_loader.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
