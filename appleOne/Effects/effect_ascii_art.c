@@ -1,8 +1,14 @@
 #include "effect_ascii_art.h"
 #include "effect_art_loader.h"
+#include "effect_matrix.h"
 #include "rb_display.h"
 
 #include <string.h>
+
+/* Bridge functions declared in ObjCBridge.m */
+void rb_render_portrait(unsigned char *data, int width, int height);
+void rb_render_portrait_pair(unsigned char *dataA, int widthA, int heightA,
+                              unsigned char *dataB, int widthB, int heightB);
 
 /* Phosphor green — must match rb_postprocess.c for consistent color */
 #define PHOSPHOR_R 51
@@ -80,6 +86,28 @@ static void render_portrait_to_display(int d, const char **art,
                          rb_display_get_pixel_height(d));
 }
 
+static void push_to_bridge(void) {
+    int count = effect_matrix_get_active_count();
+    int d0 = effect_ascii_art_get_display(0);
+
+    if (count == 1 && d0 >= 0) {
+        rb_render_portrait(rb_display_get_pixel_data(d0),
+                           rb_display_get_pixel_width(d0),
+                           rb_display_get_pixel_height(d0));
+    }
+    else if (count >= 2) {
+        int d1 = effect_ascii_art_get_display(1);
+        if (d0 >= 0 && d1 >= 0) {
+            rb_render_portrait_pair(rb_display_get_pixel_data(d0),
+                                    rb_display_get_pixel_width(d0),
+                                    rb_display_get_pixel_height(d0),
+                                    rb_display_get_pixel_data(d1),
+                                    rb_display_get_pixel_width(d1),
+                                    rb_display_get_pixel_height(d1));
+        }
+    }
+}
+
 /* --- Public API --------------------------------------------------------- */
 
 int effect_ascii_art_show(int slot, const char *name) {
@@ -128,8 +156,54 @@ int effect_ascii_art_get_cols(int slot) {
     return slot_art[slot].cols;
 }
 
+void effect_ascii_art_show_portrait(int slot, const char *name) {
+    effect_ascii_art_show(slot, name);
+    effect_matrix_start(slot,
+                         effect_ascii_art_get_lines(slot),
+                         effect_ascii_art_get_rows(slot),
+                         effect_ascii_art_get_cols(slot));
+
+    int d = effect_ascii_art_get_display(slot);
+    if (d >= 0) {
+        rb_render_portrait(rb_display_get_pixel_data(d),
+                           rb_display_get_pixel_width(d),
+                           rb_display_get_pixel_height(d));
+    }
+}
+
+void effect_ascii_art_show_portrait_pair(const char *name_a, const char *name_b) {
+    effect_ascii_art_show(0, name_a);
+    effect_ascii_art_show(1, name_b);
+    effect_matrix_start(0,
+                         effect_ascii_art_get_lines(0),
+                         effect_ascii_art_get_rows(0),
+                         effect_ascii_art_get_cols(0));
+    effect_matrix_start(1,
+                         effect_ascii_art_get_lines(1),
+                         effect_ascii_art_get_rows(1),
+                         effect_ascii_art_get_cols(1));
+
+    int da = effect_ascii_art_get_display(0);
+    int db = effect_ascii_art_get_display(1);
+    if (da >= 0 && db >= 0) {
+        rb_render_portrait_pair(rb_display_get_pixel_data(da),
+                                rb_display_get_pixel_width(da),
+                                rb_display_get_pixel_height(da),
+                                rb_display_get_pixel_data(db),
+                                rb_display_get_pixel_width(db),
+                                rb_display_get_pixel_height(db));
+    }
+}
+
+void effect_ascii_art_frame(void) {
+    if (!effect_matrix_is_active()) return;
+    effect_matrix_frame();
+    push_to_bridge();
+}
+
 void effect_ascii_art_stop(void) {
     ensure_initialized();
+    effect_matrix_stop();
     for (int i = 0; i < EFFECT_ART_MAX_SLOTS; i++) {
         effect_art_free(&slot_art[i]);
         if (slot_displays[i] >= 0) {

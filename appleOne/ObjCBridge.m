@@ -13,7 +13,7 @@
 #include "rb_display.h"
 #include "terminal.h"
 #include "Emulator.h"
-#include "Effects/effect_matrix.h"
+#include "Effects/effect_ascii_art.h"
 
 @implementation UIImage (Buffer)
 
@@ -120,6 +120,7 @@ void EmulatorFrame(void) {
     }
 
     emulator_frame();
+    effect_ascii_art_frame();
 }
 
 void EmulatorKeyPress(int ch) {
@@ -155,7 +156,7 @@ void EmulatorShowBothSteves(void) {
 }
 
 void EmulatorRefreshDisplay(void) {
-    effect_matrix_stop();
+    effect_ascii_art_stop();
     terminal_refresh();
 }
 
