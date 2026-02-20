@@ -105,6 +105,15 @@ Building an immersive visionOS experience featuring the Apple I emulator with mu
 - Same phosphor-green tinting as normal portrait rendering
 - Builds successfully for visionOS simulator
 
+### Refactoring: Move portrait_ files to Effects/ folder (2026-02-20)
+- Moved 6 portrait rendering files from `Emulator/` to `Emulator/Effects/` subfolder
+- Renamed all files from `portrait_*` to `effect_*` prefix
+- Renamed all public API functions: `portrait_hires_*` → `effect_hires_*`, `portrait_matrix_*` → `effect_matrix_*`
+- Renamed data constants and header guards accordingly
+- Updated all callers: `emulator.c`, `ObjCBridge.m`
+- Added `Effects` group to Xcode project structure
+- Git history preserved via `git mv`
+
 ### Previous Work
 - Hi-res portrait renderer with phosphor-green display
 - ASCII art portraits of Steve Jobs and Steve Wozniak
