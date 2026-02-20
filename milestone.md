@@ -5,6 +5,19 @@ Building an immersive visionOS experience featuring the Apple I emulator with mu
 
 ## Completed Steps
 
+### Enhanced Splash Screen with Typewriter Animation (2026-02-20)
+- **Rewrote `splash.c`**: Replaced static text display with phased typewriter animation
+- **15-phase state machine**: FADE_IN → LOGO → PAUSE → SEPARATOR_1 → PAUSE → TYPE_LINE_1/2/3 → PAUSE → SEPARATOR_2 → PAUSE → TYPE_LINE_4 → PAUSE → HOLD → FADE_OUT
+- **Row-by-row logo reveal**: Compact 12-row Apple logo builds top-to-bottom (5 frames per row)
+- **Typewriter text**: Characters appear one at a time (6 frames/char) with blinking cursor
+- **Separator lines**: 38 `=` characters draw across at 1 char/frame
+- **Blinking cursor**: Inverted space block at typing position, toggles every 20 frames
+- **Woz monitor prompt**: `\` prompt with blinking cursor in hold phase
+- **Updated layout**: Logo rows 1-12, separator rows 14/20, text rows 16-18/22, prompt row 24
+- **Timing**: ~12 seconds total animation before hold, 0.75s fade in/out
+- **API unchanged**: `splash_init()`, `splash_frame()`, `splash_skip()` — no changes to splash.h, emulator.c, or any other files
+- Builds cleanly for visionOS simulator
+
 ### Shockwave Integration (2026-02-20)
 - **Third game mode**: Shockwave (WipeOut-style anti-gravity racing) integrated as mode 2 alongside Emulator (0) and Breakout (1)
 - **New file `Games/platform_apple1.c`**: Platform implementation targeting Apple I display 0's pixel buffer (336x208). `platform_get_screenbuffer()` returns `rb_get_display(0)->pixel_data` so `render_software.c` draws wireframes directly into the display buffer. Bresenham line drawing for HUD text via `platform_line()`. Mach absolute time for timing. Packfile asset loading from bundle resources.
