@@ -23,6 +23,11 @@ enum AppleState {
     case started
 }
 
+enum AppMode {
+    case emulator
+    case breakout
+}
+
 // Launcher window — initializes emulator and opens the immersive space
 struct MainWindow: View {
     @Environment(\.openImmersiveSpace) var openImmersiveSpace
@@ -99,6 +104,7 @@ struct ControlPanel: View {
     @State private var displayManager = DisplayManager.shared
     @State var basicState = AppleState.cold
     @State var assemblerState = AppleState.cold
+    @State var appMode: AppMode = .emulator
 
     let basicListing = "10 PRINT \"Hello Apple I \";\n20 GOTO 10\nRUN\n"
     let assemblerListing = " LDA #'A'\nLOOP JSR $FFEF\n CLC\n ADC #$1\n CMP #'Z'+1\n BNE LOOP\n RTS\n~a\n"
@@ -110,9 +116,30 @@ struct ControlPanel: View {
                 .font(.system(size: 21, weight: .medium, design: .monospaced))
                 .kerning(6)
 
-            // Emulator screen + portrait buttons side by side
+            // Mode selector + screen + portrait buttons
             HStack(spacing: 12) {
-                // Emulator screen
+                // Mode selector (left of screen)
+                VStack(spacing: 8) {
+                    PanelButton(
+                        label: "APPLE I",
+                        color: appMode == .emulator ? .green : .white,
+                        rounded: true
+                    ) {
+                        appMode = .emulator
+                        GameSetModeEmulator()
+                    }
+
+                    PanelButton(
+                        label: "BREAKOUT",
+                        color: appMode == .breakout ? .green : .white,
+                        rounded: true
+                    ) {
+                        appMode = .breakout
+                        GameSetModeBreakout()
+                    }
+                }
+
+                // Screen
                 Group {
                     if let image = renderer.screenImage {
                         Image(uiImage: image)
@@ -178,26 +205,30 @@ struct ControlPanel: View {
                 }
             }
 
-            Text("APPLE I - EMULATOR")
+            Text(appMode == .emulator ? "APPLE I - EMULATOR" : "BREAKOUT")
                 .font(.system(size: 18, weight: .bold, design: .monospaced))
                 .foregroundColor(.white.opacity(0.6))
 
-            // Control buttons
-            HStack(spacing: 8) {
-                PanelButton(label: "RESET", color: .red) {
-                    EmulatorHardReset()
-                    self.basicState = .cold
-                    self.assemblerState = .cold
+            // Control buttons — context-dependent
+            if appMode == .emulator {
+                HStack(spacing: 8) {
+                    PanelButton(label: "RESET", color: .red) {
+                        EmulatorHardReset()
+                        self.basicState = .cold
+                        self.assemblerState = .cold
+                    }
+
+                    PanelButton(label: "BREAK", color: .orange) {
+                        EmulatorSkipSplash()
+                    }
+
+                    basicButtons
+
+                    assemblerButtons
                 }
-
-                PanelButton(label: "BREAK", color: .orange) {
-                    EmulatorSkipSplash()
-                    // KeyboardHandler().sendText("~")
-                }
-
-                basicButtons
-
-                assemblerButtons
+            }
+            else {
+                breakoutButtons
             }
         }
         .padding()
@@ -219,6 +250,27 @@ struct ControlPanel: View {
         case .started:
             PanelButton(label: "TYPE LISTING", color: .blue) {
                 KeyboardHandler().sendText(basicListing)
+            }
+        }
+    }
+
+    @ViewBuilder
+    private var breakoutButtons: some View {
+        HStack(spacing: 8) {
+            PanelButton(label: "LEFT", color: .blue) {
+                GameBreakoutInput(1)
+            }
+
+            PanelButton(label: "RIGHT", color: .blue) {
+                GameBreakoutInput(2)
+            }
+
+            PanelButton(label: "LAUNCH", color: .green) {
+                GameBreakoutInput(3)
+            }
+
+            PanelButton(label: "RESET", color: .red) {
+                GameBreakoutReset()
             }
         }
     }
