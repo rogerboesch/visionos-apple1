@@ -16,3 +16,9 @@ void EmulatorShowBothSteves(void);
 
 void EmulatorSkipSplash(void);
 void EmulatorRefreshDisplay(void);
+
+void GameSetModeEmulator(void);
+void GameSetModeBreakout(void);
+void GameBreakoutInput(int action);
+void GameBreakoutInputRelease(void);
+void GameBreakoutReset(void);

@@ -14,6 +14,10 @@
 #include "terminal.h"
 #include "Emulator.h"
 #include "Effects/effect_ascii_art.h"
+#include "Games/game_breakout.h"
+
+/* 0 = emulator, 1 = breakout */
+static int app_mode = 0;
 
 @implementation UIImage (Buffer)
 
@@ -111,15 +115,21 @@ void EmulatorInit(void) {
 }
 
 void EmulatorFrame(void) {
-    if (terminal_testch() == TERMINAL_ERR) {
-        NSNumber* ascii = [queue dequeue];
+    if (app_mode == 0) {
+        if (terminal_testch() == TERMINAL_ERR) {
+            NSNumber* ascii = [queue dequeue];
 
-        if (ascii != nil) {
-            terminal_setch(ascii.intValue);
+            if (ascii != nil) {
+                terminal_setch(ascii.intValue);
+            }
         }
+
+        emulator_frame();
+    }
+    else {
+        game_breakout_frame();
     }
 
-    emulator_frame();
     effect_ascii_art_frame();
 }
 
@@ -159,5 +169,31 @@ void EmulatorShowBothSteves(void) {
 void EmulatorRefreshDisplay(void) {
     effect_ascii_art_show_portrait(0, "steve-wozniak");
     terminal_refresh();
+}
+
+/* -------------------------------------------------------------------------- */
+/*  Game mode switching                                                       */
+/* -------------------------------------------------------------------------- */
+
+void GameSetModeEmulator(void) {
+    app_mode = 0;
+    terminal_refresh();
+}
+
+void GameSetModeBreakout(void) {
+    app_mode = 1;
+    game_breakout_init();
+}
+
+void GameBreakoutInput(int action) {
+    game_breakout_input(action);
+}
+
+void GameBreakoutInputRelease(void) {
+    game_breakout_input_release();
+}
+
+void GameBreakoutReset(void) {
+    game_breakout_reset();
 }
 
