@@ -114,6 +114,18 @@ Building an immersive visionOS experience featuring the Apple I emulator with mu
 - Added `Effects` group to Xcode project structure
 - Git history preserved via `git mv`
 
+### Refactoring: Generic Slot-Based Art Loader (2026-02-20)
+- Replaced hardcoded Jobs/Wozniak portrait system with generic N-slot art loader
+- **New module `effect_art_loader`**: Loads ASCII art from bundled `.txt` files at runtime (two-pass read: count lines + max width, then malloc + pad to uniform columns)
+- **New module `effect_ascii_art`**: Slot-based display system with `EFFECT_ART_MAX_SLOTS` (8) slots. `effect_ascii_art_show(slot, name)` loads any art file into any slot
+- **Refactored `effect_matrix`**: N independent animation slots instead of 2 hardcoded + `matrix_pair_mode` flag. `effect_matrix_start(slot, ...)` starts animation on a specific slot
+- **Bridge calls moved to `emulator.c`**: Matrix module no longer calls `rb_render_portrait`/`rb_render_portrait_pair` directly — it only advances animation state and renders into displays. `emulator_frame()` pushes pixel data to the Swift bridge
+- **Deleted**: `effect_data_jobs.h`, `effect_data_wozniak.h` (compiled-in art headers), `effect_hires.h`, `effect_hires.c` (old hardcoded portrait renderer)
+- **Added to bundle**: `steve-jobs.txt`, `steve-wozniak.txt` in `Assets/` folder as Resources
+- Art getter API: `effect_ascii_art_get_lines/rows/cols(slot)` allow matrix to access loaded art data
+- Helper functions in emulator: `_show_portrait(slot, name)`, `_show_portrait_pair(name_a, name_b)` simplify task cases
+- C layer is fully generic for N images; Swift bridge still supports 1 or 2 (single/pair)
+
 ### Previous Work
 - Hi-res portrait renderer with phosphor-green display
 - ASCII art portraits of Steve Jobs and Steve Wozniak
