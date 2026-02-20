@@ -13,7 +13,7 @@
 #include "rb_display.h"
 #include "terminal.h"
 #include "Emulator.h"
-#include "Effects/effect_matrix.h"
+#include "Emulator/Effects/effect_matrix.h"
 
 @implementation UIImage (Buffer)
 
