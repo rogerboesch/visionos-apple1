@@ -5,6 +5,16 @@ Building an immersive visionOS experience featuring the Apple I emulator with mu
 
 ## Completed Steps
 
+### Datanetics DC-50 Virtual Keyboard (2026-02-23)
+- **New file `KeyboardLayoutData.swift`**: `KeyDef` struct with normal/shifted labels, ASCII codes, width multiplier, and special flag. Five row arrays matching real DC-50 layout with inverted number row (unshifted = symbols, shifted = digits). Special action sentinels for RESET/BREAK/SHIFT/CTRL.
+- **New file `KeyboardPanel.swift`**: SwiftUI view with dark green PCB background, dark gray keycaps, white labels, red RESET accent, green active SHIFT/CTRL. Key taps send ASCII via `EmulatorKeyPress()`. SHIFT auto-releases after one character. CTRL+letter sends control character (ascii - 0x40). RESET triggers `EmulatorHardReset()`, BREAK triggers `EmulatorSkipSplash()`. "Datanetics Corp." and "DC-50 SN:1976" brand labels at bottom.
+- **AppState observable singleton**: Extracted `appMode`/`basicState`/`assemblerState` from ControlPanel local `@State` into shared `AppState` class (same pattern as `DisplayManager.shared`). Enables keyboard panel to observe mode changes.
+- **DisplayManager**: Added `KEYBOARD_DISTANCE` (0.75), `KEYBOARD_VERTICAL_OFFSET` (-0.35), `KEYBOARD_TILT_DEGREES` (45.0) constants. `keyboardEntity` property, `placeKeyboard()` and `updateKeyboardBillboard()` methods mirroring panel placement with steeper tilt.
+- **GameSpace**: Keyboard attachment (`id: "keyboard_panel"`) with `frame(width: 620, height: 260)` and `.glassBackgroundEffect()`. Wired to `displayManager.keyboardEntity`, placed and billboard-updated alongside control panel.
+- **Visibility**: Keyboard body wrapped in `if appState.appMode == .emulator` — hidden in Breakout/Shockwave modes.
+- **No changes** to ObjCBridge, bridging header, keyboard.c, terminal.c, or any C code
+- Builds cleanly for visionOS simulator
+
 ### Enhanced Splash Screen with Typewriter Animation (2026-02-20)
 - **Rewrote `splash.c`**: Replaced static text display with phased typewriter animation
 - **15-phase state machine**: FADE_IN → LOGO → PAUSE → SEPARATOR_1 → PAUSE → TYPE_LINE_1/2/3 → PAUSE → SEPARATOR_2 → PAUSE → TYPE_LINE_4 → PAUSE → HOLD → FADE_OUT
