@@ -29,6 +29,18 @@ enum AppMode {
     case shockwave
 }
 
+// MARK: - Shared app state (observable singleton for cross-panel communication)
+
+@Observable
+@MainActor
+class AppState {
+    static let shared = AppState()
+
+    var appMode: AppMode = .emulator
+    var basicState: AppleState = .cold
+    var assemblerState: AppleState = .cold
+}
+
 // Launcher window — initializes emulator and opens the immersive space
 struct MainWindow: View {
     @Environment(\.openImmersiveSpace) var openImmersiveSpace
@@ -103,9 +115,7 @@ struct PanelButton: View {
 struct ControlPanel: View {
     @State private var renderer = ScreenRenderer.shared
     @State private var displayManager = DisplayManager.shared
-    @State var basicState = AppleState.cold
-    @State var assemblerState = AppleState.cold
-    @State var appMode: AppMode = .emulator
+    @State private var appState = AppState.shared
 
     let basicListing = "10 PRINT \"Hello Apple I \";\n20 GOTO 10\nRUN\n"
     let assemblerListing = " LDA #'A'\nLOOP JSR $FFEF\n CLC\n ADC #$1\n CMP #'Z'+1\n BNE LOOP\n RTS\n~a\n"
@@ -123,28 +133,28 @@ struct ControlPanel: View {
                 VStack(spacing: 8) {
                     PanelButton(
                         label: "APPLE I",
-                        color: appMode == .emulator ? .green : .white,
+                        color: appState.appMode == .emulator ? .green : .white,
                         rounded: true
                     ) {
-                        appMode = .emulator
+                        appState.appMode = .emulator
                         GameSetModeEmulator()
                     }
 
                     PanelButton(
                         label: "BREAKOUT",
-                        color: appMode == .breakout ? .green : .white,
+                        color: appState.appMode == .breakout ? .green : .white,
                         rounded: true
                     ) {
-                        appMode = .breakout
+                        appState.appMode = .breakout
                         GameSetModeBreakout()
                     }
 
                     PanelButton(
                         label: "SHOCK\nWAVE",
-                        color: appMode == .shockwave ? .green : .white,
+                        color: appState.appMode == .shockwave ? .green : .white,
                         rounded: true
                     ) {
-                        appMode = .shockwave
+                        appState.appMode = .shockwave
                         GameSetModeShockwave()
                     }
                 }
@@ -220,12 +230,12 @@ struct ControlPanel: View {
                 .foregroundColor(.white.opacity(0.6))
 
             // Control buttons — context-dependent
-            if appMode == .emulator {
+            if appState.appMode == .emulator {
                 HStack(spacing: 8) {
                     PanelButton(label: "RESET", color: .red) {
                         EmulatorHardReset()
-                        self.basicState = .cold
-                        self.assemblerState = .cold
+                        appState.basicState = .cold
+                        appState.assemblerState = .cold
                     }
 
                     PanelButton(label: "BREAK", color: .orange) {
@@ -237,10 +247,10 @@ struct ControlPanel: View {
                     assemblerButtons
                 }
             }
-            else if appMode == .breakout {
+            else if appState.appMode == .breakout {
                 breakoutButtons
             }
-            else if appMode == .shockwave {
+            else if appState.appMode == .shockwave {
                 shockwaveButtons
             }
         }
@@ -249,16 +259,16 @@ struct ControlPanel: View {
 
     @ViewBuilder
     private var basicButtons: some View {
-        switch self.basicState {
+        switch appState.basicState {
         case .cold:
             PanelButton(label: "LOAD BASIC", color: .blue) {
                 EmulatorLoadBasic()
-                self.basicState = .loaded
+                appState.basicState = .loaded
             }
         case .loaded:
             PanelButton(label: "START BASIC", color: .blue) {
                 KeyboardHandler().sendText("e000r\n")
-                self.basicState = .started
+                appState.basicState = .started
             }
         case .started:
             PanelButton(label: "TYPE LISTING", color: .blue) {
@@ -289,7 +299,7 @@ struct ControlPanel: View {
     }
 
     private var subtitleForMode: String {
-        switch appMode {
+        switch appState.appMode {
         case .emulator: return "APPLE I - EMULATOR"
         case .breakout: return "BREAKOUT"
         case .shockwave: return "SHOCKWAVE"
@@ -307,17 +317,17 @@ struct ControlPanel: View {
 
     @ViewBuilder
     private var assemblerButtons: some View {
-        switch self.assemblerState {
+        switch appState.assemblerState {
         case .cold:
             PanelButton(label: "LOAD ASSEMBLER", color: .cyan) {
                 EmulatorLoadCore()
-                self.assemblerState = .loaded
+                appState.assemblerState = .loaded
             }
         case .loaded:
             HStack(spacing: 8) {
                 PanelButton(label: "START ASSEMBLER", color: .cyan) {
                     KeyboardHandler().sendText("f000r\n")
-                    self.assemblerState = .started
+                    appState.assemblerState = .started
                 }
 
                 PanelButton(label: "RUN EXAMPLE", color: .cyan) {

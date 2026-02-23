@@ -33,22 +33,36 @@ struct GameSpace: View {
                 root.addChild(panelAttachment)
                 displayManager.panelEntity = panelAttachment
             }
+
+            // Add the virtual keyboard as a separate attachment
+            if let keyboardAttachment = attachments.entity(for: "keyboard_panel") {
+                root.addChild(keyboardAttachment)
+                displayManager.keyboardEntity = keyboardAttachment
+            }
         } attachments: {
             Attachment(id: "control_panel") {
                 ControlPanel()
                     .frame(width: 600, height: 500)
                     .glassBackgroundEffect()
             }
+
+            Attachment(id: "keyboard_panel") {
+                KeyboardPanel()
+                    .frame(width: 620, height: 260)
+                    .glassBackgroundEffect()
+            }
         }
         .task {
             await displayManager.startTracking()
             displayManager.placePanel()
+            displayManager.placeKeyboard()
             displayManager.placeDisplayCircle()
 
             // Update loop: billboard rotation + carousel
             let frameDelta: Float = 1.0 / 60.0
             while true {
                 displayManager.updatePanelBillboard()
+                displayManager.updateKeyboardBillboard()
                 displayManager.updateCarousel(deltaTime: frameDelta)
                 try? await Task.sleep(for: .milliseconds(16))
             }

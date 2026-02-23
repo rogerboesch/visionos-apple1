@@ -21,6 +21,11 @@ let PANEL_VERTICAL_OFFSET: Float = -0.1
 let PANEL_SMOOTHING: Float = 0.1
 let PANEL_TILT_DEGREES: Float = 30.0
 
+// Keyboard placement (below and closer than control panel)
+let KEYBOARD_DISTANCE: Float = 0.75
+let KEYBOARD_VERTICAL_OFFSET: Float = -0.35
+let KEYBOARD_TILT_DEGREES: Float = 45.0
+
 // Circle layout
 let CIRCLE_DISPLAY_COUNT = 8
 let CIRCLE_RADIUS: Float = 10.0
@@ -49,6 +54,7 @@ class DisplayManager {
 
     var rootEntity: Entity? = nil
     var panelEntity: Entity? = nil
+    var keyboardEntity: Entity? = nil
     var displayEntities: [ModelEntity] = []
 
     var carouselRotating = true
@@ -120,6 +126,47 @@ class DisplayManager {
 
         let currentRot = panel.orientation
         panel.orientation = simd_slerp(currentRot, targetRot, PANEL_SMOOTHING)
+    }
+
+    func placeKeyboard() {
+        guard let keyboard = keyboardEntity else { return }
+
+        guard worldTracking.state == .running,
+              let deviceAnchor = worldTracking.queryDeviceAnchor(atTimestamp: CACurrentMediaTime())
+        else {
+            keyboard.position = simd_float3(0, DISPLAY_MIN_FLOOR_GAP, -KEYBOARD_DISTANCE)
+            return
+        }
+
+        let headMatrix = deviceAnchor.originFromAnchorTransform
+        let offset = simd_float4(0, KEYBOARD_VERTICAL_OFFSET, -KEYBOARD_DISTANCE, 1)
+        let targetPos = headMatrix * offset
+        keyboard.position = simd_float3(targetPos.x, targetPos.y, targetPos.z)
+    }
+
+    func updateKeyboardBillboard() {
+        guard let keyboard = keyboardEntity else { return }
+
+        guard worldTracking.state == .running,
+              let deviceAnchor = worldTracking.queryDeviceAnchor(atTimestamp: CACurrentMediaTime())
+        else {
+            return
+        }
+
+        let headMatrix = deviceAnchor.originFromAnchorTransform
+        let headPos = simd_float3(headMatrix.columns.3.x,
+                                  headMatrix.columns.3.y,
+                                  headMatrix.columns.3.z)
+        let dir = headPos - keyboard.position
+        let yaw = atan2(dir.x, dir.z)
+        let tilt = KEYBOARD_TILT_DEGREES * (.pi / 180.0)
+
+        let yawQuat = simd_quatf(angle: yaw, axis: simd_float3(0, 1, 0))
+        let tiltQuat = simd_quatf(angle: -tilt, axis: simd_float3(1, 0, 0))
+        let targetRot = yawQuat * tiltQuat
+
+        let currentRot = keyboard.orientation
+        keyboard.orientation = simd_slerp(currentRot, targetRot, PANEL_SMOOTHING)
     }
 
     func placeDisplay() {

@@ -74,6 +74,8 @@
 		EE000029265E00002901 /* render_software.c in Sources */ = {isa = PBXBuildFile; fileRef = EE000029265E00002902 /* render_software.c */; };
 		EE000030265E00003001 /* vector_font.c in Sources */ = {isa = PBXBuildFile; fileRef = EE000030265E00003002 /* vector_font.c */; };
 		EE000031265E00003101 /* shockwave.data in Resources */ = {isa = PBXBuildFile; fileRef = EE000031265E00003102 /* shockwave.data */; };
+		AA1001022B000002 /* KeyboardLayoutData.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA1001012B000001 /* KeyboardLayoutData.swift */; };
+		AA1001042B000004 /* KeyboardPanel.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA1001032B000003 /* KeyboardPanel.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -162,6 +164,8 @@
 		EE000029265E00002902 /* render_software.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = render_software.c; path = "../shockwave/source/src-render/render_software.c"; sourceTree = SOURCE_ROOT; };
 		EE000030265E00003002 /* vector_font.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; name = vector_font.c; path = "../shockwave/source/src-render/vector_font.c"; sourceTree = SOURCE_ROOT; };
 		EE000031265E00003102 /* shockwave.data */ = {isa = PBXFileReference; lastKnownFileType = file; name = shockwave.data; path = "../shockwave/game-data/shockwave.data"; sourceTree = SOURCE_ROOT; };
+		AA1001012B000001 /* KeyboardLayoutData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardLayoutData.swift; sourceTree = "<group>"; };
+		AA1001032B000003 /* KeyboardPanel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = KeyboardPanel.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -294,6 +298,8 @@
 				DB728ED82B8C9167006E60FD /* GameSpace.swift */,
 				DB728ED62B8C9167006E60FD /* MainWindow.swift */,
 				DB2043432B8DCB75008A464B /* KeyboardHandler.swift */,
+				AA1001012B000001 /* KeyboardLayoutData.swift */,
+				AA1001032B000003 /* KeyboardPanel.swift */,
 				DB728EE72B8C960A006E60FD /* RBUtility.swift */,
 				DB728EE92B8C9643006E60FD /* RBLog.swift */,
 				DB728EEB2B8C988C006E60FD /* appleOne-Bridging-Header.h */,
@@ -450,6 +456,8 @@
 				DB728EED2B8C988C006E60FD /* ObjCBridge.m in Sources */,
 				DB20433B2B8D396A008A464B /* keyboard.c in Sources */,
 				DB2043442B8DCB75008A464B /* KeyboardHandler.swift in Sources */,
+				AA1001022B000002 /* KeyboardLayoutData.swift in Sources */,
+				AA1001042B000004 /* KeyboardPanel.swift in Sources */,
 				DB2043392B8D396A008A464B /* m6502.c in Sources */,
 				DB728EF42B8C9A2B006E60FD /* terminal.c in Sources */,
 				DB728ED92B8C9167006E60FD /* GameSpace.swift in Sources */,
